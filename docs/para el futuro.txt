@@ -1,0 +1,26 @@
+-Documentar con comentarios
+
+-test automatizados:
+    HAcer casos más completos
+
+
+
+-USAR Sequelize EN LUGAR DE SQL PURO EN LOS SERVICIOS
+
+-A TENER EN CUENTA : ": Sequelize también ofrece hooks (o ganchos) que te permiten ejecutar lógica en diferentes puntos 
+durante el ciclo de vida de un modelo, como antes de guardar un nuevo registro o después de eliminar uno." (hay un ejemplo en la encriptacion de password)
+
+-En usuario routes cambiar por una regex de contraseña mas segura
+
+
+-auth  (HECHO)
+-ojo con las migraciones que estaban creando la tabla con m mayusculas(HECHO)
+- crear una especie de modularizacion para websocket (HECHO)
+-mover la lógica que interactúa con la base de datos a una capa de "servicios" o "repositorios" (HECHO)
+-enviar una respuesta con un código de estado HTTP que indique un error del lado del servidor (por ejemplo, 500). (HECHO)
+-Validadores: Utiliza bibliotecas como validator o joi para validar las entradas del usuario. Nunca confíes en los datos del cliente (HECHO)
+-sanitizacion  (HECHO)
+-dockerizar:(hecho)
+
+
+
