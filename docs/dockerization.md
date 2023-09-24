@@ -1,4 +1,3 @@
-
 ### **Dockerfile** (Para el backend en Node.js):
 
 1. **Base de la Imagen**: Se está utilizando una imagen base de Node.js versión 18.
@@ -12,6 +11,7 @@
 
 1. **Versión**: Se utiliza la versión 3.8 del formato de docker-compose.
 2. **Servicio de Backend**: Define el servicio `backend`:
+
     - **Construcción**: Construye la imagen usando el directorio `./back-ExpressJS` (donde se encuentra el `Dockerfile` anteriormente descrito).
     - **Puertos**: Mapea el puerto 3000 del contenedor al puerto 3000 de la máquina host.
     - **Entorno**: Define la variable de entorno `NODE_ENV` con el valor `development`.
@@ -23,8 +23,9 @@
     - **Entorno**: Define las credenciales y la base de datos inicial.
     - **Puertos**: Mapea el puerto 3306 del contenedor al puerto 3306 de la máquina host.
     - **Volúmenes**: Persiste los datos de MySQL usando un volumen llamado `mysql-data`.
-    Monta tu directorio mysql-init-scripts en la ubicación que MySQL espera encontrar scripts de inicialización.
+      Monta tu directorio mysql-init-scripts en la ubicación que MySQL espera encontrar scripts de inicialización.
 4. **Servicio phpMyAdmin**: Define un contenedor para la interfaz web phpMyAdmin:
+
     - **Imagen**: Usa la imagen oficial de phpMyAdmin.
     - **Puertos**: Mapea el puerto 80 del contenedor al puerto 8081 de la máquina host.
     - **Entorno**: Establece el host de la base de datos al servicio `mysql`.
@@ -32,22 +33,19 @@
 
 5. **Definición de Volúmenes**: Define un volumen llamado `mysql-data` para persistir los datos de la base de datos.
 
-
-
-
 ```
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
 **Explicación:**
 
-- `docker-compose`: Esta herramienta facilita la definición y ejecución de aplicaciones multi-contenedor en Docker.
+-   `docker-compose`: Esta herramienta facilita la definición y ejecución de aplicaciones multi-contenedor en Docker.
 
-- `-f docker-compose.dev.yml`: La opción `-f` permite especificar un archivo diferente al predeterminado `docker-compose.yml`. 
-                               En este caso, se está usando el archivo `docker-compose.dev.yml`, lo que sugiere que es una configuración destinada para un entorno de desarrollo.
+-   `-f docker-compose.dev.yml`: La opción `-f` permite especificar un archivo diferente al predeterminado `docker-compose.yml`.
+    En este caso, se está usando el archivo `docker-compose.dev.yml`, lo que sugiere que es una configuración destinada para un entorno de desarrollo.
 
-- `up`: El comando `up` de `docker-compose` inicia y ejecuta toda la infraestructura definida en el archivo `docker-compose` especificado. 
-        Es decir, crea y arranca contenedores, redes, volúmenes y otros recursos definidos.
+-   `up`: El comando `up` de `docker-compose` inicia y ejecuta toda la infraestructura definida en el archivo `docker-compose` especificado.
+    Es decir, crea y arranca contenedores, redes, volúmenes y otros recursos definidos.
 
-- `--build`: Este es un modificador del comando `up`. Cuando se utiliza, `docker-compose` primero construirá las imágenes según las definiciones en el archivo `docker-compose` 
-             antes de iniciar los contenedores. Es especialmente útil si has realizado cambios en tu `Dockerfile` o en el código fuente y deseas que esos cambios se reflejen en los contenedores que se van a ejecutar.
+-   `--build`: Este es un modificador del comando `up`. Cuando se utiliza, `docker-compose` primero construirá las imágenes según las definiciones en el archivo `docker-compose`
+    antes de iniciar los contenedores. Es especialmente útil si has realizado cambios en tu `Dockerfile` o en el código fuente y deseas que esos cambios se reflejen en los contenedores que se van a ejecutar.

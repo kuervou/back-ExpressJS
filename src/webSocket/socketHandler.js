@@ -1,12 +1,7 @@
 // socketHandler.js
 
-module.exports = function(io) {
-  
+module.exports = function (io) {
     io.on('connection', (socket) => {
-      console.log('Un usuario se ha conectado');
-  
-      
-    });
-  
-  };
-  
+        console.log('Un usuario se ha conectado')
+    })
+}

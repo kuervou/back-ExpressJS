@@ -3,19 +3,22 @@
 ## Levantar el back de forma local
 
 1. **Ubicarse en el directorio del backend**:
-   ```bash
-   cd back-ExpressJS
-   ```
+
+    ```bash
+    cd back-ExpressJS
+    ```
 
 2. **Instalar las dependencias**:
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Ejecutar la aplicación**:
-   ```bash
-   $env:NODE_ENV="local"; node src/app.js
-   ```
+
+    ```bash
+    $env:NODE_ENV="local"; node src/app.js
+    ```
 
 4. **Nota**: Asegúrate de configurar las variables de entorno en el archivo `.env` para la conexión a la base de datos.
 
@@ -28,7 +31,6 @@ npm test
 ```
 
 **Nota**: Asegúrate de configurar las variables de entorno en el archivo `.env` para la conexión a la base de datos. (host desbe ser localhost)
-
 
 ## Levantar el back en un contenedor Docker
 
@@ -46,17 +48,17 @@ Para ejecutar en modo test, realiza las siguientes modificaciones:
 
 1. **Modificar el Dockerfile**:
    Cambia el comando para iniciar la aplicación al siguiente:
-   
-   ```Dockerfile
-   # Comando para iniciar la aplicación 
-   CMD ["npm", "test"]
-   ```
+
+    ```Dockerfile
+    # Comando para iniciar la aplicación
+    CMD ["npm", "test"]
+    ```
 
 2. **Modificar el docker-compose**:
    Quita las líneas que montan los volúmenes para evitar errores:
 
-   ```yml
-   volumes:
-     - .:/usr/src/app  # Sincroniza el directorio local con el directorio en el contenedor
-     - /usr/src/app/node_modules
-   ```
+    ```yml
+    volumes:
+        - .:/usr/src/app # Sincroniza el directorio local con el directorio en el contenedor
+        - /usr/src/app/node_modules
+    ```

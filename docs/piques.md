@@ -18,11 +18,11 @@ Patron repository
 
 Mockear llamadas a la base de datos o servicios externos en los tests
 
-----------------------------
+---
 
 node --watch
 
-404 
+404
 
 utilizar scripts de package.json
 
