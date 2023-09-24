@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 
 module.exports = (sequelize) => {
     class Usuario extends Model {
-        static associate(models) {
+        static associate() {
             // Aquí puedes definir las relaciones
         }
     }

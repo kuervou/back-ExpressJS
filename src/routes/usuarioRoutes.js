@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const usuarioController = require('../controllers/usuarioController')
-const auth = require('../middleware/auth')
+
 const Joi = require('joi')
 const validate = require('../middleware/validate')
 

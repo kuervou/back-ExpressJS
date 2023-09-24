@@ -1,6 +1,5 @@
 // controllers/mesaController.js
 
-const { db } = require('../../config/config.js') // Importar la conexión a la base de datos
 const mesaService = require('../services/mesaService.js')
 
 const mesaController = {

@@ -4,12 +4,14 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "extends": ["eslint:recommended", "prettier"],
+    "extends": ["eslint:recommended", "prettier","plugin:jest/recommended"],
     "env": {
         "es2021": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "rules": {
         "no-console": "error"
-    }
+    },
+    "plugins": ["jest"]
 }

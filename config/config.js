@@ -23,6 +23,7 @@ const db = mysql.createConnection({
 db.connect((err) => {
     if (err) throw err
     if (process.env.NODE_ENV !== 'test') {
+        // eslint-disable-next-line no-console
         console.log('Conectado a la base de datos')
     }
 })

@@ -1,5 +1,5 @@
 const request = require('supertest')
-const { app, http, db } = require('../../app')
+const { http, db } = require('../../app')
 let server
 
 describe('Tests de usuarios', () => {

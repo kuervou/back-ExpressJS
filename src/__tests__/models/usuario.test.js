@@ -2,12 +2,12 @@ const { Usuario } = require('../../models')
 const { db } = require('../../../config/config')
 
 // Limpieza después de todas las pruebas
-afterAll((done) => {
+afterAll(() => {return new Promise(done => {
     db.end((err) => {
         if (err) throw err
         done() // Llamar a 'done' para indicar que hemos terminado
     })
-})
+})})
 
 test('crear un nuevo usuario', async () => {
     const usuario = await Usuario.create({
