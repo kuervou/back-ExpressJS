@@ -4,16 +4,12 @@ const bcrypt = require('bcryptjs');
 
 const usuarioService = {
   crearUsuario: async (username, email, password) => {
-    try {
       const nuevoUsuario = await Usuario.create({
         username,
         email,
         password 
       });
       return nuevoUsuario;
-    } catch (error) {
-      throw new Error('Error al crear el usuario');
-    }
   },
   authenticate: async function(username, password) {
     const user = await Usuario.findOne({ where: { username }});

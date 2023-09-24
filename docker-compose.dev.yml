@@ -33,7 +33,9 @@ services:
       - NODE_ENV=DEVELOPMENT
     depends_on:
       - mysql
- 
+    volumes:
+      - .:/usr/src/app  # Sincroniza el directorio local con el directorio en el contenedor
+      - /usr/src/app/node_modules
       
 
 volumes:
