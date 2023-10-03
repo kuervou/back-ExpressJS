@@ -1,7 +1,7 @@
 const mesaRoutes = require('./mesaRoutes')
-const usuarioRoutes = require('./usuarioRoutes')
+const empleadoRoutes = require('./empleadoRoutes')
 
 module.exports = (app) => {
     app.use('/api', mesaRoutes)
-    app.use('/api', usuarioRoutes)
+    app.use('/api', empleadoRoutes)
 }

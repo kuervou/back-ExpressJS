@@ -1,0 +1,121 @@
+1. Lista de entidades:
+
+Usuario (jerarquización):
+Id: INT PK,
+Nombre: STRING NOT NULL,
+Apellido: STRING NOT NULL,
+Telefono: STRING
+----
+Cliente (hija de Usuario):
+Cuenta: FLOAT
+----
+Empleado (hija de Usuario):
+Nick: STRING UNIQUE NOT NULL,
+Contraseña: STRING NOT NULL,
+Rol: STRING NOT NULL,
+Activo: BOOLEAN NOT NULL
+----
+(fin de la jerarquización)
+----
+Mesa:
+Id: INT PK,
+NroMesa: INT NOT NULL UNIQUE,
+Libre: BOOLEAN NOT NULL
+----
+Orden:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+Total: FLOAT NOT NULL,
+Responsable: STRING,
+Estado: STRING NOT NULL,
+Ocupacion: INT NOT NULL,
+Observaciones: STRING,
+Paga: BOOLEAN NOT NULL
+-----
+Pagos:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+Total: Float NOT NULL,
+MetodoPago: STRING NOT NULL
+----
+Caja:
+Id: INT PK,
+Total: FLOAT NOT NULL
+---
+Movimiento:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Tipo: STRING NOT NULL,
+Observacion: STRING,
+Total: FLOAT NOT NULL
+---
+Compra:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+CantxCasillero: INT,
+Cantidad: INT NOT NULL,
+Total: FLOAT NOT NULL
+----
+Item:
+Id: INT PK,
+Cantidad: INT NOT NULL,
+Precio: FLOAT NOT NULL
+----
+ItemMenu:
+Id: INT PK,
+Nombre: String NOT NULL,
+Descripcion: String,
+Precio: Float NOT NULL,
+Imagen: Text NOT NULL,
+Activo: BOOLEAN NOT NULL
+----
+Grupo:
+Id: INT PK,
+Nombre: STRING UNIQUE NOT NULL,
+----
+ItemInventario:
+Id: INT PK,
+Nombre: String NOT NULL,
+Descripcion: String,
+Stock: INT NOT NULL,
+Costo: Float NOT NULL,
+CantxCasillero: INT,
+----
+ModoVenta:
+Id: INT PK,
+PorUnidad: BOOLEAN,
+EnBarra: BOOLEAN
+----
+Log:
+Id: INT PK,
+FechaHoraAbierta: DateTime,
+FechaHoraCerrada: DateTime,
+----
+Categoria:
+Id: INT PK,
+Nombre: STRING UNIQUE NOT NULL,
+----
+
+2.Relaciones entre Entidades:
+
+Orden - Cliente: Muchas ordenes tienen un Cliente;
+Orden - Mesa: Muchas ordenes tienen una o muchas mesas;
+Orden - Empleado: Muchas ordenes tienen un Empleado;
+Orden - Item: Muchas ordenes tienen muchos items;
+Empleado - Log: Muchos empleados tienen muchos logs;
+Pago - Orden: Muchos pagos tienen una orden;
+Pago - Empleado: Muchos pagos tienen un Empleado;
+Caja - Pago: Una caja tiene Muchos pagos;
+Caja - Movimiento: Una caja tiene muchos Movimientos;
+Movimiento - Empleado: Muchos Movimientos tienen un empleado;
+Compra - Empleado: Muchas compras tienen un empleado;
+Compra - ItemInventario: Muchas compras tienen un ItemInventario;
+ItemInventario - Categoria: Muchos ItemInventario tienen una Categoria;
+Log - ItemInventario : Muchos Logs tienen un ItemInventario;
+ModoVenta - ItemInventario: Un modo venta tiene muchos ItemInventario;
+ItemMenu - ModoVenta: muchos ItemMenu tienen 1 modo venta;
+ItemMenu - Grupo: muchos ItemMenu tienen 1 grupo;
+Item - ItemMenu: muchos Item tienen 1 ItemMenu;

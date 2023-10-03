@@ -1,0 +1,67 @@
+1. Lista de entidades:
+
+Mesa:
+Id: INT PK,
+NroMesa: INT NOT NULL UNIQUE,
+Libre: BOOLEAN NOT NULL
+----
+Orden:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+Total: FLOAT NOT NULL,
+Responsable: STRING,
+Estado: STRING NOT NULL,
+Ocupacion: INT NOT NULL,
+Observaciones: STRING,
+Paga: BOOLEAN NOT NULL
+-----
+Pagos:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+Total: Float NOT NULL,
+MetodoPago: STRING NOT NULL
+----
+Caja:
+Id: INT PK,
+Total: FLOAT NOT NULL
+---
+Movimiento:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Tipo: STRING NOT NULL,
+Observacion: STRING,
+Total: FLOAT NOT NULL
+---
+Compra:
+Id: INT PK,
+Fecha: Date NOT NULL,
+Hora: Time NOT NULL,
+CantxCasillero: INT,
+Cantidad: INT NOT NULL,
+Total: FLOAT NOT NULL
+
+
+
+
+
+----
+
+2.Relaciones entre Entidades:
+
+Orden - Cliente: Muchas ordenes tienen un Cliente;
+Orden - Mesa: Muchas ordenes tienen una o muchas mesas;
+Orden - Empleado: Muchas ordenes tienen un Empleado;
+Orden - Item: Muchas ordenes tienen muchos items;
+
+Pago - Orden: Muchos pagos tienen una orden;
+Pago - Empleado: Muchos pagos tienen un Empleado;
+Caja - Pago: Una caja tiene Muchos pagos;
+Caja - Movimiento: Una caja tiene muchos Movimientos;
+Movimiento - Empleado: Muchos Movimientos tienen un empleado;
+Compra - Empleado: Muchas compras tienen un empleado;
+Compra - ItemInventario: Muchas compras tienen un ItemInventario;
+
+
+

@@ -17,7 +17,8 @@
 3. **Ejecutar la aplicación**:
 
     ```bash
-    $env:NODE_ENV="local"; node src/app.js
+    $env:NODE_ENV="LOCAL"; node src/app.js
+
     ```
 
 4. **Nota**: Asegúrate de configurar las variables de entorno en el archivo `.env` para la conexión a la base de datos.

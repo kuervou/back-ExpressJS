@@ -1,67 +1,50 @@
-// controllers/mesaController.js
-
 const mesaService = require('../services/mesaService.js')
+const asyncHandler = require('express-async-handler')
+const { HttpError, HttpCode } = require('../error-handling/http_error')
 
 const mesaController = {
-    addMesa: async function (req, res) {
+    addMesa: asyncHandler(async (req, res) => {
         const numeroDeMesa = req.body.numeroDeMesa || req.body.numero_de_mesa
         const estaLibre = req.body.estaLibre || req.body.esta_libre
 
         if (numeroDeMesa === undefined || estaLibre === undefined) {
-            return res.status(400).json({ error: 'Campos faltantes' })
+            throw new HttpError(HttpCode.BAD_REQUEST, 'Campos faltantes')
         }
 
-        try {
-            await mesaService.addMesa(numeroDeMesa, estaLibre)
-            res.status(201).json({ message: 'Mesa añadida' })
-        } catch (err) {
-            res.status(500).json({ error: 'Error al añadir mesa' })
-        }
-    },
+        await mesaService.addMesa(numeroDeMesa, estaLibre)
+        res.status(HttpCode.CREATED).json({ message: 'Mesa añadida' })
+    }),
 
-    getMesas: async function (req, res) {
-        try {
-            const mesas = await mesaService.getMesas()
-            res.json(mesas)
-        } catch (err) {
-            res.status(500).json({ error: 'Error al obtener mesas' })
-        }
-    },
+    getMesas: asyncHandler(async (req, res) => {
+        const mesas = await mesaService.getMesas()
+        res.json(mesas)
+    }),
 
-    updateMesa: async function (req, res) {
+    updateMesa: asyncHandler(async (req, res) => {
         const { id } = req.params
         const numeroDeMesa = req.body.numeroDeMesa
         const estaLibre = req.body.estaLibre
         const io = req.io
 
         if (numeroDeMesa === undefined || estaLibre === undefined) {
-            return res.status(400).json({ error: 'Campos faltantes' })
+            throw new HttpError(HttpCode.BAD_REQUEST, 'Campos faltantes')
         }
 
-        try {
-            const result = await mesaService.updateMesa(
-                id,
-                numeroDeMesa,
-                estaLibre
-            )
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ message: 'Mesa no encontrada' })
-            }
-            io.emit('mesaUpdate', { numeroDeMesa, estaLibre })
-            res.status(200).json({ message: 'Mesa actualizada' })
-        } catch (err) {
-            res.status(500).json({ error: 'Error al actualizar mesa' })
-        }
-    },
+        const result = await mesaService.updateMesa(id, numeroDeMesa, estaLibre)
 
-    deleteMesa: async function (req, res) {
+        if (result.affectedRows === 0) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Mesa no encontrada')
+        }
+
+        io.emit('mesaUpdate', { numeroDeMesa, estaLibre })
+        res.status(HttpCode.OK).json({ message: 'Mesa actualizada' })
+    }),
+
+    deleteMesa: asyncHandler(async (req, res) => {
         const { id } = req.params
-        try {
-            await mesaService.deleteMesa(id)
-            res.send('Mesa eliminada')
-        } catch (err) {
-            res.status(500).json({ error: 'Error al eliminar mesa' })
-        }
-    },
+        await mesaService.deleteMesa(id)
+        res.status(HttpCode.OK).json({ message: 'Mesa eliminada' })
+    }),
 }
+
 module.exports = mesaController

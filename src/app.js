@@ -1,17 +1,15 @@
 /* eslint-disable no-console */
+
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const port = 3000
+const port = 3000 //process.env.PORT
 
-// Importar el objeto de base de datos
+// Imports
 const db = require('./models')
-
-// Importar rutas
 const configureRoutes = require('./routes')
-
-// Importar el manejador de Socket.io
 const socketHandler = require('./webSocket/socketHandler')
+const errorHandler = require('./error-handling/errorHandler')
 
 // Instancia Socket.io
 const http = require('http').Server(app)
@@ -22,7 +20,7 @@ const io = require('socket.io')(http, {
     },
 })
 
-// Middleware
+// Middleware para cors y parseo de req
 app.use(cors())
 app.use(express.json())
 
@@ -37,6 +35,8 @@ configureRoutes(app, io)
 
 // Configurar Socket.io
 socketHandler(io)
+
+app.use(errorHandler)
 
 if (process.env.NODE_ENV !== 'TEST') {
     // Sincronizar con la base de datos y luego iniciar el servidor HTTP y Socket.io

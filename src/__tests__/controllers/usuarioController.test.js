@@ -15,13 +15,11 @@ describe('Tests de usuarios', () => {
     })
 
     test('crear un nuevo usuario a través de la API', async () => {
-        const res = await request(http)
-            .post('/api/usuario')
-            .send({
-                username: 'Johncito',
-                email: 'johncito@email.com',
-                password: 'jhon12345',
-            })
+        const res = await request(http).post('/api/usuario').send({
+            username: 'Johncito',
+            email: 'johncito@email.com',
+            password: 'jhon12345',
+        })
 
         expect(res.statusCode).toEqual(201)
     })

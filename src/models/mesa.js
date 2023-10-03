@@ -1,32 +1,41 @@
-'use strict'
+// src/models/mesa.js
 
-// Importaciones requeridas
-const { Model } = require('sequelize')
+'use strict';
+const { Model, DataTypes } = require('sequelize');
 
-// Exportar el modelo
-module.exports = (sequelize, DataTypes) => {
-    // Definición de la clase Mesa, que representa una mesa en un restaurante o similar.
-    class Mesa extends Model {}
-
-    // Inicialización del modelo con sus campos
-    Mesa.init(
-        {
-            // `numeroDeMesa` representa el número identificador de la mesa.
-            numeroDeMesa: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            // `estaLibre` indica si la mesa está disponible o no.
-            estaLibre: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-            },
-        },
-        {
-            sequelize,
-            modelName: 'Mesa',
+module.exports = (sequelize) => {
+    class Mesa extends Model {
+        static associate(models) {
+            // Muchas mesas pueden estar asociadas con muchas órdenes
+            // a través de la tabla OrdenMesa.
+            Mesa.belongsToMany(models.Orden, {
+                through: 'OrdenMesa',
+                foreignKey: 'mesaId',
+                as: 'ordenes'
+            });
         }
-    )
+    }
 
-    return Mesa
-}
+    Mesa.init({
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        nroMesa: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: false
+        },
+        libre: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        }
+    }, {
+        sequelize,
+        modelName: 'Mesa',
+        timestamps: true  
+    });
+
+    return Mesa;
+};

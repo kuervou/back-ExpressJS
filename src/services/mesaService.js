@@ -1,12 +1,9 @@
-// services/mesaService.js
-
-const { Mesa } = require('../models') // Asumiendo que el modelo Mesa está en la carpeta "models"
+const mesaRepository = require('../repositories/mesaRepository')
 
 const mesaService = {
     addMesa: async function (numeroDeMesa, estaLibre) {
         try {
-            const nuevaMesa = await Mesa.create({ numeroDeMesa, estaLibre })
-            return nuevaMesa
+            return await mesaRepository.create(numeroDeMesa, estaLibre)
         } catch (error) {
             throw new Error('Error al añadir la mesa')
         }
@@ -14,8 +11,7 @@ const mesaService = {
 
     getMesas: async function () {
         try {
-            const mesas = await Mesa.findAll()
-            return mesas
+            return await mesaRepository.findAll()
         } catch (error) {
             throw new Error('Error al obtener las mesas')
         }
@@ -23,14 +19,10 @@ const mesaService = {
 
     updateMesa: async function (id, numeroDeMesa, estaLibre) {
         try {
-            const mesa = await Mesa.findByPk(id)
+            const mesa = await mesaRepository.findById(id)
             if (!mesa) throw new Error('Mesa no encontrada')
 
-            mesa.numeroDeMesa = numeroDeMesa
-            mesa.estaLibre = estaLibre
-            await mesa.save()
-
-            return mesa
+            return await mesaRepository.update(id, numeroDeMesa, estaLibre)
         } catch (error) {
             throw new Error('Error al actualizar la mesa')
         }
@@ -38,10 +30,9 @@ const mesaService = {
 
     deleteMesa: async function (id) {
         try {
-            const mesa = await Mesa.findByPk(id)
-            if (!mesa) throw new Error('Mesa no encontrada')
+            const wasDeleted = await mesaRepository.delete(id)
+            if (!wasDeleted) throw new Error('Mesa no encontrada')
 
-            await mesa.destroy()
             return { message: 'Mesa eliminada correctamente' }
         } catch (error) {
             throw new Error('Error al eliminar la mesa')
