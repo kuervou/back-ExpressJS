@@ -34,15 +34,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL'
             },
-            modoVentaId: {
-                type: Sequelize.INTEGER,
-                references: {
-                    model: 'ModoVentas',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
-            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

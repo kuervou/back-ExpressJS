@@ -14,9 +14,12 @@ module.exports = (sequelize) => {
             ItemInventario.hasMany(models.Compra, {
                 foreignKey: 'itemInventarioId'
             });
-            ItemInventario.belongsTo(models.ModoVenta, {
-                foreignKey: 'modoVentaId'
+            ItemInventario.belongsToMany(models.ItemMenu, {
+                through: 'ItemMenuInventario',
+                foreignKey: 'itemInventarioId',
+                as: 'itemInventario'
             });
+            
         }
     }
     ItemInventario.init({
@@ -38,12 +41,8 @@ module.exports = (sequelize) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        modoVentaId: {  
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'ModoVentas', 
-                key: 'id'
-            },
+        porUnidad: {
+            type: DataTypes.BOOLEAN,
             allowNull: true
         },
         categoriaId: {

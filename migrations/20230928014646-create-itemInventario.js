@@ -27,20 +27,16 @@ module.exports = {
             cantxCasillero: {
                 type: Sequelize.INTEGER
             },
+            porUnidad: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false
+            },
             categoriaId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Categorias',
                     key: 'id'
                 }
-            },
-            modoVentaId: {
-                type: Sequelize.INTEGER,
-                references: {
-                    model: 'ModoVentas', 
-                    key: 'id'
-                },
-                allowNull: true
             },
             createdAt: {
                 allowNull: false,

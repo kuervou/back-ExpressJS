@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
 
             Orden.belongsTo(models.Pago, {
                 foreignKey: 'ordenId',
-                as: 'ordejn'
+                as: 'orden'
             });
         }
     }

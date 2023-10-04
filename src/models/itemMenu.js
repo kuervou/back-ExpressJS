@@ -10,9 +10,10 @@ module.exports = (sequelize) => {
                 foreignKey: 'grupoId',
                 as: 'grupo'
             });
-            ItemMenu.belongsTo(models.ModoVenta, {
-                foreignKey: 'modoVentaId',
-                as: 'modoVenta'
+            ItemMenu.belongsToMany(models.ItemInventario, {
+                through: 'ItemMenuInventario',
+                foreignKey: 'itemMenuId',
+                as: 'itemMenu'
             });
             
             ItemMenu.hasMany(models.Item, {
@@ -52,13 +53,6 @@ module.exports = (sequelize) => {
                 key: 'id'
             }
         },
-        modoVentaId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'ModoVentas',
-                key: 'id'
-            }
-        }
     }, {
         sequelize,
         modelName: 'ItemMenu',
