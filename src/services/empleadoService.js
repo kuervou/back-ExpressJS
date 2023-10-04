@@ -5,6 +5,23 @@ const empleadoService = {
     crearEmpleado: async ( nick, nombre, apellido, password, telefono, rol,activo) => {
         return await empleadoRepository.create( nick, nombre, apellido, password, telefono, rol,activo)
     },
+    getEmpleados: async function () {
+        return await empleadoRepository.findAll()
+    },
+
+    getEmpleadoById: async (id) => {
+        return await empleadoRepository.getEmpleadoById(id);
+    },
+    
+
+    updateEmpleado: async (id, nick, nombre, apellido, password, telefono, rol, activo) => {
+        return await empleadoRepository.update(id, nick, nombre, apellido, password, telefono, rol, activo);
+    },
+    deleteEmpleado: async (id) => {
+        return await empleadoRepository.deleteEmpleado(id);
+    },
+    
+    
     authenticate: async (username, password) => {
         const user = await empleadoRepository.findByNick(username)
         if (!user) return null

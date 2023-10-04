@@ -11,6 +11,50 @@ const empleadoController = {
         res.status(HttpCode.CREATED).json({ message: 'Empleado creado' })
     }),
 
+    getEmpleados: asyncHandler(async (req, res) => {
+        const empleados = await empleadoService.getEmpleados()
+        res.json(empleados)
+    }),
+
+    getEmpleadoById: asyncHandler(async (req, res) => {
+        const id = req.params.id;
+        
+        const empleado = await empleadoService.getEmpleadoById(id);
+        
+        if (!empleado) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+        }
+        
+        res.status(HttpCode.OK).json(empleado);
+    }),
+    
+
+    updateEmpleado: asyncHandler(async (req, res) => {
+        const id = req.params.id;
+        const { nick, nombre, apellido, password, telefono, rol, activo } = req.body;
+        
+        const empleadoActualizado = await empleadoService.updateEmpleado(id, nick, nombre, apellido, password, telefono, rol, activo);
+        
+        if (empleadoActualizado[0] === 0) { // Si la cantidad de registros actualizados es 0
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+        }
+        
+        res.status(HttpCode.OK).json({ message: 'Empleado actualizado' });
+    }),
+    
+    deleteEmpleado: asyncHandler(async (req, res) => {
+        const id = req.params.id;
+        
+        const resultado = await empleadoService.deleteEmpleado(id);
+        
+        if (resultado === 0) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+        }
+        
+        res.status(HttpCode.OK).json({ message: 'Empleado eliminado' });
+    }),
+    
+
     login: asyncHandler(async (req, res) => {
         const { nick, password } = req.body
         const empleado = await empleadoService.authenticate(nick, password)

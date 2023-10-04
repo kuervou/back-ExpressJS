@@ -2,7 +2,6 @@
 
 # EN LO QUE QUEDÉ:
 
-
 Ver porque no anda el undo migrations
 
 DOCUMENTAR UN POCO LAS MIGRATIONS Y SUS COMANDOS:
