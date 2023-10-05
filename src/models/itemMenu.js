@@ -13,7 +13,6 @@ module.exports = (sequelize) => {
             ItemMenu.belongsToMany(models.ItemInventario, {
                 through: 'ItemMenuInventario',
                 foreignKey: 'itemMenuId',
-                as: 'itemMenu'
             });
             
             ItemMenu.hasMany(models.Item, {

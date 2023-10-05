@@ -16,8 +16,7 @@ module.exports = (sequelize) => {
             });
             ItemInventario.belongsToMany(models.ItemMenu, {
                 through: 'ItemMenuInventario',
-                foreignKey: 'itemInventarioId',
-                as: 'itemInventario'
+                foreignKey: 'itemInventarioId'
             });
             
         }

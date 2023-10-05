@@ -4,7 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = 3000 //process.env.PORT
-
+const { exec } = require('child_process');
 // Imports
 const db = require('./models')
 const configureRoutes = require('./routes')
@@ -38,21 +38,21 @@ socketHandler(io)
 
 app.use(errorHandler)
 
+
 if (process.env.NODE_ENV !== 'TEST') {
-    // Sincronizar con la base de datos y luego iniciar el servidor HTTP y Socket.io
-    db.sequelize
-        .sync()
-        .then(() => {
-            http.listen(port, () => {
-                console.log(`Aplicación escuchando en http://localhost:${port}`)
-            })
-        })
-        .catch((error) => {
-            console.error(
-                'Error al intentar conectar con la base de datos:',
-                error
-            )
-        })
+    // Ejecutar migraciones (tampoco se deben ejecutar en prod)
+    exec('npx sequelize-cli db:migrate', (error, stdout, stderr) => {
+        if (error) {
+            console.error('Error ejecutando migraciones:', error); 
+            return;
+        }
+        console.log(stdout);
+
+        // Iniciar el servidor después de ejecutar las migraciones
+        http.listen(port, () => {
+            console.log(`Aplicación escuchando en http://localhost:${port}`);
+        });
+    });
 }
 
 module.exports = { app, http, io, db }

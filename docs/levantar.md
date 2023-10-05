@@ -17,7 +17,7 @@
 3. **Ejecutar la aplicación**:
 
     ```bash
-    $env:NODE_ENV="LOCAL"; node src/app.js
+    npm run local
 
     ```
 

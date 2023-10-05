@@ -22,8 +22,8 @@ const empleadoService = {
     },
     
     
-    authenticate: async (username, password) => {
-        const user = await empleadoRepository.findByNick(username)
+    authenticate: async (nick, password) => {
+        const user = await empleadoRepository.findByNick(nick)
         if (!user) return null
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
