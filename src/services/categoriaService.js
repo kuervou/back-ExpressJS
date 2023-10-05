@@ -2,8 +2,8 @@ const categoriaRepository = require('../repositories/categoriaRepository')
 
 
 const categoriaService = {
-    crearCategoria: async (nombre, apellido, telefono) => {
-        return await categoriaRepository.create(nombre, apellido, telefono)
+    crearCategoria: async (nombre) => {
+        return await categoriaRepository.create(nombre)
     },
     getCategorias: async function () {
         return await categoriaRepository.findAll()
@@ -14,8 +14,8 @@ const categoriaService = {
     },
     
 
-    updateCategoria: async (id, nombre, apellido,  telefono, cuenta) => {
-        return await categoriaRepository.update(id, nombre, apellido, telefono, cuenta);
+    updateCategoria: async (id, nombre) => {
+        return await categoriaRepository.update(id, nombre);
     },
     deleteCategoria: async (id) => {
         return await categoriaRepository.deleteCategoria(id);
