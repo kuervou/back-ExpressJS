@@ -1,7 +1,11 @@
 # Tareas
 
 # EN LO QUE QUEDÉ:
-
+Validaciones de usuarios repetidos y esas cosas
+Endpoints sencillos:
+Grupo
+Caja
+Mesa
 
 
 

@@ -18,7 +18,8 @@ module.exports = {
       },
       libre: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: true
       },
       createdAt: {
         allowNull: false,
