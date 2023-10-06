@@ -13,7 +13,10 @@ const errorHandler = (err, req, res, next) => {
             status: HttpCode.INTERNAL_SERVER,
         }
 
-        if (process.env.NODE_ENV === 'DEVELOPMENT' || process.env.NODE_ENV === 'LOCAL') {
+        if (
+            process.env.NODE_ENV === 'DEVELOPMENT' ||
+            process.env.NODE_ENV === 'LOCAL'
+        ) {
             errorMessage['stack'] = err.stack
         }
 

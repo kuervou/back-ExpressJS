@@ -9,9 +9,7 @@ console.log(process.env.LOCAL_DB_HOST);
 console.log(`${env}_DB_HOST`);
 console.log(process.env[`${env}_DB_NAME`]);*/
 
-
 module.exports = {
-
     DEVELOPMENT: {
         username: process.env.DEVELOPMENT_DB_USER,
         password: process.env.DEVELOPMENT_DB_PASS,

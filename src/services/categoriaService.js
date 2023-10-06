@@ -1,6 +1,5 @@
 const categoriaRepository = require('../repositories/categoriaRepository')
 
-
 const categoriaService = {
     crearCategoria: async (nombre) => {
         return await categoriaRepository.create(nombre)
@@ -10,18 +9,15 @@ const categoriaService = {
     },
 
     getCategoriaById: async (id) => {
-        return await categoriaRepository.getCategoriaById(id);
+        return await categoriaRepository.getCategoriaById(id)
     },
-    
 
     updateCategoria: async (id, nombre) => {
-        return await categoriaRepository.update(id, nombre);
+        return await categoriaRepository.update(id, nombre)
     },
     deleteCategoria: async (id) => {
-        return await categoriaRepository.deleteCategoria(id);
+        return await categoriaRepository.deleteCategoria(id)
     },
-    
-    
 }
 
 module.exports = categoriaService

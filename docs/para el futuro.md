@@ -1,11 +1,10 @@
 # Tareas
 
 # EN LO QUE QUEDÉ:
-Validaciones de usuarios repetidos y esas cosas
+Validaciones de usuarios repetidos y esas cosas (validaciones en capa de servicio)
 Endpoints sencillos:
-Grupo
 Caja
-Mesa
+
 
 
 

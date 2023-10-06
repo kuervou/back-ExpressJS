@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('Pagos', {
@@ -6,58 +6,58 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             fecha: {
                 type: Sequelize.DATEONLY,
-                allowNull: false
+                allowNull: false,
             },
             hora: {
                 type: Sequelize.TIME,
-                allowNull: false
+                allowNull: false,
             },
             total: {
                 type: Sequelize.FLOAT,
-                allowNull: false
+                allowNull: false,
             },
             ordenId: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'Ordenes', 
-                    key: 'id'
+                    model: 'Ordenes',
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             metodoPago: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             empleadoId: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'Empleados',  
-                    key: 'id'
+                    model: 'Empleados',
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             cajaId: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'Cajas',  
-                    key: 'id'
+                    model: 'Cajas',
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
-        });
+                type: Sequelize.DATE,
+            },
+        })
     },
     down: async (queryInterface) => {
-        await queryInterface.dropTable('Pagos');
-    }
-};
+        await queryInterface.dropTable('Pagos')
+    },
+}

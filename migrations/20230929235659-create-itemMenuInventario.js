@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
@@ -8,30 +8,30 @@ module.exports = {
                 primaryKey: true,
                 references: {
                     model: 'ItemsMenu',
-                    key: 'id'
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             itemInventarioId: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 references: {
                     model: 'ItemsInventario',
-                    key: 'id'
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
-        });
+                type: Sequelize.DATE,
+            },
+        })
     },
     down: async (queryInterface) => {
-        await queryInterface.dropTable('ItemsMenuInventario');
-    }
-};
+        await queryInterface.dropTable('ItemsMenuInventario')
+    },
+}

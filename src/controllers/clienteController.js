@@ -15,45 +15,48 @@ const clienteController = {
     }),
 
     getClienteById: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        
-        const cliente = await clienteService.getClienteById(id);
-        
+        const id = req.params.id
+
+        const cliente = await clienteService.getClienteById(id)
+
         if (!cliente) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado');
+            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado')
         }
-        
-        res.status(HttpCode.OK).json(cliente);
+
+        res.status(HttpCode.OK).json(cliente)
     }),
-    
 
     updateCliente: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        const {nombre, apellido, telefono, cuenta } = req.body;
-        
-        const clienteActualizado = await clienteService.updateCliente(id, nombre, apellido, telefono, cuenta);
-        
-        if (clienteActualizado[0] === 0) { // Si la cantidad de registros actualizados es 0
-            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado');
+        const id = req.params.id
+        const { nombre, apellido, telefono, cuenta } = req.body
+
+        const clienteActualizado = await clienteService.updateCliente(
+            id,
+            nombre,
+            apellido,
+            telefono,
+            cuenta
+        )
+
+        if (clienteActualizado[0] === 0) {
+            // Si la cantidad de registros actualizados es 0
+            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado')
         }
-        
-        res.status(HttpCode.OK).json({ message: 'Cliente actualizado' });
+
+        res.status(HttpCode.OK).json({ message: 'Cliente actualizado' })
     }),
-    
+
     deleteCliente: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        
-        const resultado = await clienteService.deleteCliente(id);
-        
+        const id = req.params.id
+
+        const resultado = await clienteService.deleteCliente(id)
+
         if (resultado === 0) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado');
+            throw new HttpError(HttpCode.NOT_FOUND, 'Cliente no encontrado')
         }
-        
-        res.status(HttpCode.OK).json({ message: 'Cliente eliminado' });
+
+        res.status(HttpCode.OK).json({ message: 'Cliente eliminado' })
     }),
-    
-
-
 }
 
 module.exports = clienteController

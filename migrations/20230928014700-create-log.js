@@ -21,21 +21,21 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'ItemsInventario',
-                    key: 'id'
+                    key: 'id',
                 },
-                allowNull: true
+                allowNull: true,
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     down: async (queryInterface) => {
         await queryInterface.dropTable('Logs')
-    }
+    },
 }

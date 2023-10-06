@@ -6,55 +6,57 @@ module.exports = (sequelize) => {
     class ItemInventario extends Model {
         static associate(models) {
             ItemInventario.belongsTo(models.Categoria, {
-                foreignKey: 'categoriaId'
-            });
+                foreignKey: 'categoriaId',
+            })
             ItemInventario.hasMany(models.Log, {
-                foreignKey: 'itemInventarioId'
-            });
+                foreignKey: 'itemInventarioId',
+            })
             ItemInventario.hasMany(models.Compra, {
-                foreignKey: 'itemInventarioId'
-            });
+                foreignKey: 'itemInventarioId',
+            })
             ItemInventario.belongsToMany(models.ItemMenu, {
                 through: 'ItemMenuInventario',
-                foreignKey: 'itemInventarioId'
-            });
-            
+                foreignKey: 'itemInventarioId',
+            })
         }
     }
-    ItemInventario.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+    ItemInventario.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            nombre: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            descripcion: DataTypes.STRING,
+            stock: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            costo: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
+            },
+            porUnidad: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+            },
+            categoriaId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Categorias',
+                    key: 'id',
+                },
+            },
+            cantxCasillero: DataTypes.INTEGER,
         },
-        nombre: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        descripcion: DataTypes.STRING,
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        costo: {
-            type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        porUnidad: {
-            type: DataTypes.BOOLEAN,
-            allowNull: true
-        },
-        categoriaId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Categorias',
-                key: 'id'
-            }
-        },
-        cantxCasillero: DataTypes.INTEGER
-    }, {
-        sequelize,
-        modelName: 'ItemInventario'
-    });
+        {
+            sequelize,
+            modelName: 'ItemInventario',
+        }
+    )
     return ItemInventario
 }

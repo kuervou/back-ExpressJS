@@ -7,48 +7,48 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             nombre: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             apellido: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             telefono: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             nick: {
                 type: Sequelize.STRING,
                 unique: true,
-                allowNull: false
+                allowNull: false,
             },
             password: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             rol: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             activo: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
-                defaultValue: true
+                defaultValue: true,
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     down: async (queryInterface) => {
         await queryInterface.dropTable('Empleados')
-    }
+    },
 }

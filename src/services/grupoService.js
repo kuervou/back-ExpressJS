@@ -1,6 +1,5 @@
 const grupoRepository = require('../repositories/grupoRepository')
 
-
 const grupoService = {
     crearGrupo: async (nombre) => {
         return await grupoRepository.create(nombre)
@@ -10,18 +9,15 @@ const grupoService = {
     },
 
     getGrupoById: async (id) => {
-        return await grupoRepository.getGrupoById(id);
+        return await grupoRepository.getGrupoById(id)
     },
-    
 
     updateGrupo: async (id, nombre) => {
-        return await grupoRepository.update(id, nombre);
+        return await grupoRepository.update(id, nombre)
     },
     deleteGrupo: async (id) => {
-        return await grupoRepository.deleteGrupo(id);
+        return await grupoRepository.deleteGrupo(id)
     },
-    
-    
 }
 
 module.exports = grupoService

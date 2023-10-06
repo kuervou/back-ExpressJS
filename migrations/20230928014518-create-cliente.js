@@ -7,33 +7,33 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             nombre: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             apellido: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             telefono: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             cuenta: {
-                type: Sequelize.FLOAT
+                type: Sequelize.FLOAT,
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     down: async (queryInterface) => {
         await queryInterface.dropTable('Clientes')
-    }
+    },
 }

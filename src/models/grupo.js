@@ -1,34 +1,37 @@
 // src/models/grupo.js
 
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+'use strict'
+const { Model, DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
     class Grupo extends Model {
         static associate(models) {
             Grupo.hasMany(models.ItemMenu, {
                 foreignKey: 'grupoId',
-                as: 'grupo'
-            });
+                as: 'grupo',
+            })
         }
     }
 
-    Grupo.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+    Grupo.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            nombre: {
+                type: DataTypes.STRING,
+                unique: true,
+                allowNull: false,
+            },
         },
-        nombre: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false
+        {
+            sequelize,
+            modelName: 'Grupo',
+            timestamps: true,
         }
-    }, {
-        sequelize,
-        modelName: 'Grupo',
-        timestamps: true
-    });
+    )
 
-    return Grupo;
-};
+    return Grupo
+}

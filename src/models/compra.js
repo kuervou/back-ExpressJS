@@ -1,67 +1,70 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+'use strict'
+const { Model, DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
     class Compra extends Model {
         static associate(models) {
             Compra.belongsTo(models.Empleado, {
                 foreignKey: 'empleadoId',
-                as: 'empleado'
-            });
+                as: 'empleado',
+            })
 
             Compra.belongsTo(models.ItemInventario, {
                 foreignKey: 'itemInventarioId',
-                as: 'itemInventario'
-            });
+                as: 'itemInventario',
+            })
         }
     }
 
-    Compra.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        fecha: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
-        },
-        hora: {
-            type: DataTypes.TIME,
-            allowNull: false
-        },
-        cantidadxCasillero: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        cantidad: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        total: {
-            type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        
-        ItemInventarioId: {  
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'ItemsInventario',
-                key: 'id'
-            }
-        },
-        empleadoId: { 
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Empleados',
-                key: 'id'
-            }
-        }
-    }, {
-        sequelize,
-        modelName: 'Compra',
-        timestamps: true
-    });
+    Compra.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            fecha: {
+                type: DataTypes.DATEONLY,
+                allowNull: false,
+            },
+            hora: {
+                type: DataTypes.TIME,
+                allowNull: false,
+            },
+            cantidadxCasillero: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            cantidad: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            total: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
+            },
 
-    return Compra;
-};
+            ItemInventarioId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'ItemsInventario',
+                    key: 'id',
+                },
+            },
+            empleadoId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Empleados',
+                    key: 'id',
+                },
+            },
+        },
+        {
+            sequelize,
+            modelName: 'Compra',
+            timestamps: true,
+        }
+    )
+
+    return Compra
+}

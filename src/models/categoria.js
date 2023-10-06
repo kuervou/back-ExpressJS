@@ -6,25 +6,27 @@ module.exports = (sequelize) => {
     class Categoria extends Model {
         static associate(models) {
             Categoria.hasMany(models.ItemInventario, {
-                foreignKey: 'categoriaId'
-            });
+                foreignKey: 'categoriaId',
+            })
         }
     }
-    Categoria.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+    Categoria.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            nombre: {
+                type: DataTypes.STRING,
+                unique: true,
+                allowNull: false,
+            },
         },
-        nombre: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false
+        {
+            sequelize,
+            modelName: 'Categoria',
         }
-    }, {
-        sequelize,
-        modelName: 'Categoria'
-    });
+    )
     return Categoria
 }
-

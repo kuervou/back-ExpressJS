@@ -9,8 +9,8 @@ module.exports = {
                 primaryKey: true,
                 references: {
                     model: 'Empleados',
-                    key: 'id'  
-                }
+                    key: 'id',
+                },
             },
             logId: {
                 type: Sequelize.INTEGER,
@@ -18,20 +18,20 @@ module.exports = {
                 primaryKey: true,
                 references: {
                     model: 'Logs',
-                    key: 'id'
-                }
+                    key: 'id',
+                },
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     down: async (queryInterface) => {
         await queryInterface.dropTable('EmpleadoLogs')
-    }
+    },
 }

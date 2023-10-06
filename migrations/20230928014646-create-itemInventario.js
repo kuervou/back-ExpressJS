@@ -7,48 +7,48 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             nombre: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             descripcion: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             stock: {
                 type: Sequelize.INTEGER,
-                allowNull: false
+                allowNull: false,
             },
             costo: {
                 type: Sequelize.FLOAT,
-                allowNull: false
+                allowNull: false,
             },
             cantxCasillero: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             porUnidad: {
                 type: Sequelize.BOOLEAN,
-                allowNull: false
+                allowNull: false,
             },
             categoriaId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Categorias',
-                    key: 'id'
-                }
+                    key: 'id',
+                },
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     down: async (queryInterface) => {
         await queryInterface.dropTable('ItemsInventario')
-    }
+    },
 }

@@ -7,7 +7,14 @@ const SECRET_KEY = process.env.SECRET_KEY
 const empleadoController = {
     crearEmpleado: asyncHandler(async (req, res) => {
         const { nick, nombre, apellido, password, telefono, rol } = req.body
-        await empleadoService.crearEmpleado(nick, nombre, apellido, password, telefono, rol)
+        await empleadoService.crearEmpleado(
+            nick,
+            nombre,
+            apellido,
+            password,
+            telefono,
+            rol
+        )
         res.status(HttpCode.CREATED).json({ message: 'Empleado creado' })
     }),
 
@@ -17,43 +24,52 @@ const empleadoController = {
     }),
 
     getEmpleadoById: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        
-        const empleado = await empleadoService.getEmpleadoById(id);
-        
+        const id = req.params.id
+
+        const empleado = await empleadoService.getEmpleadoById(id)
+
         if (!empleado) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado')
         }
-        
-        res.status(HttpCode.OK).json(empleado);
+
+        res.status(HttpCode.OK).json(empleado)
     }),
-    
 
     updateEmpleado: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        const { nick, nombre, apellido, password, telefono, rol, activo } = req.body;
-        
-        const empleadoActualizado = await empleadoService.updateEmpleado(id, nick, nombre, apellido, password, telefono, rol, activo);
-        
-        if (empleadoActualizado[0] === 0) { // Si la cantidad de registros actualizados es 0
-            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+        const id = req.params.id
+        const { nick, nombre, apellido, password, telefono, rol, activo } =
+            req.body
+
+        const empleadoActualizado = await empleadoService.updateEmpleado(
+            id,
+            nick,
+            nombre,
+            apellido,
+            password,
+            telefono,
+            rol,
+            activo
+        )
+
+        if (empleadoActualizado[0] === 0) {
+            // Si la cantidad de registros actualizados es 0
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado')
         }
-        
-        res.status(HttpCode.OK).json({ message: 'Empleado actualizado' });
+
+        res.status(HttpCode.OK).json({ message: 'Empleado actualizado' })
     }),
-    
+
     deleteEmpleado: asyncHandler(async (req, res) => {
-        const id = req.params.id;
-        
-        const resultado = await empleadoService.deleteEmpleado(id);
-        
+        const id = req.params.id
+
+        const resultado = await empleadoService.deleteEmpleado(id)
+
         if (resultado === 0) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado');
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado')
         }
-        
-        res.status(HttpCode.OK).json({ message: 'Empleado eliminado' });
+
+        res.status(HttpCode.OK).json({ message: 'Empleado eliminado' })
     }),
-    
 
     login: asyncHandler(async (req, res) => {
         const { nick, password } = req.body
@@ -67,13 +83,15 @@ const empleadoController = {
         }
 
         const token = jwt.sign(
-            {   id: empleado.id, 
-                nick: empleado.nick, 
-                nombre: empleado.nombre, 
-                apellido: empleado.apellido, 
-                telefono: empleado.telefono, 
-                rol: empleado.rol, 
-                activo: empleado.activo  },
+            {
+                id: empleado.id,
+                nick: empleado.nick,
+                nombre: empleado.nombre,
+                apellido: empleado.apellido,
+                telefono: empleado.telefono,
+                rol: empleado.rol,
+                activo: empleado.activo,
+            },
             SECRET_KEY,
             { expiresIn: '1h' }
         )
@@ -81,12 +99,12 @@ const empleadoController = {
         res.status(HttpCode.OK).json({
             token,
             empleado: {
-                nick: empleado.nick, 
-                nombre: empleado.nombre, 
-                apellido: empleado.apellido, 
-                telefono: empleado.telefono, 
-                rol: empleado.rol, 
-                activo: empleado.activo
+                nick: empleado.nick,
+                nombre: empleado.nombre,
+                apellido: empleado.apellido,
+                telefono: empleado.telefono,
+                rol: empleado.rol,
+                activo: empleado.activo,
             },
         })
     }),

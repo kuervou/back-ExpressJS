@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('ItemsMenu', {
@@ -6,45 +6,45 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             Nombre: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             Descripcion: Sequelize.STRING,
             Precio: {
                 type: Sequelize.FLOAT,
-                allowNull: false
+                allowNull: false,
             },
             Imagen: {
                 type: Sequelize.TEXT,
-                allowNull: false
+                allowNull: false,
             },
             Activo: {
                 type: Sequelize.BOOLEAN,
-                allowNull: false
+                allowNull: false,
             },
             grupoId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Grupos',
-                    key: 'id'
+                    key: 'id',
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
+                onDelete: 'SET NULL',
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
-        });
+                type: Sequelize.DATE,
+            },
+        })
     },
     down: async (queryInterface) => {
-        await queryInterface.dropTable('ItemsMenu');
-    }
-};
+        await queryInterface.dropTable('ItemsMenu')
+    },
+}

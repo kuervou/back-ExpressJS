@@ -1,92 +1,95 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+'use strict'
+const { Model, DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
     class Orden extends Model {
         static associate(models) {
             Orden.belongsTo(models.Cliente, {
                 foreignKey: 'clienteId',
-                as: 'cliente'
-            });
+                as: 'cliente',
+            })
 
             Orden.belongsToMany(models.Mesa, {
                 through: 'OrdenMesa',
                 foreignKey: 'ordenId',
-                as: 'mesas'
-            });
+                as: 'mesas',
+            })
 
             Orden.belongsTo(models.Empleado, {
                 foreignKey: 'empleadoId',
-                as: 'empleado'
-            });
+                as: 'empleado',
+            })
 
-             // Relación uno-a-muchos con Item
+            // Relación uno-a-muchos con Item
             Orden.hasMany(models.Item, {
                 foreignKey: 'ordenId',
-                as: 'orden'
-            });
+                as: 'orden',
+            })
 
             Orden.belongsTo(models.Pago, {
                 foreignKey: 'ordenId',
-            });
+            })
         }
     }
 
-    Orden.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+    Orden.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            fecha: {
+                type: DataTypes.DATEONLY,
+                allowNull: false,
+            },
+            hora: {
+                type: DataTypes.TIME,
+                allowNull: false,
+            },
+            total: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
+            },
+            responsable: {
+                type: DataTypes.STRING,
+            },
+            estado: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            ocupacion: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            observaciones: {
+                type: DataTypes.STRING,
+            },
+            paga: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+            },
+            clienteId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Clientes',
+                    key: 'id',
+                },
+            },
+            empleadoId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Empleados',
+                    key: 'id',
+                },
+            },
         },
-        fecha: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
-        },
-        hora: {
-            type: DataTypes.TIME,
-            allowNull: false
-        },
-        total: {
-            type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        responsable: {
-            type: DataTypes.STRING
-        },
-        estado: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        ocupacion: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        observaciones: {
-            type: DataTypes.STRING
-        },
-        paga: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
-        },
-        clienteId: {  
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Clientes',
-                key: 'id'
-            }
-        },
-        empleadoId: { 
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Empleados',
-                key: 'id'
-            }
+        {
+            sequelize,
+            modelName: 'Orden',
+            timestamps: true,
         }
-    }, {
-        sequelize,
-        modelName: 'Orden',
-        timestamps: true
-    });
+    )
 
-    return Orden;
-};
+    return Orden
+}

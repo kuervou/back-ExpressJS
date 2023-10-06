@@ -1,36 +1,34 @@
 const { Cliente } = require('../models')
 
-
 const clienteRepository = {
     create: async (nombre, apellido, telefono) => {
         const nuevoCliente = await Cliente.create({
-            nombre, 
-            apellido, 
-            telefono, 
+            nombre,
+            apellido,
+            telefono,
         })
         return nuevoCliente
     },
     findAll: async () => {
-        return await Cliente.findAll();
+        return await Cliente.findAll()
     },
 
     update: async (id, nombre, apellido, telefono, cuenta) => {
         return await Cliente.update(
             { nombre, apellido, telefono, cuenta },
             { where: { id: id } }
-        );
+        )
     },
-    
+
     getClienteById: async (id) => {
-        return await Cliente.findByPk(id);
+        return await Cliente.findByPk(id)
     },
 
     deleteCliente: async (id) => {
         return await Cliente.destroy({
-            where: { id: id }
-        });
+            where: { id: id },
+        })
     },
-    
 }
 
 module.exports = clienteRepository

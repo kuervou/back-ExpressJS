@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('Ordenes', {
@@ -6,65 +6,65 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             fecha: {
                 type: Sequelize.DATEONLY,
-                allowNull: false
+                allowNull: false,
             },
             hora: {
                 type: Sequelize.TIME,
-                allowNull: false
+                allowNull: false,
             },
             total: {
                 type: Sequelize.FLOAT,
-                allowNull: false
+                allowNull: false,
             },
             responsable: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             estado: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
             },
             ocupacion: {
                 type: Sequelize.INTEGER,
-                allowNull: false
+                allowNull: false,
             },
             observaciones: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             paga: {
                 type: Sequelize.BOOLEAN,
-                allowNull: false
+                allowNull: false,
             },
             clienteId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Clientes',
-                    key: 'id'
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             empleadoId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Empleados',
-                    key: 'id'
+                    key: 'id',
                 },
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
-        });
+                type: Sequelize.DATE,
+            },
+        })
     },
     down: async (queryInterface) => {
-        await queryInterface.dropTable('Ordenes');
-    }
-};
+        await queryInterface.dropTable('Ordenes')
+    },
+}

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('Movimientos', {
@@ -6,55 +6,55 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             fecha: {
                 type: Sequelize.DATEONLY,
-                allowNull: false
+                allowNull: false,
             },
             hora: {
                 type: Sequelize.TIME,
-                allowNull: false
+                allowNull: false,
             },
             total: {
                 type: Sequelize.FLOAT,
-                allowNull: false
+                allowNull: false,
             },
             tipo: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             observacion: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             cajaId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Cajas',
-                    key: 'id'
+                    key: 'id',
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
+                onDelete: 'SET NULL',
             },
             empleadoId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'Empleados',
-                    key: 'id'
+                    key: 'id',
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
+                onDelete: 'SET NULL',
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
-        });
+                type: Sequelize.DATE,
+            },
+        })
     },
     down: async (queryInterface) => {
-        await queryInterface.dropTable('Movimientos');
-    }
-};
+        await queryInterface.dropTable('Movimientos')
+    },
+}
