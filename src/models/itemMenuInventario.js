@@ -28,6 +28,7 @@ module.exports = (sequelize) => {
         {
             sequelize,
             modelName: 'ItemMenuInventario',
+            tableName: 'ItemsMenuInventario', //porque sequelize sino va a buscar la tabla "ItemMenuInventarios"
             timestamps: true,
         }
     )
