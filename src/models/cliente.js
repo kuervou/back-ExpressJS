@@ -30,6 +30,8 @@ module.exports = (sequelize) => {
             telefono: DataTypes.STRING,
             cuenta: {
                 type: DataTypes.FLOAT,
+                allowNull: true,
+                defaultValue: 0,
             },
         },
         {

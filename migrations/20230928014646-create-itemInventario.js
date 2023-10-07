@@ -37,6 +37,7 @@ module.exports = {
                     model: 'Categorias',
                     key: 'id',
                 },
+                allowNull: false,
             },
             createdAt: {
                 allowNull: false,

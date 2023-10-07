@@ -1,5 +1,14 @@
 const empleadoRepository = require('../repositories/empleadoRepository')
 const bcrypt = require('bcryptjs')
+const { HttpError, HttpCode } = require('../error-handling/http_error')
+
+// Función auxiliar para chequear la unicidad del nick
+const checkNickUnique = async (nick, excludeId = null) => {
+    const existingUser = await empleadoRepository.findByNick(nick);
+    if (existingUser && (!excludeId || existingUser.id !== excludeId)) {
+        throw new HttpError(HttpCode.CONFLICT, 'El nick ya está siendo utilizado por otro empleado');
+    }
+};
 
 const empleadoService = {
     crearEmpleado: async (
@@ -11,6 +20,9 @@ const empleadoService = {
         rol,
         activo
     ) => {
+        // Chequear si el nick es único antes de intentar crear el empleado
+        await checkNickUnique(nick);
+        
         return await empleadoRepository.create(
             nick,
             nombre,
@@ -21,6 +33,7 @@ const empleadoService = {
             activo
         )
     },
+
     getEmpleados: async function () {
         return await empleadoRepository.findAll()
     },
@@ -39,6 +52,9 @@ const empleadoService = {
         rol,
         activo
     ) => {
+        // Chequear si el nick es único antes de intentar actualizar el empleado
+        await checkNickUnique(nick, id);
+
         return await empleadoRepository.update(
             id,
             nick,
@@ -50,6 +66,7 @@ const empleadoService = {
             activo
         )
     },
+
     deleteEmpleado: async (id) => {
         return await empleadoRepository.deleteEmpleado(id)
     },

@@ -8,7 +8,7 @@ const itemInventarioSchema = Joi.object({
     stock: Joi.number().optional(),
     cantxCasillero: Joi.number().optional(),
     porUnidad: Joi.bool().optional(),
-    categoriaId: Joi.number().optional(),
+    categoriaId: Joi.number().required(),
 })
 
 const updateItemInventarioSchema = Joi.object({

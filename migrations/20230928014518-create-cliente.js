@@ -22,6 +22,8 @@ module.exports = {
             },
             cuenta: {
                 type: Sequelize.FLOAT,
+                allowNull: true,
+                defaultValue: 0,
             },
             createdAt: {
                 allowNull: false,

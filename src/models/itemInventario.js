@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
                     model: 'Categorias',
                     key: 'id',
                 },
-                allowNull: true,
+                allowNull: false,
             },
             cantxCasillero:{
                 type: DataTypes.INTEGER,
