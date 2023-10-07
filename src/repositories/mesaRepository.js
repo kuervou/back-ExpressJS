@@ -25,6 +25,13 @@ const mesaRepository = {
             where: { id: id },
         })
     },
+    findByNroMesa: async (nroMesa) => {
+        return await Mesa.findOne({
+            where: {
+                nroMesa: nroMesa
+            }
+        });
+    },
 }
 
 module.exports = mesaRepository

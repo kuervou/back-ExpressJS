@@ -29,6 +29,11 @@ const clienteRepository = {
             where: { id: id },
         })
     },
+
+    findByNombreAndApellido: async (nombre, apellido) => {
+        return await Cliente.findOne({ where: { nombre, apellido } });
+    },
+    
 }
 
 module.exports = clienteRepository

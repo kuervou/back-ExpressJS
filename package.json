@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "local": "cross-env NODE_ENV=LOCAL node src/app.js",
+        "local": "cross-env NODE_ENV=LOCAL node --watch src/app.js",
         "migrate:local": "cross-env NODE_ENV=LOCAL npx sequelize-cli db:migrate",
         "undoMigrations:local": "cross-env NODE_ENV=LOCAL db:migrate:undo:all --config ./config/config.js",
         "test": "cross-env NODE_ENV=TEST jest --coverage",

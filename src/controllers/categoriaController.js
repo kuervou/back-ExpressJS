@@ -5,7 +5,8 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const categoriaController = {
     crearCategoria: asyncHandler(async (req, res) => {
         const { nombre } = req.body
-        await categoriaService.crearCategoria(nombre)
+        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
+        await categoriaService.crearCategoria(nombreNormalizado)
         res.status(HttpCode.CREATED).json({ message: 'Categoria creada' })
     }),
 
@@ -29,10 +30,10 @@ const categoriaController = {
     updateCategoria: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre } = req.body
-
+        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
         const categoriaActualizada = await categoriaService.updateCategoria(
             id,
-            nombre
+            nombreNormalizado
         )
 
         if (categoriaActualizada[0] === 0) {

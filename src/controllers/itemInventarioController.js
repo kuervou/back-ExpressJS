@@ -5,7 +5,8 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const itemInventarioController = {
     crearItemInventario: asyncHandler(async (req, res) => {
         const { nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId  } = req.body
-        await itemInventarioService.crearItemInventario(nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId)
+        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
+        await itemInventarioService.crearItemInventario(nombreNormalizado, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId)
         res.status(HttpCode.CREATED).json({ message: 'ItemInventario creado' })
     }),
 
@@ -29,8 +30,9 @@ const itemInventarioController = {
     updateItemInventario: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId } = req.body
+        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
 
-        const itemInventarioActualizado = await itemInventarioService.updateItemInventario(id, nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId)
+        const itemInventarioActualizado = await itemInventarioService.updateItemInventario(id, nombreNormalizado, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId)
 
         if (itemInventarioActualizado[0] === 0) {
             // Si la cantidad de registros actualizados es 0

@@ -49,6 +49,9 @@ const itemInventarioRepository = {
             where: { id: id },
         })
     },
+    findByNombre: async (nombre) => {
+        return await ItemInventario.findOne({ where: { nombre: nombre.toLowerCase() } });
+    },
 }
 
 module.exports = itemInventarioRepository

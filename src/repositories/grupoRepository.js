@@ -24,6 +24,9 @@ const grupoRepository = {
             where: { id: id },
         })
     },
+    findByNombre: async (nombre) => {
+        return await Grupo.findOne({ where: { nombre: nombre.toLowerCase() } });
+    },
 }
 
 module.exports = grupoRepository
