@@ -22,6 +22,7 @@ back-expressJS/: carpeta que contiene la mayoria de archivos del proyecto
         index.js: Archivo principal que inicia el servidor y hace migraciones dependiendo el entorno
     tests/: Contiene los archivos para el testing
         utils:/ FUnciones y recursos auxiliares (token generator)
+    .dockerignore: COntiene archivosy carpetas ignorados por docker
     .env: Contiene variables de entorno.
     .eslintrc.json: contiene configuración para eslint (checkeo de código)
     .gitignore: archivos a ignorar por git

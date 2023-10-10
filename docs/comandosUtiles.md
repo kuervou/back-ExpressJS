@@ -13,3 +13,5 @@ npm run lint:check: chequeo de errores por eslint
 npm run lint:fix: ajuste de errores por eslint
 
 npx sequelize-cli migration:generate --name create-nombreDelModelo: Crear migration
+
+docker-compose -f docker-compose.dev.yml run backend npm run seed:development: poblar con datos la bd del contenedor

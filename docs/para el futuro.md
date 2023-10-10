@@ -1,7 +1,8 @@
 
 # EN LO QUE QUEDÉ:
 
-### ver de hacer test complejos: se puedesn hacer test con diferentes tokens y diferentes roles
+### OJO CON EL CAMPO ACTIVO: verificar el borrado logico (no dejar loguear a un usuario con el campo activo en false, y ver de implementar metodos para el borrado logico)
+
 
 
 
@@ -19,7 +20,7 @@
 
 - Documentar con comentarios.
 
-- **Test automatizados**: Realizar casos más completos.
+- **Test automatizados**: Realizar casos más completos. se puedesn hacer test con diferentes tokens y diferentes roles
 
 - Implementar manejo de error `404`.
 
