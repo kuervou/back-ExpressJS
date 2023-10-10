@@ -15,13 +15,13 @@ router.post(
     empleadoController.crearEmpleado
 ) //agregarle el auth luego
 router.post('/login', validate(loginSchema), empleadoController.login)
-router.get('/empleados', auth, empleadoController.getEmpleados)
-router.get('/empleados/:id', auth, empleadoController.getEmpleadoById)
+router.get('/empleados', auth(['Admin']), empleadoController.getEmpleados)
+router.get('/empleados/:id', auth(['Admin']), empleadoController.getEmpleadoById)
 router.put(
     '/empleados/:id',
-    [auth, validate(updateEmpleadoSchema)],
+    [auth(['Admin']), validate(updateEmpleadoSchema)],
     empleadoController.updateEmpleado
 )
-router.delete('/empleados/:id', auth, empleadoController.deleteEmpleado)
+router.delete('/empleados/:id', auth(['Admin']), empleadoController.deleteEmpleado)
 
 module.exports = router

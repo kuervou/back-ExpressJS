@@ -5,14 +5,14 @@ const validate = require('../middleware/validate')
 const { cajaSchema } = require('./validations/cajaValidation')
 const auth = require('../middleware/auth')
 
-router.post('/cajas', [auth, validate(cajaSchema)], cajaController.crearCaja)
-router.get('/cajas', auth, cajaController.getCajas)
-router.get('/cajas/:id', auth, cajaController.getCajaById)
+router.post('/cajas', [auth(['Admin']), validate(cajaSchema)], cajaController.crearCaja)
+router.get('/cajas', auth(['Admin']), cajaController.getCajas)
+router.get('/cajas/:id', auth(['Admin']), cajaController.getCajaById)
 router.put(
     '/cajas/:id',
-    [auth, validate(cajaSchema)],
+    [auth(['Admin']), validate(cajaSchema)],
     cajaController.updateCaja
 )
-router.delete('/cajas/:id', auth, cajaController.deleteCaja)
+router.delete('/cajas/:id', auth(['Admin']), cajaController.deleteCaja)
 
 module.exports = router

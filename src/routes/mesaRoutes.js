@@ -5,14 +5,14 @@ const validate = require('../middleware/validate')
 const { updateMesaSchema, mesaSchema } = require('./validations/mesaValidation')
 const auth = require('../middleware/auth')
 
-router.post('/mesas', [auth, validate(mesaSchema)], mesaController.crearMesa)
-router.get('/mesas', auth, mesaController.getMesas)
-router.get('/mesas/:id', auth, mesaController.getMesaById)
+router.post('/mesas', [auth(['Admin']), validate(mesaSchema)], mesaController.crearMesa)
+router.get('/mesas', auth(['Admin', 'Mozo']), mesaController.getMesas)
+router.get('/mesas/:id', auth(['Admin', 'Mozo']), mesaController.getMesaById)
 router.put(
     '/mesas/:id',
-    [auth, validate(updateMesaSchema)],
+    [auth(['Admin', 'Mozo']), validate(updateMesaSchema)],
     mesaController.updateMesa
 )
-router.delete('/mesas/:id', auth, mesaController.deleteMesa)
+router.delete('/mesas/:id', auth(['Admin']), mesaController.deleteMesa)
 
 module.exports = router

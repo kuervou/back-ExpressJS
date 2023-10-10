@@ -7,16 +7,16 @@ const auth = require('../middleware/auth')
 
 router.post(
     '/itemsInventario',
-    [auth, validate(itemInventarioSchema)],
+    [auth(['Admin']), validate(itemInventarioSchema)],
     itemInventarioController.crearItemInventario
 )
-router.get('/itemsInventario', auth, itemInventarioController.getItemsInventario)
-router.get('/itemsInventario/:id', auth, itemInventarioController.getItemInventarioById)
+router.get('/itemsInventario', auth(['Admin']), itemInventarioController.getItemsInventario)
+router.get('/itemsInventario/:id', auth(['Admin']), itemInventarioController.getItemInventarioById)
 router.put(
     '/itemsInventario/:id',
-    [auth, validate(updateItemInventarioSchema)],
+    [auth(['Admin']), validate(updateItemInventarioSchema)],
     itemInventarioController.updateItemInventario
 )
-router.delete('/itemsInventario/:id', auth, itemInventarioController.deleteItemInventario)
+router.delete('/itemsInventario/:id', auth(['Admin']), itemInventarioController.deleteItemInventario)
 
 module.exports = router

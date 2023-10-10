@@ -7,16 +7,16 @@ const auth = require('../middleware/auth')
 
 router.post(
     '/categorias',
-    [auth, validate(categoriaSchema)],
+    [auth(['Admin']), validate(categoriaSchema)],
     categoriaController.crearCategoria
 )
-router.get('/categorias', auth, categoriaController.getCategorias)
-router.get('/categorias/:id', auth, categoriaController.getCategoriaById)
+router.get('/categorias', auth(['Admin']), categoriaController.getCategorias)
+router.get('/categorias/:id', auth(['Admin']), categoriaController.getCategoriaById)
 router.put(
     '/categorias/:id',
-    [auth, validate(categoriaSchema)],
+    [auth(['Admin']), validate(categoriaSchema)],
     categoriaController.updateCategoria
 )
-router.delete('/categorias/:id', auth, categoriaController.deleteCategoria)
+router.delete('/categorias/:id', auth(['Admin']), categoriaController.deleteCategoria)
 
 module.exports = router

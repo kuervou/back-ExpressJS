@@ -32,15 +32,20 @@ clienteService.getClienteById = jest.fn((id) => {
 clienteService.crearCliente = jest.fn().mockResolvedValue(true);
 clienteService.updateCliente = jest.fn().mockResolvedValue([1]); // Suponemos que retorna el número de registros actualizados
 clienteService.deleteCliente = jest.fn().mockResolvedValue(1); // Suponemos que retorna el número de registros eliminados
-
-const validToken = generateTokenForTesting();  
   
 
   describe('clienteController Tests', () => {
+    let authToken;
+
+    // Esto se ejecutará antes de cada prueba
+    beforeEach(() => {
+        authToken = `Bearer ${generateTokenForTesting()}`;
+    });
+
     // Test para getClientes
     it('should return a list of clients', async () => {
         const res = await request(app).get('/api/clientes')
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', authToken);
         expect(res.statusCode).toEqual(200);
         
         expect(res.body).toEqual([ClienteMock.toJSON()]);
@@ -48,20 +53,20 @@ const validToken = generateTokenForTesting();
 
     // Test para getClienteById
     it('should return a client by ID', async () => {
-        const res = await request(app).get('/api/clientes/1').set('Authorization', `Bearer ${validToken}`);
+        const res = await request(app).get('/api/clientes/1').set('Authorization', authToken);
         expect(res.statusCode).toEqual(200);
 
         expect(res.body).toEqual(ClienteMock.toJSON());
     });
 
     it('should return 404 if client is not found by ID', async () => {
-        const res = await request(app).get('/api/clientes/2').set('Authorization', `Bearer ${validToken}`);
+        const res = await request(app).get('/api/clientes/2').set('Authorization', authToken);
         expect(res.statusCode).toEqual(404);
     });
 
     // Test para crearCliente
     it('should create a client', async () => {
-        const res = await request(app).post('/api/clientes').set('Authorization', `Bearer ${validToken}`).send({
+        const res = await request(app).post('/api/clientes').set('Authorization', authToken).send({
             nombre: 'John',
             apellido: 'Does',
             telefono: '123456789'
@@ -72,7 +77,7 @@ const validToken = generateTokenForTesting();
 
     // Test para updateCliente
     it('should update a client', async () => {
-        const res = await request(app).put('/api/clientes/1').set('Authorization', `Bearer ${validToken}`).send({
+        const res = await request(app).put('/api/clientes/1').set('Authorization', authToken).send({
             nombre: 'John',
             apellido: 'Doe Updated',
             telefono: '123456789',
@@ -84,7 +89,7 @@ const validToken = generateTokenForTesting();
 
     it('should return 404 if client to update is not found', async () => {
         clienteService.updateCliente.mockResolvedValue([0]);
-        const res = await request(app).put('/api/clientes/2').set('Authorization', `Bearer ${validToken}`).send({
+        const res = await request(app).put('/api/clientes/2').set('Authorization', authToken).send({
             nombre: 'John',
             apellido: 'Doe Updated',
             telefono: '123456789',
@@ -95,14 +100,14 @@ const validToken = generateTokenForTesting();
 
     // Test para deleteCliente
     it('should delete a client', async () => {
-        const res = await request(app).delete('/api/clientes/1').set('Authorization', `Bearer ${validToken}`);
+        const res = await request(app).delete('/api/clientes/1').set('Authorization', authToken);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Cliente eliminado');
     });
 
     it('should return 404 if client to delete is not found', async () => {
         clienteService.deleteCliente.mockResolvedValue(0);
-        const res = await request(app).delete('/api/clientes/2').set('Authorization', `Bearer ${validToken}`);
+        const res = await request(app).delete('/api/clientes/2').set('Authorization', authToken);
         expect(res.statusCode).toEqual(404);
     });
 });
