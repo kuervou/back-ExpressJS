@@ -1,18 +1,9 @@
 
 # EN LO QUE QUEDÉ:
 
-### Validaciones de usuarios repetidos y esas cosas 
-
-- Validaciones en Capa de Servicio: "Las validaciones de negocios específicas, como comprobar la existencia de una Ciudad, son generalmente mejor manejadas en la capa de servicio."
-
-- Existencia de Referencias: "Como mencionaste, es esencial validar que si se envía un ciudadId, esta ciudad realmente exista en la base de datos antes de asociarla a un Cliente."
+### ver de hacer test complejos: se puedesn hacer test con diferentes tokens y diferentes roles
 
 
-### OJO: 
-
-- Forgot password 
-- paginados 
-- agregar middleware para roles (decodificar el token)
 
 ### LO QUE LE DIJE A GUZMAN:
 - errores manejo y servicio nuevo
@@ -23,7 +14,7 @@
 ---
 
 # Tareas
-
+ 
 ## Pendientes
 
 - Documentar con comentarios.

@@ -15,7 +15,8 @@ const errorHandler = (err, req, res, next) => {
 
         if (
             process.env.NODE_ENV === 'DEVELOPMENT' ||
-            process.env.NODE_ENV === 'LOCAL'
+            process.env.NODE_ENV === 'LOCAL' ||
+            process.env.NODE_ENV === 'TEST'
         ) {
             errorMessage['stack'] = err.stack
         }

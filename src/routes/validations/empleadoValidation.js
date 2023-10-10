@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const ROLES = require('./roles')
+const ROLES = require('../roles/roles')
 
 const empleadoSchema = Joi.object({
     nick: Joi.string().min(4).required(),
