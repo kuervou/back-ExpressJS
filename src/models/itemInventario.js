@@ -6,7 +6,7 @@ module.exports = (sequelize) => {
     class ItemInventario extends Model {
         static associate(models) {
             ItemInventario.belongsTo(models.Categoria, {
-                as: 'Categoria', foreignKey: 'categoriaId', //usamos el alias para poder hacer referencia en "getItemInventarioById" del repository
+                as: 'categoria', foreignKey: 'categoriaId', //usamos el alias para poder hacer referencia en "getItemInventarioById" del repository
             })
             ItemInventario.hasMany(models.Log, {
                 foreignKey: 'itemInventarioId',
