@@ -6,14 +6,16 @@ const {
     empleadoSchema,
     updateEmpleadoSchema,
     loginSchema,
+    resetPasswordSchema
 } = require('./validations/empleadoValidation')
 const auth = require('../middleware/auth')
 
+//agregarle el auth luego
 router.post(
     '/empleados',
     validate(empleadoSchema),
     empleadoController.crearEmpleado
-) //agregarle el auth luego
+) 
 router.post('/login', validate(loginSchema), empleadoController.login)
 router.get('/empleados', auth(['Admin']), empleadoController.getEmpleados)
 router.get('/empleados/:id', auth(['Admin']), empleadoController.getEmpleadoById)
@@ -23,5 +25,6 @@ router.put(
     empleadoController.updateEmpleado
 )
 router.delete('/empleados/:id', auth(['Admin']), empleadoController.deleteEmpleado)
+router.patch('/resetPassword/:id', auth([]), validate(resetPasswordSchema), empleadoController.resetPassword);
 
 module.exports = router

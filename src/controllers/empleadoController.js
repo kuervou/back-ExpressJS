@@ -108,6 +108,26 @@ const empleadoController = {
             },
         })
     }),
+
+    
+    resetPassword: asyncHandler(async (req, res) => {
+        const id = req.params.id;
+        const { currentPassword, newPassword } = req.body;
+    
+        if (!currentPassword || !newPassword) {
+            throw new HttpError(HttpCode.BAD_REQUEST, 'Se necesita la contraseña actual y la nueva contraseña');
+        }
+    
+        const empleado = await empleadoService.authenticateById(id, currentPassword);
+        
+        if (!empleado) {
+            throw new HttpError(HttpCode.UNAUTHORIZED, 'Contraseña actual incorrecta');
+        }
+    
+        await empleadoService.resetPassword(id, newPassword);
+    
+        res.status(HttpCode.OK).json({ message: 'Contraseña actualizada' });
+    })
 }
 
 module.exports = empleadoController

@@ -80,6 +80,22 @@ const empleadoService = {
 
         return user
     },
+
+    resetPassword: async (id, newPassword) => {
+        return await empleadoRepository.resetPassword(id, newPassword); //la encriptación de la password se hace en un hook de sequelize
+    },
+
+    authenticateById: async (id, password) => {
+        const empleado = await empleadoRepository.getPasswordById(id);
+        
+        if (!empleado) return null;
+    
+        const isPasswordValid = await bcrypt.compare(password, empleado.password);
+        if (!isPasswordValid) return null;
+    
+        return empleado;
+    },
+    
 }
 
 module.exports = empleadoService
