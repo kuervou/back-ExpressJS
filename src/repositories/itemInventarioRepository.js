@@ -18,7 +18,7 @@ const itemInventarioRepository = {
         return await ItemInventario.findAll( {
             include: [{ //para mostrar la categoria de forma más limpia
                 model: Categoria,
-                as: 'Categoria'
+                as: 'categoria'
             }],
             attributes: { 
                 exclude: ['categoriaId', 'porUnidad'], 
@@ -35,7 +35,7 @@ const itemInventarioRepository = {
         return await ItemInventario.findByPk(id, {
             include: [{ //para mostrar la categoria de forma más limpia
                 model: Categoria,
-                as: 'Categoria'
+                as: 'categoria'
             }],
             attributes: { 
                 exclude: ['categoriaId', 'porUnidad'], 

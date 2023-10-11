@@ -93,7 +93,7 @@ const empleadoController = {
                 activo: empleado.activo,
             },
             SECRET_KEY,
-            { expiresIn: '1h' }
+            { expiresIn: '3h' }
         )
 
         res.status(HttpCode.OK).json({
