@@ -7,6 +7,7 @@ const {
     updateEmpleadoSchema,
     loginSchema,
     resetPasswordSchema,
+    querySchema,
 } = require('./validations/empleadoValidation')
 const auth = require('../middleware/auth')
 
@@ -16,7 +17,12 @@ router.post(
     validate(empleadoSchema),
     empleadoController.crearEmpleado
 )
-router.post('/login', validate(loginSchema), empleadoController.login)
+router.post(
+    '/login',
+    validate(loginSchema),
+    validate(querySchema, 'query'),
+    empleadoController.login
+)
 router.get('/empleados', auth(['Admin']), empleadoController.getEmpleados)
 router.get(
     '/empleados/:id',

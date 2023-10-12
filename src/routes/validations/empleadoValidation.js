@@ -44,9 +44,19 @@ const resetPasswordSchema = Joi.object({
         .required(),
 })
 
+const querySchema = Joi.object({
+    page: Joi.number().integer().min(1).optional(),
+    limit: Joi.number().integer().min(1).max(100).optional(),
+    nombre: Joi.string().max(255).optional(),
+    apellido: Joi.string().max(255).optional(),
+    rol: Joi.string().max(32).optional(),
+    nick: Joi.string().max(255).optional(),
+})
+
 module.exports = {
     empleadoSchema,
     updateEmpleadoSchema,
     loginSchema,
     resetPasswordSchema,
+    querySchema,
 }

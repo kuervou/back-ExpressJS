@@ -19,7 +19,21 @@ const empleadoController = {
     }),
 
     getEmpleados: asyncHandler(async (req, res) => {
-        const empleados = await empleadoService.getEmpleados()
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const filterName = req.query.nombre || ''
+        const filterApellido = req.query.apellido || ''
+        const filterNick = req.query.nick || ''
+        const filterRol = req.query.rol || ''
+
+        const empleados = await empleadoService.getEmpleados({
+            page,
+            limit,
+            nick: filterNick,
+            rol: filterRol,
+            nombre: filterName,
+            apellido: filterApellido,
+        })
         res.json(empleados)
     }),
 

@@ -1,4 +1,5 @@
 const { Empleado } = require('../models')
+const { Op } = require('sequelize')
 
 const empleadoRepository = {
     create: async (nick, nombre, apellido, password, telefono, rol) => {
@@ -12,9 +13,22 @@ const empleadoRepository = {
         })
         return nuevoEmpleado
     },
-    findAll: async () => {
+    findAll: async (options = {}) => {
+        const { page = 1, limit = 10, nombre, apellido, nick, rol } = options
+
+        const offset = (page - 1) * limit
+
+        const whereClause = {}
+        if (nick) whereClause.nick = { [Op.like]: `%${nick}%` }
+        if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
+        if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
+        if (rol) whereClause.rol = { [Op.like]: `%${rol}%` }
+
         return await Empleado.findAll({
-            attributes: { exclude: ['password'] },
+            where: whereClause,
+            offset,
+            limit,
+            order: [['nombre', 'ASC']],
         })
     },
 

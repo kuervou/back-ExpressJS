@@ -37,8 +37,8 @@ const empleadoService = {
         )
     },
 
-    getEmpleados: async function () {
-        return await empleadoRepository.findAll()
+    getEmpleados: async function (options = {}) {
+        return await empleadoRepository.findAll(options)
     },
 
     getEmpleadoById: async (id) => {
