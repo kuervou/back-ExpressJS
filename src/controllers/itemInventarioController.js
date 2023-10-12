@@ -11,8 +11,16 @@ const itemInventarioController = {
     }),
 
     getItemsInventario: asyncHandler(async (req, res) => {
-        const itemsInventario = await itemInventarioService.getItemsInventario()
-        res.json(itemsInventario)
+        const { page, limit, nombre, categoriaId } = req.query;
+    
+        const options = {};
+        if (page) options.page = +page;
+        if (limit) options.limit = +limit;
+        if (nombre) options.nombre = nombre;
+        if (categoriaId) options.categoriaId = +categoriaId;
+    
+        const itemsInventario = await itemInventarioService.getItemsInventario(options);
+        res.json(itemsInventario);
     }),
 
     getItemInventarioById: asyncHandler(async (req, res) => {
@@ -30,7 +38,7 @@ const itemInventarioController = {
     updateItemInventario: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId } = req.body
-        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
+        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined; //normalizamos el nombre
 
         const itemInventarioActualizado = await itemInventarioService.updateItemInventario(id, nombreNormalizado, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId)
 

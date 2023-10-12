@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const itemInventarioController = require('../controllers/itemInventarioController')
 const validate = require('../middleware/validate')
-const { itemInventarioSchema, updateItemInventarioSchema } = require('./validations/itemInventarioValidation')
+const { itemInventarioSchema, updateItemInventarioSchema, querySchema } = require('./validations/itemInventarioValidation')
 const auth = require('../middleware/auth')
 
 router.post(
@@ -10,7 +10,8 @@ router.post(
     [auth(['Admin']), validate(itemInventarioSchema)],
     itemInventarioController.crearItemInventario
 )
-router.get('/itemsInventario', auth(['Admin']), itemInventarioController.getItemsInventario)
+router.get('/itemsInventario',
+ auth(['Admin']), validate(querySchema, 'query'), itemInventarioController.getItemsInventario)
 router.get('/itemsInventario/:id', auth(['Admin']), itemInventarioController.getItemInventarioById)
 router.put(
     '/itemsInventario/:id',

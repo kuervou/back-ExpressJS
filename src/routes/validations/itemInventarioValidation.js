@@ -21,10 +21,15 @@ const updateItemInventarioSchema = Joi.object({
     categoriaId: Joi.number().optional(),
 })
 
-
+const querySchema = Joi.object({
+    page: Joi.number().integer().min(1).optional(),
+    limit: Joi.number().integer().min(1).max(100).optional(),
+    nombre: Joi.string().max(255).optional(),
+    categoriaId: Joi.number().integer().positive().optional()
+});
 
 module.exports = {
     itemInventarioSchema,
     updateItemInventarioSchema,
-  
+    querySchema
 }

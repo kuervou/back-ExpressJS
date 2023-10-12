@@ -24,8 +24,8 @@ const itemInventarioService = {
         await checkCategoriaExists(categoriaId);
         return await itemInventarioRepository.create(nombre, descripcion, stock, costo, cantxCasillero, porUnidad, categoriaId);
     },
-    getItemsInventario: async function () {
-        return await itemInventarioRepository.findAll()
+    getItemsInventario: async function (options = {}) {
+        return await itemInventarioRepository.findAll(options);
     },
 
     getItemInventarioById: async (id) => {
@@ -33,8 +33,12 @@ const itemInventarioService = {
     },
 
     updateItemInventario: async (id, nombre, descripcion, stock, costo, cantxCasillero, porUnidad, categoriaId) => {
-        await checkNombreUnique(nombre, id); // El id se pasa para excluirlo y permitir la actualización de otros campos sin cambiar el nombre
-        await checkCategoriaExists(categoriaId);
+        if(nombre){
+            await checkNombreUnique(nombre, id); // El id se pasa para excluirlo y permitir la actualización de otros campos sin cambiar el nombre
+        }
+        if(categoriaId) {
+            await checkCategoriaExists(categoriaId);
+        }
         return await itemInventarioRepository.update(id, nombre, descripcion, stock, costo, cantxCasillero, porUnidad, categoriaId);
     },
     deleteItemInventario: async (id) => {

@@ -1,5 +1,6 @@
 const { ItemInventario, Categoria } = require('../models')
 const sequelize = require('sequelize');
+const { Op } = require('sequelize'); 
 
 const itemInventarioRepository = {
     create: async (nombre, descripcion, stock, costo, cantxCasillero,porUnidad,categoriaId) => {
@@ -14,15 +15,33 @@ const itemInventarioRepository = {
         })
         return nuevoItemInventario
     },
-    findAll: async () => {
-        return await ItemInventario.findAll( {
-            include: [{ //para mostrar la categoria de forma más limpia
+
+    findAll: async (options = {}) => {
+        const { page = 1, limit = 10, nombre, categoriaId } = options;
+    
+        const offset = (page - 1) * limit;
+    
+        const whereConditions = {}
+        if (nombre) {
+            whereConditions.nombre = {
+                [Op.like]: `%${nombre}%`  // Cambiado a Op.like para MySQL
+            };
+        }
+        if (categoriaId) {
+            whereConditions.categoriaId = categoriaId;
+        }
+    
+        return await ItemInventario.findAll({
+            where: whereConditions,
+            offset,
+            limit,
+            include: [{
                 model: Categoria,
                 as: 'categoria'
             }],
-            attributes: { 
-                exclude: ['categoriaId', 'porUnidad'], 
-                include: [[sequelize.col('porUnidad'), 'ventaPorUnidad']] //para darle un nombre más descriptivo al atributo
+            attributes: {
+                exclude: ['categoriaId', 'porUnidad'],
+                include: [[sequelize.col('porUnidad'), 'ventaPorUnidad']]
             }
         });
     },
