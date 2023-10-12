@@ -35,8 +35,8 @@ const clienteController = {
     updateCliente: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre, apellido, telefono, cuenta } = req.body
-        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
-        const apellidoNormalizado = apellido.toLowerCase() //normalizamos el apellido
+        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined  //normalizamos el nombre
+        const apellidoNormalizado = apellido ? apellido.toLowerCase() : undefined  //normalizamos el apellido
         const clienteActualizado = await clienteService.updateCliente(
             id,
             nombreNormalizado,

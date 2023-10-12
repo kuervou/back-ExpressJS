@@ -36,8 +36,10 @@ const clienteService = {
     },
 
     updateCliente: async (id, nombre, apellido, telefono, cuenta) => {
-        await checkNombreApellidoUnique(nombre, apellido, id)
-        return await clienteRepository.update(
+        if(nombre && apellido){
+            await checkNombreApellidoUnique(nombre, apellido, id)
+        }
+            return await clienteRepository.update(
             id,
             nombre,
             apellido,
