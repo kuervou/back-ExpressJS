@@ -2,7 +2,10 @@ const express = require('express')
 const router = express.Router()
 const categoriaController = require('../controllers/categoriaController')
 const validate = require('../middleware/validate')
-const { categoriaSchema } = require('./validations/categoriaValidation')
+const {
+    querySchema,
+    categoriaSchema,
+} = require('./validations/categoriaValidation')
 const auth = require('../middleware/auth')
 
 router.post(
@@ -10,7 +13,12 @@ router.post(
     [auth(['Admin']), validate(categoriaSchema)],
     categoriaController.crearCategoria
 )
-router.get('/categorias', auth(['Admin']), categoriaController.getCategorias)
+router.get(
+    '/categorias',
+    auth(['Admin']),
+    validate(querySchema, 'query'),
+    categoriaController.getCategorias
+)
 router.get(
     '/categorias/:id',
     auth(['Admin']),

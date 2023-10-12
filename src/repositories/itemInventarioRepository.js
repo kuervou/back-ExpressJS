@@ -32,7 +32,7 @@ const itemInventarioRepository = {
         const whereConditions = {}
         if (nombre) {
             whereConditions.nombre = {
-                [Op.like]: `%${nombre}%`, // Cambiado a Op.like para MySQL
+                [Op.like]: `%${nombre}%`,
             }
         }
         if (categoriaId) {

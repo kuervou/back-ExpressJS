@@ -11,7 +11,15 @@ const categoriaController = {
     }),
 
     getCategorias: asyncHandler(async (req, res) => {
-        const categorias = await categoriaService.getCategorias()
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const filterName = req.query.nombre || ''
+
+        const categorias = await categoriaService.getCategorias({
+            page,
+            limit,
+            nombre: filterName,
+        })
         res.json(categorias)
     }),
 
@@ -30,7 +38,7 @@ const categoriaController = {
     updateCategoria: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre } = req.body
-        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
         const categoriaActualizada = await categoriaService.updateCategoria(
             id,
             nombreNormalizado

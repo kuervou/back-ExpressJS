@@ -22,8 +22,8 @@ const categoriaService = {
         await checkNombreUnique(nombre)
         return await categoriaRepository.create(nombre)
     },
-    getCategorias: async function () {
-        return await categoriaRepository.findAll()
+    getCategorias: async function (options = {}) {
+        return await categoriaRepository.findAll(options)
     },
 
     getCategoriaById: async (id) => {
@@ -31,7 +31,9 @@ const categoriaService = {
     },
 
     updateCategoria: async (id, nombre) => {
-        await checkNombreUnique(nombre, id)
+        if (nombre) {
+            await checkNombreUnique(nombre, id)
+        }
         return await categoriaRepository.update(id, nombre)
     },
 
