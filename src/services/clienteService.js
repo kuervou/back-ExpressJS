@@ -27,8 +27,8 @@ const clienteService = {
         return await clienteRepository.create(nombre, apellido, telefono)
     },
 
-    getClientes: async function () {
-        return await clienteRepository.findAll()
+    getClientes: async function (options = {}) {
+        return await clienteRepository.findAll(options)
     },
 
     getClienteById: async (id) => {
@@ -36,10 +36,10 @@ const clienteService = {
     },
 
     updateCliente: async (id, nombre, apellido, telefono, cuenta) => {
-        if(nombre && apellido){
+        if (nombre && apellido) {
             await checkNombreApellidoUnique(nombre, apellido, id)
         }
-            return await clienteRepository.update(
+        return await clienteRepository.update(
             id,
             nombre,
             apellido,

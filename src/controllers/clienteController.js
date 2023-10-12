@@ -16,7 +16,17 @@ const clienteController = {
     }),
 
     getClientes: asyncHandler(async (req, res) => {
-        const clientes = await clienteService.getClientes()
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const filterName = req.query.nombre || ''
+        const filterApellido = req.query.apellido || ''
+
+        const clientes = await clienteService.getClientes({
+            page,
+            limit,
+            nombre: filterName,
+            apellido: filterApellido,
+        })
         res.json(clientes)
     }),
 
@@ -35,8 +45,10 @@ const clienteController = {
     updateCliente: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre, apellido, telefono, cuenta } = req.body
-        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined  //normalizamos el nombre
-        const apellidoNormalizado = apellido ? apellido.toLowerCase() : undefined  //normalizamos el apellido
+        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
+        const apellidoNormalizado = apellido
+            ? apellido.toLowerCase()
+            : undefined //normalizamos el apellido
         const clienteActualizado = await clienteService.updateCliente(
             id,
             nombreNormalizado,

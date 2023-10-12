@@ -1,4 +1,5 @@
 const { Cliente } = require('../models')
+const { Op } = require('sequelize')
 
 const clienteRepository = {
     create: async (nombre, apellido, telefono) => {
@@ -9,8 +10,21 @@ const clienteRepository = {
         })
         return nuevoCliente
     },
-    findAll: async () => {
-        return await Cliente.findAll()
+    findAll: async (options = {}) => {
+        const { page = 1, limit = 10, nombre, apellido } = options
+
+        const offset = (page - 1) * limit
+
+        const whereClause = {}
+        if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
+        if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
+
+        return await Cliente.findAll({
+            where: whereClause,
+            offset,
+            limit,
+            order: [['nombre', 'ASC']],
+        })
     },
 
     update: async (id, nombre, apellido, telefono, cuenta) => {
