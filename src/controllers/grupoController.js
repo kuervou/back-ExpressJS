@@ -5,8 +5,8 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const grupoController = {
     crearGrupo: asyncHandler(async (req, res) => {
         const { nombre } = req.body
-        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
-        await grupoService.crearGrupo(nombreNormalizado);
+        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        await grupoService.crearGrupo(nombreNormalizado)
         res.status(HttpCode.CREATED).json({ message: 'Grupo creado' })
     }),
 
@@ -30,8 +30,11 @@ const grupoController = {
     updateGrupo: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre } = req.body
-        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
-        const grupoActualizado = await grupoService.updateGrupo(id, nombreNormalizado)
+        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        const grupoActualizado = await grupoService.updateGrupo(
+            id,
+            nombreNormalizado
+        )
 
         if (grupoActualizado[0] === 0) {
             // Si la cantidad de registros actualizados es 0

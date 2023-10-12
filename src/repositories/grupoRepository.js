@@ -25,7 +25,7 @@ const grupoRepository = {
         })
     },
     findByNombre: async (nombre) => {
-        return await Grupo.findOne({ where: { nombre: nombre.toLowerCase() } });
+        return await Grupo.findOne({ where: { nombre: nombre.toLowerCase() } })
     },
 }
 

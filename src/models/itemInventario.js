@@ -6,7 +6,8 @@ module.exports = (sequelize) => {
     class ItemInventario extends Model {
         static associate(models) {
             ItemInventario.belongsTo(models.Categoria, {
-                as: 'categoria', foreignKey: 'categoriaId', //usamos el alias para poder hacer referencia en "getItemInventarioById" del repository
+                as: 'categoria',
+                foreignKey: 'categoriaId', //usamos el alias para poder hacer referencia en "getItemInventarioById" del repository
             })
             ItemInventario.hasMany(models.Log, {
                 foreignKey: 'itemInventarioId',
@@ -31,7 +32,7 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            descripcion:{
+            descripcion: {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
@@ -56,17 +57,16 @@ module.exports = (sequelize) => {
                 },
                 allowNull: false,
             },
-            cantxCasillero:{
+            cantxCasillero: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
-            } 
-
+            },
         },
         {
             sequelize,
             modelName: 'ItemInventario',
-            tableName: 'ItemsInventario',//porque sequelize sino va a buscar la tabla "ItemInventarios"
-            timestamps: true
+            tableName: 'ItemsInventario', //porque sequelize sino va a buscar la tabla "ItemInventarios"
+            timestamps: true,
         }
     )
     return ItemInventario

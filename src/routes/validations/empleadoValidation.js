@@ -37,16 +37,16 @@ const loginSchema = Joi.object({
 
 const resetPasswordSchema = Joi.object({
     currentPassword: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')) //modificar por una mas compleja
-    .required(),
+        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')) //modificar por una mas compleja
+        .required(),
     newPassword: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')) //modificar por una mas compleja
-    .required(),
+        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')) //modificar por una mas compleja
+        .required(),
 })
 
 module.exports = {
     empleadoSchema,
     updateEmpleadoSchema,
     loginSchema,
-    resetPasswordSchema
+    resetPasswordSchema,
 }

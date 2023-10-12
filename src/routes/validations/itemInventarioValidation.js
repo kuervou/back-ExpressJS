@@ -1,6 +1,5 @@
 const Joi = require('joi')
 
-
 const itemInventarioSchema = Joi.object({
     nombre: Joi.string().min(4).required(),
     descripcion: Joi.string().min(4).optional(),
@@ -25,11 +24,11 @@ const querySchema = Joi.object({
     page: Joi.number().integer().min(1).optional(),
     limit: Joi.number().integer().min(1).max(100).optional(),
     nombre: Joi.string().max(255).optional(),
-    categoriaId: Joi.number().integer().positive().optional()
-});
+    categoriaId: Joi.number().integer().positive().optional(),
+})
 
 module.exports = {
     itemInventarioSchema,
     updateItemInventarioSchema,
-    querySchema
+    querySchema,
 }

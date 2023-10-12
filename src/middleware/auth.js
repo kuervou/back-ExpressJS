@@ -14,7 +14,7 @@ module.exports = function (allowedRoles = []) {
     return function (req, res, next) {
         const token = req.header('Authorization')
             ? req.header('Authorization').replace('Bearer ', '')
-            : null;
+            : null
 
         if (!token) {
             throw new HttpError(
@@ -25,7 +25,7 @@ module.exports = function (allowedRoles = []) {
 
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
-            req.user = decoded;
+            req.user = decoded
 
             // Comprobar si el rol del usuario está permitido
             if (allowedRoles.length && !allowedRoles.includes(decoded.rol)) {
@@ -35,13 +35,12 @@ module.exports = function (allowedRoles = []) {
                 )
             }
 
-            next();
+            next()
         } catch (ex) {
             if (ex instanceof jwt.JsonWebTokenError) {
-                throw new HttpError(HttpCode.BAD_REQUEST, 'Token inválido.');
+                throw new HttpError(HttpCode.BAD_REQUEST, 'Token inválido.')
             }
-            throw ex;
+            throw ex
         }
     }
 }
-

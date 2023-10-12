@@ -44,7 +44,7 @@ const empleadoRepository = {
         return await Empleado.findOne({
             where: { id: id },
             attributes: ['id', 'password'],
-        });
+        })
     },
 
     findByNick: async (nick) => {
@@ -58,14 +58,13 @@ const empleadoRepository = {
     },
 
     resetPassword: async (id, newPassword) => {
-        const empleado = await Empleado.findByPk(id);
+        const empleado = await Empleado.findByPk(id)
         if (!empleado) {
-            throw new Error('Empleado no encontrado');
+            throw new Error('Empleado no encontrado')
         }
-        empleado.password = newPassword;
-        return await empleado.save();
-    }
-    
+        empleado.password = newPassword
+        return await empleado.save()
+    },
 }
 
 module.exports = empleadoRepository

@@ -30,6 +30,6 @@ module.exports = {
         database: process.env.LOCAL_DB_NAME,
         host: process.env.LOCAL_DB_HOST,
         dialect: 'mysql',
-        logging: console.log
+        logging: console.log,
     },
 }

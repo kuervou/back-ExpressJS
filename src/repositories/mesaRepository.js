@@ -28,9 +28,9 @@ const mesaRepository = {
     findByNroMesa: async (nroMesa) => {
         return await Mesa.findOne({
             where: {
-                nroMesa: nroMesa
-            }
-        });
+                nroMesa: nroMesa,
+            },
+        })
     },
 }
 

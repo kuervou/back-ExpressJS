@@ -37,5 +37,4 @@ socketHandler(io)
 
 app.use(errorHandler)
 
-
 module.exports = { app, http, io, db }

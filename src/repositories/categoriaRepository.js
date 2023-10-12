@@ -26,9 +26,10 @@ const categoriaRepository = {
     },
 
     findByNombre: async (nombre) => {
-        return await Categoria.findOne({ where: { nombre: nombre.toLowerCase() } });
+        return await Categoria.findOne({
+            where: { nombre: nombre.toLowerCase() },
+        })
     },
-    
 }
 
 module.exports = categoriaRepository

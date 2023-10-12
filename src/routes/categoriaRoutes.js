@@ -11,12 +11,20 @@ router.post(
     categoriaController.crearCategoria
 )
 router.get('/categorias', auth(['Admin']), categoriaController.getCategorias)
-router.get('/categorias/:id', auth(['Admin']), categoriaController.getCategoriaById)
+router.get(
+    '/categorias/:id',
+    auth(['Admin']),
+    categoriaController.getCategoriaById
+)
 router.put(
     '/categorias/:id',
     [auth(['Admin']), validate(categoriaSchema)],
     categoriaController.updateCategoria
 )
-router.delete('/categorias/:id', auth(['Admin']), categoriaController.deleteCategoria)
+router.delete(
+    '/categorias/:id',
+    auth(['Admin']),
+    categoriaController.deleteCategoria
+)
 
 module.exports = router

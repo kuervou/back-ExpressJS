@@ -5,9 +5,13 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const clienteController = {
     crearCliente: asyncHandler(async (req, res) => {
         const { nombre, apellido, telefono } = req.body
-        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
-        const apellidoNormalizado = apellido.toLowerCase(); //normalizamos el apellido
-        await clienteService.crearCliente(nombreNormalizado, apellidoNormalizado, telefono)
+        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        const apellidoNormalizado = apellido.toLowerCase() //normalizamos el apellido
+        await clienteService.crearCliente(
+            nombreNormalizado,
+            apellidoNormalizado,
+            telefono
+        )
         res.status(HttpCode.CREATED).json({ message: 'Cliente creado' })
     }),
 
@@ -31,8 +35,8 @@ const clienteController = {
     updateCliente: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre, apellido, telefono, cuenta } = req.body
-        const nombreNormalizado = nombre.toLowerCase(); //normalizamos el nombre
-        const apellidoNormalizado = apellido.toLowerCase(); //normalizamos el apellido
+        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        const apellidoNormalizado = apellido.toLowerCase() //normalizamos el apellido
         const clienteActualizado = await clienteService.updateCliente(
             id,
             nombreNormalizado,

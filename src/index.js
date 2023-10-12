@@ -1,28 +1,28 @@
-const { exec } = require('child_process');
-const { http} = require('./app');  
-const port = 3000; //process.env.PORT
+const { exec } = require('child_process')
+const { http } = require('./app')
+const port = 3000 //process.env.PORT
 
 // Ejecutar migraciones
 if (process.env.NODE_ENV !== 'TEST') {
     exec('npx sequelize-cli db:migrate', (error, stdout) => {
         if (error) {
             // eslint-disable-next-line no-console
-            console.error('Error ejecutando migraciones:', error);
-            return;
+            console.error('Error ejecutando migraciones:', error)
+            return
         }
         // eslint-disable-next-line no-console
-        console.log(stdout);
+        console.log(stdout)
 
         // Iniciar el servidor después de ejecutar las migraciones
         http.listen(port, () => {
             // eslint-disable-next-line no-console
-            console.log(`Aplicación escuchando en http://localhost:${port}`);
-        });
-    });
+            console.log(`Aplicación escuchando en http://localhost:${port}`)
+        })
+    })
 } else {
     // Si estás en un ambiente de prueba, simplemente inicia el servidor sin ejecutar migraciones.
     http.listen(port, () => {
         // eslint-disable-next-line no-console
-        console.log(`Aplicación escuchando en http://localhost:${port}`);
-    });
+        console.log(`Aplicación escuchando en http://localhost:${port}`)
+    })
 }
