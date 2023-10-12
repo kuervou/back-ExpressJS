@@ -1,6 +1,14 @@
 
 # EN LO QUE QUEDÉ:
 
+"
+Actúa como un experto en desarrollo de software con expressJS.
+
+Realiza un implementación para modificar el endpoint get para que devuelva datos paginados y que se puedan filtrar por nombre en el siguiente controlador, servicio y repository.
+
+Utiliza las mejores practicas, patrones y tecnicas de software."
+
+
 ### OJO CON EL CAMPO ACTIVO: verificar el borrado logico (no dejar loguear a un usuario con el campo activo en false, y ver de implementar metodos para el borrado logico)
 
 

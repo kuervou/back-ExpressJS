@@ -11,7 +11,15 @@ const grupoController = {
     }),
 
     getGrupos: asyncHandler(async (req, res) => {
-        const grupos = await grupoService.getGrupos()
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const filterName = req.query.nombre || ''
+
+        const grupos = await grupoService.getGrupos({
+            page,
+            limit,
+            nombre: filterName,
+        })
         res.json(grupos)
     }),
 
@@ -30,7 +38,7 @@ const grupoController = {
     updateGrupo: asyncHandler(async (req, res) => {
         const id = req.params.id
         const { nombre } = req.body
-        const nombreNormalizado = nombre.toLowerCase() //normalizamos el nombre
+        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
         const grupoActualizado = await grupoService.updateGrupo(
             id,
             nombreNormalizado

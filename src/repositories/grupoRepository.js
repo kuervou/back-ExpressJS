@@ -1,4 +1,5 @@
 const { Grupo } = require('../models')
+const { Op } = require('sequelize')
 
 const grupoRepository = {
     create: async (nombre) => {
@@ -7,8 +8,24 @@ const grupoRepository = {
         })
         return nuevoGrupo
     },
-    findAll: async () => {
-        return await Grupo.findAll()
+    findAll: async (options = {}) => {
+        const { page = 1, limit = 10, nombre } = options
+
+        const offset = (page - 1) * limit
+
+        const whereConditions = {}
+        if (nombre) {
+            whereConditions.nombre = {
+                [Op.like]: `%${nombre}%`, // Búsqueda insensible a mayúsculas/minúsculas
+            }
+        }
+
+        return await Grupo.findAll({
+            where: whereConditions,
+            offset,
+            limit,
+            order: [['nombre', 'ASC']],
+        })
     },
 
     update: async (id, nombre) => {

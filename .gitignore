@@ -35,3 +35,6 @@ jspm_packages
 *.tmp
 *.tmp.*
 
+#extra
+docs/para el futuro.md
+docs/para el futuro.md

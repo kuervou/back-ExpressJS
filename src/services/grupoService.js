@@ -18,8 +18,8 @@ const grupoService = {
         await checkNombreUnique(nombre)
         return await grupoRepository.create(nombre)
     },
-    getGrupos: async function () {
-        return await grupoRepository.findAll()
+    getGrupos: async function (options = {}) {
+        return await grupoRepository.findAll(options)
     },
 
     getGrupoById: async (id) => {
@@ -27,7 +27,9 @@ const grupoService = {
     },
 
     updateGrupo: async (id, nombre) => {
-        await checkNombreUnique(nombre, id)
+        if (nombre) {
+            await checkNombreUnique(nombre, id)
+        }
         return await grupoRepository.update(id, nombre)
     },
     deleteGrupo: async (id) => {
