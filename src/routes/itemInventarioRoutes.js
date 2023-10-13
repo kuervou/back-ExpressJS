@@ -6,6 +6,7 @@ const {
     itemInventarioSchema,
     updateItemInventarioSchema,
     querySchema,
+    updateStockSchema,
 } = require('./validations/itemInventarioValidation')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../routes/roles/roles')
@@ -35,6 +36,11 @@ router.delete(
     '/itemsInventario/:id',
     auth([ROLES.ADMIN]),
     itemInventarioController.deleteItemInventario
+)
+router.put(
+    '/itemsInventario/:id/stock',
+    [auth([ROLES.ADMIN]), validate(updateStockSchema)], // Asumiendo que defines un esquema de validación
+    itemInventarioController.updateStock
 )
 
 module.exports = router

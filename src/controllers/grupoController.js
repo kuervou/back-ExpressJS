@@ -37,12 +37,9 @@ const grupoController = {
 
     updateGrupo: asyncHandler(async (req, res) => {
         const id = req.params.id
-        const { nombre } = req.body
-        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
-        const grupoActualizado = await grupoService.updateGrupo(
-            id,
-            nombreNormalizado
-        )
+        let { nombre } = req.body
+        nombre = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
+        const grupoActualizado = await grupoService.updateGrupo(id, nombre)
 
         if (grupoActualizado[0] === 0) {
             // Si la cantidad de registros actualizados es 0

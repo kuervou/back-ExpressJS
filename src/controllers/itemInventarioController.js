@@ -59,7 +59,6 @@ const itemInventarioController = {
     updateItemInventario: asyncHandler(async (req, res) => {
         const id = req.params.id
         const {
-            nombre,
             descripcion,
             stock,
             costo,
@@ -67,12 +66,13 @@ const itemInventarioController = {
             porUnidad,
             categoriaId,
         } = req.body
-        const nombreNormalizado = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
+        let { nombre } = req.body
+        nombre = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
 
         const itemInventarioActualizado =
             await itemInventarioService.updateItemInventario(
                 id,
-                nombreNormalizado,
+                nombre,
                 descripcion,
                 stock,
                 costo,
@@ -105,6 +105,19 @@ const itemInventarioController = {
         }
 
         res.status(HttpCode.OK).json({ message: 'ItemInventario eliminado' })
+    }),
+
+    updateStock: asyncHandler(async (req, res) => {
+        const id = req.params.id
+        const { amount } = req.body
+        const updatedItem = await itemInventarioService.updateStock(id, amount)
+        if (!updatedItem) {
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                'ItemInventario no encontrado'
+            )
+        }
+        res.status(HttpCode.OK).json(updatedItem)
     }),
 }
 

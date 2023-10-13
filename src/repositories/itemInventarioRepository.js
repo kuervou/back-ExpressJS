@@ -106,6 +106,16 @@ const itemInventarioRepository = {
             where: { nombre: nombre.toLowerCase() },
         })
     },
+    updateStock: async (id, newStock) => {
+        const item = await ItemInventario.findByPk(id)
+        if (!item) {
+            return null
+        }
+
+        item.stock = newStock
+        await item.save()
+        return item
+    },
 }
 
 module.exports = itemInventarioRepository

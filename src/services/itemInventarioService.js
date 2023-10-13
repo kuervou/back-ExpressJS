@@ -82,6 +82,38 @@ const itemInventarioService = {
     deleteItemInventario: async (id) => {
         return await itemInventarioRepository.deleteItemInventario(id)
     },
+
+    updateStock: async (id, amount) => {
+        // Obtener el stock actual del itemInventario
+        const currentItem =
+            await itemInventarioRepository.getItemInventarioById(id)
+
+        // Si no existe el item, lanzar un error
+        if (!currentItem) {
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                'ItemInventario no encontrado'
+            )
+        }
+
+        // Calcula el nuevo stock
+        const newStock = currentItem.stock + amount
+
+        // Valida que el nuevo stock no sea menor que cero
+        if (newStock < 0) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'No se puede actualizar el stock a un valor negativo'
+            )
+        }
+
+        // Actualizar el stock
+        const updatedItem = await itemInventarioRepository.updateStock(
+            id,
+            newStock
+        )
+        return updatedItem
+    },
 }
 
 module.exports = itemInventarioService
