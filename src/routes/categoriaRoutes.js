@@ -7,31 +7,32 @@ const {
     categoriaSchema,
 } = require('./validations/categoriaValidation')
 const auth = require('../middleware/auth')
+const { ROLES } = require('../routes/roles/roles')
 
 router.post(
     '/categorias',
-    [auth(['Admin']), validate(categoriaSchema)],
+    [auth([ROLES.ADMIN]), validate(categoriaSchema)],
     categoriaController.crearCategoria
 )
 router.get(
     '/categorias',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     validate(querySchema, 'query'),
     categoriaController.getCategorias
 )
 router.get(
     '/categorias/:id',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     categoriaController.getCategoriaById
 )
 router.put(
     '/categorias/:id',
-    [auth(['Admin']), validate(categoriaSchema)],
+    [auth([ROLES.ADMIN]), validate(categoriaSchema)],
     categoriaController.updateCategoria
 )
 router.delete(
     '/categorias/:id',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     categoriaController.deleteCategoria
 )
 

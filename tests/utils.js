@@ -6,7 +6,7 @@ function generateTokenForTesting() {
     // al generar tokens para usuarios reales.
     const testUserPayload = {
         id: 1,
-        role: 'admin', // o cualquier otro rol que sea relevante para tus pruebas
+        role: 'Admin', // o cualquier otro rol que sea relevante para tus pruebas
         // cualquier otro campo que incluyas en tus tokens JWT en producción
     }
 

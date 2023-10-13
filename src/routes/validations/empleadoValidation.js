@@ -12,7 +12,7 @@ const empleadoSchema = Joi.object({
         .pattern(/^\d{8,9}$/)
         .message('El teléfono debe tener 8 o 9 dígitos.'),
     rol: Joi.string()
-        .valid(...ROLES)
+        .valid(...Object.values(ROLES.ROLES)) //Con Object.values(ROLES.ROLES), obtenemos un array con los valores del objeto ROLES. Usamos el spread ... para expandir ese array dentro de
         .required(),
 })
 
@@ -25,7 +25,7 @@ const updateEmpleadoSchema = Joi.object({
         .message('El teléfono debe tener 8 o 9 dígitos.')
         .optional(),
     rol: Joi.string()
-        .valid(...ROLES)
+        .valid(...Object.values(ROLES.ROLES)) //Con Object.values(ROLES.ROLES), obtenemos un array con los valores del objeto ROLES. Usamos el spread ... para expandir ese array dentro de
         .optional(),
     activo: Joi.bool().optional(),
 })

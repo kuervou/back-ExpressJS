@@ -8,25 +8,34 @@ const {
     updateClienteSchema,
 } = require('./validations/clienteValidation')
 const auth = require('../middleware/auth')
+const { ROLES } = require('../routes/roles/roles')
 
 router.post(
     '/clientes',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     validate(clienteSchema),
     clienteController.crearCliente
 )
 router.get(
     '/clientes',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     validate(querySchema, 'query'),
     clienteController.getClientes
 )
-router.get('/clientes/:id', auth(['Admin']), clienteController.getClienteById)
+router.get(
+    '/clientes/:id',
+    auth([ROLES.ADMIN]),
+    clienteController.getClienteById
+)
 router.put(
     '/clientes/:id',
-    [auth(['Admin']), validate(updateClienteSchema)],
+    [auth([ROLES.ADMIN]), validate(updateClienteSchema)],
     clienteController.updateCliente
 )
-router.delete('/clientes/:id', auth(['Admin']), clienteController.deleteCliente)
+router.delete(
+    '/clientes/:id',
+    auth([ROLES.ADMIN]),
+    clienteController.deleteCliente
+)
 
 module.exports = router

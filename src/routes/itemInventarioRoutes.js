@@ -8,31 +8,32 @@ const {
     querySchema,
 } = require('./validations/itemInventarioValidation')
 const auth = require('../middleware/auth')
+const { ROLES } = require('../routes/roles/roles')
 
 router.post(
     '/itemsInventario',
-    [auth(['Admin']), validate(itemInventarioSchema)],
+    [auth([ROLES.ADMIN]), validate(itemInventarioSchema)],
     itemInventarioController.crearItemInventario
 )
 router.get(
     '/itemsInventario',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     validate(querySchema, 'query'),
     itemInventarioController.getItemsInventario
 )
 router.get(
     '/itemsInventario/:id',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     itemInventarioController.getItemInventarioById
 )
 router.put(
     '/itemsInventario/:id',
-    [auth(['Admin']), validate(updateItemInventarioSchema)],
+    [auth([ROLES.ADMIN]), validate(updateItemInventarioSchema)],
     itemInventarioController.updateItemInventario
 )
 router.delete(
     '/itemsInventario/:id',
-    auth(['Admin']),
+    auth([ROLES.ADMIN]),
     itemInventarioController.deleteItemInventario
 )
 
