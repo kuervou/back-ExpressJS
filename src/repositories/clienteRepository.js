@@ -19,12 +19,17 @@ const clienteRepository = {
         if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
         if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
 
-        return await Cliente.findAll({
+        const result = await Cliente.findAndCountAll({
             where: whereClause,
             offset,
             limit,
             order: [['nombre', 'ASC']],
         })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
     },
 
     update: async (id, nombre, apellido, telefono, cuenta) => {

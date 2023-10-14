@@ -19,18 +19,23 @@ const empleadoRepository = {
         const offset = (page - 1) * limit
 
         const whereClause = {}
-        whereClause.activo = true
+        whereClause.activo = true // Solo empleados activos
         if (nick) whereClause.nick = { [Op.like]: `%${nick}%` }
         if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
         if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
         if (rol) whereClause.rol = { [Op.like]: `%${rol}%` }
 
-        return await Empleado.findAll({
+        const result = await Empleado.findAndCountAll({
             where: whereClause,
             offset,
             limit,
             order: [['nombre', 'ASC']],
         })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
     },
 
     update: async (

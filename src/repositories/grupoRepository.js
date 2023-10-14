@@ -20,12 +20,17 @@ const grupoRepository = {
             }
         }
 
-        return await Grupo.findAll({
+        const result = await Grupo.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
             order: [['nombre', 'ASC']],
         })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
     },
 
     update: async (id, nombre) => {

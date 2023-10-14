@@ -20,12 +20,17 @@ const categoriaRepository = {
             }
         }
 
-        return await Categoria.findAll({
+        const result = await Categoria.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
             order: [['nombre', 'ASC']],
         })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
     },
 
     update: async (id, nombre) => {
