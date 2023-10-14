@@ -39,7 +39,7 @@ const itemInventarioRepository = {
             whereConditions.categoriaId = categoriaId
         }
 
-        return await ItemInventario.findAll({
+        const result = await ItemInventario.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
@@ -54,6 +54,11 @@ const itemInventarioRepository = {
                 include: [[sequelize.col('porUnidad'), 'ventaPorUnidad']],
             },
         })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
     },
 
     update: async (
