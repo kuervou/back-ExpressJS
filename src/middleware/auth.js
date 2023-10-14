@@ -59,6 +59,14 @@ module.exports = function (allowedRoles = []) {
                 )
             }
 
+            // Comprobar si el usuario está activo
+            if (!decoded.activo) {
+                throw new HttpError(
+                    HttpCode.FORBIDDEN,
+                    'Acceso denegado. Tu cuenta no está activa.'
+                )
+            }
+
             next()
         } catch (ex) {
             if (ex instanceof jwt.JsonWebTokenError) {

@@ -19,6 +19,7 @@ const empleadoRepository = {
         const offset = (page - 1) * limit
 
         const whereClause = {}
+        whereClause.activo = true
         if (nick) whereClause.nick = { [Op.like]: `%${nick}%` }
         if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
         if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
@@ -66,9 +67,7 @@ const empleadoRepository = {
     },
 
     deleteEmpleado: async (id) => {
-        return await Empleado.destroy({
-            where: { id: id },
-        })
+        return await Empleado.update({ activo: false }, { where: { id: id } })
     },
 
     resetPassword: async (id, newPassword) => {

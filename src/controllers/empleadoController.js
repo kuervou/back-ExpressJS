@@ -78,11 +78,11 @@ const empleadoController = {
 
         const resultado = await empleadoService.deleteEmpleado(id)
 
-        if (resultado === 0) {
+        if (resultado == 0) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado')
         }
 
-        res.status(HttpCode.OK).json({ message: 'Empleado eliminado' })
+        res.status(HttpCode.OK).json({ message: 'Empleado desactivado' })
     }),
 
     login: asyncHandler(async (req, res) => {
@@ -94,6 +94,10 @@ const empleadoController = {
                 HttpCode.UNAUTHORIZED,
                 'Usuario o contraseña incorrecta'
             )
+        }
+
+        if (empleado.activo === false) {
+            throw new HttpError(HttpCode.UNAUTHORIZED, 'Usuario no está activo')
         }
 
         const token = jwt.sign(
