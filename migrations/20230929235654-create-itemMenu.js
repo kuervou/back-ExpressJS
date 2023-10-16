@@ -18,7 +18,7 @@ module.exports = {
                 allowNull: false,
             },
             Imagen: {
-                type: Sequelize.TEXT,
+                type: Sequelize.BLOB,
                 allowNull: false,
             },
             Activo: {

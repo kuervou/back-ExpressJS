@@ -101,6 +101,10 @@ const itemInventarioRepository = {
         })
     },
 
+    updatePorUnidad: async (id, porUnidadValue) => {
+        return await ItemInventario.update({ porUnidad: porUnidadValue }, { where: { id } });
+    },
+
     deleteItemInventario: async (id) => {
         return await ItemInventario.destroy({
             where: { id: id },

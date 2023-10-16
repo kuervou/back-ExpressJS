@@ -29,22 +29,23 @@ module.exports = (sequelize) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            Nombre: {
+            nombre: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            Descripcion: DataTypes.STRING,
-            Precio: {
+            descripcion: DataTypes.STRING,
+            precio: {
                 type: DataTypes.FLOAT,
                 allowNull: false,
             },
-            Imagen: {
-                type: DataTypes.TEXT,
+            imagen: {
+                type: DataTypes.BLOB,
                 allowNull: false,
             },
-            Activo: {
+            activo: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
+                defaultValue: true,
             },
             grupoId: {
                 type: DataTypes.INTEGER,

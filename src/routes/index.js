@@ -5,6 +5,7 @@ const categoriaRoutes = require('./categoriaRoutes')
 const cajaRoutes = require('./cajaRoutes')
 const grupoRoutes = require('./grupoRoutes')
 const itemInventarioRoutes = require('./itemInventarioRoutes')
+const itemMenuRoutes = require('./itemMenuRoutes')
 module.exports = (app) => {
     app.use('/api', mesaRoutes)
     app.use('/api', empleadoRoutes)
@@ -13,4 +14,5 @@ module.exports = (app) => {
     app.use('/api', cajaRoutes)
     app.use('/api', grupoRoutes)
     app.use('/api', itemInventarioRoutes)
+    app.use('/api', itemMenuRoutes)
 }

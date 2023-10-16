@@ -56,7 +56,7 @@ const empleadoService = {
         activo
     ) => {
         // Chequear si el nick es único antes de intentar actualizar el empleado
-        await checkNickUnique(nick, id)
+        if(nick) await checkNickUnique(nick, id)
 
         return await empleadoRepository.update(
             id,
