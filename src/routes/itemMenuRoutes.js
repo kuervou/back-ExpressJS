@@ -32,6 +32,13 @@ router.get(
     itemMenuController.getItemsMenuActivos
 )
 
+//ruta para obtener los itemsMenu activos con datos basicos
+router.get(
+    '/itemsMenu/activos/basic',
+    validate(querySchema, 'query'),
+    itemMenuController.getItemsMenuActivosBasic
+)
+
 router.get(
     '/itemsMenu/:id',
     auth([ROLES.ADMIN]),

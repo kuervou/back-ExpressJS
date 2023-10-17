@@ -92,6 +92,38 @@ const itemMenuRepository = {
             items: result.rows,
         }
     },
+    //findAllActivosBasic
+    findAllActivosBasic: async (options = {}) => {
+        const { page = 1, limit = 10, nombre, grupoId } = options
+        const offset = (page - 1) * limit
+
+        const whereConditions = {}
+        whereConditions.Activo = true
+        if (nombre) {
+            whereConditions.Nombre = {
+                [Op.like]: `%${nombre}%`,
+            }
+        }
+        if (grupoId) {
+            whereConditions.GrupoId = grupoId
+        }
+
+        const result = await ItemMenu.findAndCountAll({
+            where: whereConditions,
+            offset,
+            limit,
+            order: [['Nombre', 'ASC']],
+            include: ['grupo'], // incluyendo asociaciones
+            //exlcuir campos imagen, activo, grupoId
+            attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
+        })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
+    },
+
     update: async (id, data) => {
         return await ItemMenu.update(data, { where: { id: id } })
     },

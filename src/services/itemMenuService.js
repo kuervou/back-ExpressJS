@@ -66,6 +66,9 @@ const itemMenuService = {
     getItemsMenuActivos: async (options = {}) => {
         return await itemMenuRepository.findAllActivos(options)
     },
+    getItemsMenuActivosBasic: async (options = {}) => {
+        return await itemMenuRepository.findAllActivosBasic(options)
+    },
     getItemMenuById: async (id) => {
         return await itemMenuRepository.getItemMenuById(id)
     },
