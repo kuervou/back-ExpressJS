@@ -7,6 +7,7 @@ const {
     itemMenuSchema,
     updateItemMenuSchema,
     querySchema,
+    updateItemsMenuInventarioSchema,
 } = require('./validations/itemMenuValidations')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../routes/roles/roles')
@@ -23,7 +24,6 @@ router.get(
     validate(querySchema, 'query'),
     itemMenuController.getItemsMenu
 )
-
 
 //ruta para obtener los itemsMenu activos
 router.get(
@@ -48,6 +48,20 @@ router.delete(
     '/itemsMenu/:id',
     auth([ROLES.ADMIN]),
     itemMenuController.deleteItemMenu
+)
+
+router.put(
+    '/itemsMenu/:id/addItemsInventario',
+    auth([ROLES.ADMIN]),
+    validate(updateItemsMenuInventarioSchema),
+    itemMenuController.addItemsInventario
+)
+
+router.put(
+    '/itemsMenu/:id/removeItemsInventario',
+    auth([ROLES.ADMIN]),
+    validate(updateItemsMenuInventarioSchema),
+    itemMenuController.removeItemsInventario
 )
 
 module.exports = router

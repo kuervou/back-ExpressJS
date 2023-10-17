@@ -102,7 +102,23 @@ const itemInventarioRepository = {
     },
 
     updatePorUnidad: async (id, porUnidadValue) => {
-        return await ItemInventario.update({ porUnidad: porUnidadValue }, { where: { id } });
+        // eslint-disable-next-line no-console
+        console.log('porUnidadValue')
+        // eslint-disable-next-line no-console
+        console.log(porUnidadValue)
+        // eslint-disable-next-line no-console
+        console.log(id)
+        // eslint-disable-next-line no-console
+        console.log(
+            await ItemInventario.update(
+                { porUnidad: porUnidadValue },
+                { where: { id } }
+            )
+        )
+        return await ItemInventario.update(
+            { porUnidad: porUnidadValue },
+            { where: { id } }
+        )
     },
 
     deleteItemInventario: async (id) => {

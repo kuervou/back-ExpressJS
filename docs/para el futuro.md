@@ -1,7 +1,7 @@
 
 # EN LO QUE QUEDÉ:
-Revisar si con blob se banca el tamaño de la imagen base64.
-Ver como hacer que tenga uno o varios item inventario asociado. 
+Ajustar el update items menu
+
 Revisar mayusculas y minusculas en campos de modelos y migrations
 CRUD ItemMenu - Item - Orden
 Mostrarle la foto a gpt as ver que endpoints se le ocurren
@@ -10,73 +10,6 @@ Actúa como un experto en desarrollo de software con expressJS.
 
 Realiza una implementación paso a paso para lograr un CRUD de itemMenu. EL modelo de item menu es el siguiente:
 "
-// src/models/itemMenu.js
-
-'use strict'
-const { Model, DataTypes } = require('sequelize')
-
-module.exports = (sequelize) => {
-    class ItemMenu extends Model {
-        static associate(models) {
-            ItemMenu.belongsTo(models.Grupo, {
-                foreignKey: 'grupoId',
-                as: 'grupo',
-            })
-            ItemMenu.belongsToMany(models.ItemInventario, {
-                through: 'ItemMenuInventario',
-                foreignKey: 'itemMenuId',
-            })
-
-            ItemMenu.hasMany(models.Item, {
-                foreignKey: 'itemMenuId',
-                as: 'items',
-            })
-        }
-    }
-
-    ItemMenu.init(
-        {
-            id: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
-            Nombre: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            Descripcion: DataTypes.STRING,
-            Precio: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            Imagen: {
-                type: DataTypes.TEXT,
-                allowNull: false,
-            },
-            Activo: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-            },
-            grupoId: {
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'Grupos',
-                    key: 'id',
-                },
-            },
-        },
-        {
-            sequelize,
-            modelName: 'ItemMenu',
-            tableName: 'ItemsMenu',
-            timestamps: true,
-        }
-    )
-
-    return ItemMenu
-}
-
 "
 A continuación te comparto la implementación de otra entidad de mi sistemas para que entiendas como estoy trabajando:
 "
@@ -387,3 +320,8 @@ Utiliza las mejores practicas, patrones y tecnicas de software."
 - Ojo con los try-catch en mesaService. Hay que hacer como en el caso de los users que los errores se atrapan en el controller.  ✅
 - **Migrar a Sequelize**: Usar Sequelize en lugar de SQL puro en los servicios. ✅
 - DOCUMENTAR UN POCO LAS MIGRATIONS Y SUS COMANDOS ✅
+
+
+
+
+

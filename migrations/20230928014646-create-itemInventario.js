@@ -29,7 +29,7 @@ module.exports = {
             },
             porUnidad: {
                 type: Sequelize.BOOLEAN,
-                allowNull: false,
+                allowNull: true,
             },
             categoriaId: {
                 type: Sequelize.INTEGER,

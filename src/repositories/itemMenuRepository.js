@@ -1,6 +1,7 @@
 // src/repositories/itemMenuRepository.js
 const { ItemMenu } = require('../models')
 const { ItemInventario } = require('../models')
+const { Grupo } = require('../models')
 const { Op } = require('sequelize')
 
 const itemMenuRepository = {
@@ -15,8 +16,16 @@ const itemMenuRepository = {
             await itemMenu.addItemInventario(itemInventario)
         }
     },
+    removeItemInventario: async (itemMenuId, itemInventarioId) => {
+        const itemMenu = await ItemMenu.findByPk(itemMenuId)
+        const itemInventario = await ItemInventario.findByPk(itemInventarioId)
+        if (itemMenu && itemInventario) {
+            await itemMenu.removeItemInventario(itemInventario)
+        }
+    },
+
     findAll: async (options = {}) => {
-        const { page = 1, limit = 10, nombre } = options
+        const { page = 1, limit = 10, nombre, grupoId } = options
         const offset = (page - 1) * limit
 
         const whereConditions = {}
@@ -25,13 +34,28 @@ const itemMenuRepository = {
                 [Op.like]: `%${nombre}%`,
             }
         }
+        if (grupoId) {
+            whereConditions.GrupoId = grupoId
+        }
 
         const result = await ItemMenu.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
             order: [['Nombre', 'ASC']],
-            include: ['grupo'], // incluyendo asociaciones
+            include: [
+                {
+                    model: Grupo, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'grupo',
+                },
+                {
+                    model: ItemInventario, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'ItemInventarios', // Por convención, Sequelize usa el nombre plural del modelo
+                    through: {
+                        attributes: [], // Si quieres excluir todos los campos de la tabla intermedia. Si deseas incluir algunos, coloca sus nombres aquí.
+                    },
+                },
+            ],
         })
 
         return {
@@ -41,7 +65,7 @@ const itemMenuRepository = {
     },
     //findAllActivos
     findAllActivos: async (options = {}) => {
-        const { page = 1, limit = 10, nombre } = options
+        const { page = 1, limit = 10, nombre, grupoId } = options
         const offset = (page - 1) * limit
 
         const whereConditions = {}
@@ -50,6 +74,9 @@ const itemMenuRepository = {
             whereConditions.Nombre = {
                 [Op.like]: `%${nombre}%`,
             }
+        }
+        if (grupoId) {
+            whereConditions.GrupoId = grupoId
         }
 
         const result = await ItemMenu.findAndCountAll({
@@ -70,7 +97,19 @@ const itemMenuRepository = {
     },
     getItemMenuById: async (id) => {
         return await ItemMenu.findByPk(id, {
-            include: ['grupo'], // incluyendo asociaciones
+            include: [
+                {
+                    model: Grupo, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'grupo',
+                },
+                {
+                    model: ItemInventario, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'ItemInventarios', // Por convención, Sequelize usa el nombre plural del modelo
+                    through: {
+                        attributes: [], // Si quieres excluir todos los campos de la tabla intermedia. Si deseas incluir algunos, coloca sus nombres aquí.
+                    },
+                },
+            ],
         })
     },
     deleteItemMenu: async (id) => {
