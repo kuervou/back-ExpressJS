@@ -3,17 +3,24 @@ const { ItemMenu } = require('../models')
 const { ItemInventario } = require('../models')
 const { Grupo } = require('../models')
 const { Op } = require('sequelize')
+const { HttpError, HttpCode } = require('../error-handling/http_error')
 
 const itemMenuRepository = {
-    create: async (data) => {
-        const newItemMenu = await ItemMenu.create(data)
+    create: async (data, transaction) => {
+        const newItemMenu = await ItemMenu.create(data, { transaction })
         return newItemMenu
     },
-    addItemInventario: async (itemMenuId, itemInventarioId) => {
-        const itemMenu = await ItemMenu.findByPk(itemMenuId)
+    addItemInventario: async (itemMenu, itemInventarioId, transaction) => {
         const itemInventario = await ItemInventario.findByPk(itemInventarioId)
+       
         if (itemMenu && itemInventario) {
-            await itemMenu.addItemInventario(itemInventario)
+            await itemMenu.addItemInventario(itemInventario, { transaction })
+        } else {
+         
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                `ItemInventario con id ${itemInventarioId} no encontrado`
+            )
         }
     },
     removeItemInventario: async (itemMenuId, itemInventarioId) => {
@@ -22,6 +29,10 @@ const itemMenuRepository = {
         if (itemMenu && itemInventario) {
             await itemMenu.removeItemInventario(itemInventario)
         }
+    },
+
+    findItemInventarios: async (itemMenu) => {
+        return await itemMenu.getItemInventarios()
     },
 
     findAll: async (options = {}) => {

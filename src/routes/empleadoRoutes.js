@@ -10,7 +10,7 @@ const {
     querySchema,
 } = require('./validations/empleadoValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 //agregarle el auth luego
 router.post(

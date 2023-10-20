@@ -10,7 +10,7 @@ const {
     updateItemsMenuInventarioSchema,
 } = require('./validations/itemMenuValidations')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/itemsMenu',

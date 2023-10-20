@@ -2,6 +2,10 @@
 const itemMenuRepository = require('../repositories/itemMenuRepository')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const grupoRepository = require('../repositories/grupoRepository')
+
+const db = require('../models')
+const sequelize = db.sequelize
+
 // Función auxiliar para chequear unicidad del nombre
 const checkNombreUnique = async (nombre, excludeId = null) => {
     const existingItemMenu = await itemMenuRepository.findByNombre(nombre)
@@ -23,42 +27,50 @@ const checkGrupoExists = async (grupoId) => {
 }
 const itemMenuService = {
     crearItemMenu: async (data) => {
-        await checkNombreUnique(data.nombre)
-        await checkGrupoExists(data.grupoId)
-        //crear el nuevo itemMenu
-        const newItemMenu = await itemMenuRepository.create(data)
-        //obtener el id del nuevo itemMenu
-        const newItemMenuId = newItemMenu.id
+        const t = await sequelize.transaction()
+        try {
+            await checkNombreUnique(data.nombre)
+            await checkGrupoExists(data.grupoId)
+            //crear el nuevo itemMenu
+            const newItemMenu = await itemMenuRepository.create(data, t)            
+        
+            if (data.itemsInventario) {
+                for (let itemInventarioData of data.itemsInventario) {
+                    // Asociar ItemMenu con ItemInventario aquí
+                    const itemInventario =
+                        await itemInventarioRepository.getItemInventarioById(
+                            itemInventarioData.id
+                        )
+                    if (itemInventario) {
+                        await itemMenuRepository.addItemInventario(
+                            newItemMenu,
+                            itemInventarioData.id,
+                            t
+                        )
+                    } else {
+                        // eslint-disable-next-line no-console
+                        console.log("caso 1", itemInventarioData.id)
+                        throw new HttpError(
+                            HttpCode.NOT_FOUND,
+                            `ItemInventario con id ${itemInventarioData.id} no encontrado`
+                        )
+                    }
 
-        if (data.itemsInventario) {
-            for (let itemInventarioData of data.itemsInventario) {
-                // Asociar ItemMenu con ItemInventario aquí
-                const itemInventario =
-                    await itemInventarioRepository.getItemInventarioById(
-                        itemInventarioData.id
-                    )
-                if (itemInventario) {
-                    await itemMenuRepository.addItemInventario(
-                        newItemMenuId,
-                        itemInventarioData.id
-                    )
-                } else {
-                    throw new HttpError(
-                        HttpCode.NOT_FOUND,
-                        `ItemInventario con id ${itemInventarioData.id} no encontrado`
+                    // Actualizar el campo porUnidad del ItemInventario
+
+                    await itemInventarioRepository.updatePorUnidad(
+                        itemInventarioData.id,
+                        data.porUnidad,
+                        t
                     )
                 }
-
-                // Actualizar el campo porUnidad del ItemInventario
-
-                await itemInventarioRepository.updatePorUnidad(
-                    itemInventarioData.id,
-                    data.porUnidad
-                )
             }
+            await t.commit()
+            return newItemMenu
+        } catch (error) {
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
-
-        return newItemMenu
     },
     getItemsMenu: async (options = {}) => {
         return await itemMenuRepository.findAll(options)
@@ -103,6 +115,8 @@ const itemMenuService = {
                         itemInventarioData.id
                     )
                 } else {
+                    // eslint-disable-next-line no-console
+                    console.log("caso 2", itemInventarioData.id);
                     throw new HttpError(
                         HttpCode.NOT_FOUND,
                         `ItemInventario con id ${itemInventarioData.id} no encontrado`
@@ -142,6 +156,8 @@ const itemMenuService = {
                         itemInventarioData.id
                     )
                 } else {
+                    // eslint-disable-next-line no-console
+                    console.log("caso 3", itemInventarioData.id);
                     throw new HttpError(
                         HttpCode.NOT_FOUND,
                         `ItemInventario con id ${itemInventarioData.id} no encontrado`

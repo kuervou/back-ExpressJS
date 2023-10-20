@@ -101,23 +101,10 @@ const itemInventarioRepository = {
         })
     },
 
-    updatePorUnidad: async (id, porUnidadValue) => {
-        // eslint-disable-next-line no-console
-        console.log('porUnidadValue')
-        // eslint-disable-next-line no-console
-        console.log(porUnidadValue)
-        // eslint-disable-next-line no-console
-        console.log(id)
-        // eslint-disable-next-line no-console
-        console.log(
-            await ItemInventario.update(
-                { porUnidad: porUnidadValue },
-                { where: { id } }
-            )
-        )
+    updatePorUnidad: async (id, porUnidadValue, transaction) => {
         return await ItemInventario.update(
             { porUnidad: porUnidadValue },
-            { where: { id } }
+            { where: { id: id }, transaction }
         )
     },
 
@@ -140,6 +127,15 @@ const itemInventarioRepository = {
         item.stock = newStock
         await item.save()
         return item
+    },
+    descontarStock: async (itemInventario, cantidad, transaction) => {
+        await itemInventario.update(
+            { stock: itemInventario.stock - cantidad },
+            { transaction }
+        )
+    },
+    getStock: async (itemInventario) => {
+        return itemInventario.stock
     },
 }
 

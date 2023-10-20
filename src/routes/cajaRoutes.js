@@ -4,7 +4,7 @@ const cajaController = require('../controllers/cajaController')
 const validate = require('../middleware/validate')
 const { cajaSchema } = require('./validations/cajaValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/cajas',

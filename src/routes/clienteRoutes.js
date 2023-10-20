@@ -8,7 +8,7 @@ const {
     updateClienteSchema,
 } = require('./validations/clienteValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/clientes',

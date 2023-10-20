@@ -7,7 +7,7 @@ const {
     categoriaSchema,
 } = require('./validations/categoriaValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/categorias',

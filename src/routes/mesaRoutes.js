@@ -4,7 +4,7 @@ const mesaController = require('../controllers/mesaController')
 const validate = require('../middleware/validate')
 const { updateMesaSchema, mesaSchema } = require('./validations/mesaValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/mesas',

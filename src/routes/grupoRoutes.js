@@ -4,7 +4,7 @@ const grupoController = require('../controllers/grupoController')
 const validate = require('../middleware/validate')
 const { querySchema, grupoSchema } = require('./validations/grupoValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/grupos',

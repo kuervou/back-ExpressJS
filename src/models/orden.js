@@ -23,11 +23,13 @@ module.exports = (sequelize) => {
             // Relación uno-a-muchos con Item
             Orden.hasMany(models.Item, {
                 foreignKey: 'ordenId',
-                as: 'orden',
+                as: 'items',
             })
 
-            Orden.belongsTo(models.Pago, {
+            // Relación uno-a-muchos con Pago
+            Orden.hasMany(models.Pago, {
                 foreignKey: 'ordenId',
+                as: 'pagos',
             })
         }
     }
@@ -87,6 +89,7 @@ module.exports = (sequelize) => {
         {
             sequelize,
             modelName: 'Orden',
+            tableName: 'ordenes',
             timestamps: true,
         }
     )

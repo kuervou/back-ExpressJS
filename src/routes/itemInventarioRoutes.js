@@ -9,7 +9,7 @@ const {
     updateStockSchema,
 } = require('./validations/itemInventarioValidation')
 const auth = require('../middleware/auth')
-const { ROLES } = require('../routes/roles/roles')
+const { ROLES } = require('../constants/roles/roles')
 
 router.post(
     '/itemsInventario',
