@@ -8,8 +8,9 @@ const clienteSchema = Joi.object({
         .message('El teléfono debe tener 8 o 9 dígitos.'),
 })
 const querySchema = Joi.object({
-    page: Joi.number().integer().min(1).optional(),
-    limit: Joi.number().integer().min(1).max(100).optional(),
+    //page y limit pueden ser enteros y -1
+    page: Joi.number().min(-1).optional(),
+    limit: Joi.number().min(-1).optional(),
     nombre: Joi.string().max(255).optional(),
     apellido: Joi.string().max(255).optional(),
 })

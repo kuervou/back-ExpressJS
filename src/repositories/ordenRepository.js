@@ -34,6 +34,7 @@ const ordenRepository = {
     },
 
     addMesas: async (orderId, mesas, transaction) => {
+        // agregar mesas a la orden y retornar la orden
         const orden = await Orden.findByPk(orderId)
         if (orden) {
             await orden.addMesas(mesas, { transaction })
@@ -42,6 +43,9 @@ const ordenRepository = {
                 { where: { id: mesas }, transaction }
             )
         }
+
+        return orden
+
     },
 
     removeMesas: async (orderId, mesas, transaction) => {
@@ -53,6 +57,8 @@ const ordenRepository = {
                 { where: { id: mesas }, transaction }
             )
         }
+
+        return orden
     },
 
 
@@ -120,6 +126,9 @@ const ordenRepository = {
     deleteOrden: async (id) => {
         return await Orden.destroy({ where: { id: id } })
     },
+    findById: async (id, transaction) => {
+        return await Orden.findByPk(id, { transaction })
+    },
     getOrdenById: async (id) => {
         return await Orden.findByPk(id, {
             include: [
@@ -130,6 +139,16 @@ const ordenRepository = {
             ],
         })
     },
+    getItemsOrden: async (id) => {
+        return await Orden.findByPk(id, {
+            include: [
+                {
+                    model: Item,
+                    as: 'items',
+                },
+            ],
+        })
+    }
 }
 
 module.exports = ordenRepository

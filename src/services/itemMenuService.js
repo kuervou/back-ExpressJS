@@ -48,8 +48,6 @@ const itemMenuService = {
                             t
                         )
                     } else {
-                        // eslint-disable-next-line no-console
-                        console.log("caso 1", itemInventarioData.id)
                         throw new HttpError(
                             HttpCode.NOT_FOUND,
                             `ItemInventario con id ${itemInventarioData.id} no encontrado`
@@ -115,8 +113,6 @@ const itemMenuService = {
                         itemInventarioData.id
                     )
                 } else {
-                    // eslint-disable-next-line no-console
-                    console.log("caso 2", itemInventarioData.id);
                     throw new HttpError(
                         HttpCode.NOT_FOUND,
                         `ItemInventario con id ${itemInventarioData.id} no encontrado`
@@ -156,8 +152,6 @@ const itemMenuService = {
                         itemInventarioData.id
                     )
                 } else {
-                    // eslint-disable-next-line no-console
-                    console.log("caso 3", itemInventarioData.id);
                     throw new HttpError(
                         HttpCode.NOT_FOUND,
                         `ItemInventario con id ${itemInventarioData.id} no encontrado`

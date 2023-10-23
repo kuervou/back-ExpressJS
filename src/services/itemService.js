@@ -56,9 +56,25 @@ const itemService = {
         return items
     },
 
-    deleteItem : async (id, transaction) => {
-        return await itemRepository.deleteItem(id, transaction)
-    }
+    deleteItems : async (items, transaction) => {
+        //ubicamos los items a borrar a partir de su id
+        const itemsToDelete = await itemRepository.findItems(items);
+        //para cada item a borrar, ubicamos el itemMenu asociado y si el item menu tiene asociado un unico itemInventario, entonces debemos sumar al stock la cantidad del item
+        await Promise.all(itemsToDelete.map(async (item) => {
+            const itemMenu = await itemMenuRepository.getItemMenuById(item.itemMenuId);
+            const itemInventarios = await itemMenuRepository.findItemInventarios(itemMenu);
+            if (itemInventarios.length === 1 && itemInventarios[0].porUnidad === true) {
+                await itemInventarioRepository.sumarStock(itemInventarios[0], item.cantidad, transaction);
+            }
+        }));
+        //llamamos al repositorio para borrar los items
+        return await itemRepository.deleteItems(items, transaction);
+        
+
+        
+    },
+
+  
     
 }
 

@@ -86,7 +86,7 @@ const ordenController = {
         const mesas = req.body.mesas
 
         const orden = await ordenService.addMesas(id, mesas)
-
+        
         if (!orden) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
@@ -107,6 +107,32 @@ const ordenController = {
         res.status(HttpCode.OK).json({ message: 'Mesas removidas' })
     }),
 
+    addItems: asyncHandler(async (req, res) => {
+        const id = req.params.id
+        const data = req.body
+
+        const orden = await ordenService.addItems(id, data)
+
+        if (!orden) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
+        }
+
+        res.status(HttpCode.OK).json({ message: 'Items agregados' })
+    }),
+    
+    removeItems: asyncHandler(async (req, res) => {
+        const id = req.params.id
+        const items = req.body.items
+
+        const orden = await ordenService.removeItems(id, items)
+
+        if (!orden) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Algo salió mal, revisa los valores enviados')
+        }
+
+        res.status(HttpCode.OK).json({ message: 'Items removidos' })
+    }),
+    
     deleteOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
 

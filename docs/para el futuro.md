@@ -1,9 +1,13 @@
 
 # EN LO QUE QUEDÉ:
 
-Probar el add y remove mesas
-Agregar lo de websocket a la edicion de una orden
+Verificar que no se quieran eliminar items que no sean de esa orden.
 
+Verificar el estado en que esta una orden antes de agregarle o quitarle items.
+
+Agregar lo de websocket a la edicion de una orden y sus endpoint derivados
+
+Aumentar el tamaño del blob en el contenedor
 
 ### LO QUE LE DIJE A GUZMAN:
 - errores manejo y servicio nuevo

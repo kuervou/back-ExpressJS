@@ -6,5 +6,6 @@ module.exports = {
         PARA_ENTREGAR: 'Para entregar',
         ENTREGADA: 'Entregada',
         CANCELADA: 'Cancelada',
+        MODIFICADA: 'Modificada',
     },
 }

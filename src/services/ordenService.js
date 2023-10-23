@@ -3,7 +3,9 @@ const ordenRepository = require('../repositories/ordenRepository')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const empleadoRepository = require('../repositories/empleadoRepository')
 const clienteRepository = require('../repositories/clienteRepository')
+const itemRepository = require('../repositories/itemRepository')
 const itemService = require('./itemService')
+const { ESTADOS } = require('../constants/estados/estados')
 
 const db = require('../models')
 const sequelize = db.sequelize
@@ -102,8 +104,9 @@ const ordenService = {
                 throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
             }
 
-            await ordenRepository.addMesas(orderId, mesas, t);
+            const result = await ordenRepository.addMesas(orderId, mesas, t);
             await t.commit();
+            return result;
         } catch (error) {
             await t.rollback();
             throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
@@ -118,14 +121,69 @@ const ordenService = {
                 throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
             }
 
-            await ordenRepository.removeMesas(orderId, mesas, t);
+            const result = await ordenRepository.removeMesas(orderId, mesas, t);
             await t.commit();
+            return result;
         } catch (error) {
             await t.rollback();
             throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
         }
     },
     
+    addItems: async (orderId, data) => {
+        const t = await sequelize.transaction();
+        try {
+            const orden = await ordenRepository.findById(orderId, t);
+            if (!orden) {
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+            }
+
+            const result = await itemService.createItemsForOrder(data, orden, t);
+
+            //debemos actualizar el total de la orden
+            const totalItems = data.items.reduce((acc, item) => {
+                return acc + item.cantidad * item.precio;
+            }, 0);
+
+            //el total de la orden será el total actual + el total de los items
+            const total = orden.total + totalItems;
+
+            //se debe modificar el estado de la orden a ESTADOS.MODIFICADA
+            const estado = ESTADOS.MODIFICADA;
+
+            await ordenRepository.update(orderId, { total, estado }, t);
+            
+            await t.commit();
+            return result;
+        } catch (error) {
+            await t.rollback();
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+        }
+    },
+
+    removeItems: async (orderId, items) => {
+        const t = await sequelize.transaction();
+        try {
+            const orden = await ordenRepository.findById(orderId, t);
+            if (!orden) {
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+            }
+
+            const result = await itemService.deleteItems(items, t);
+
+            await t.commit();
+
+            //debemos actualizar el total de la orden y para eso usamos updateOrderTotal de itemRepository
+            await itemRepository.updateOrderTotal(orderId);
+
+
+            return result;
+
+        } catch (error) {
+            await t.rollback();
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+        }
+    }
 
 
 }

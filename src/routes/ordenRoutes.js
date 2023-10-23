@@ -4,7 +4,7 @@ const express = require('express')
 const router = express.Router()
 const ordenController = require('../controllers/ordenController')
 const validate = require('../middleware/validate')
-const { updateOrdenSchema, ordenSchema, querySchema, addOrRemoveMesaSchema } = require('./validations/ordenValidations')
+const { updateOrdenSchema, ordenSchema, querySchema, addOrRemoveMesaSchema, addItemsSchema, removeItemsSchema } = require('./validations/ordenValidations')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 
@@ -43,6 +43,21 @@ router.delete(
     auth([ROLES.ADMIN, ROLES.MOZO]),
     validate(addOrRemoveMesaSchema),
     ordenController.removeMesas
+)
+
+//rutas para add y remove items
+router.post(
+    '/ordenes/:id/items',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    validate(addItemsSchema),
+    ordenController.addItems
+)
+
+router.delete(
+    '/ordenes/:id/items',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    validate(removeItemsSchema),
+    ordenController.removeItems
 )
 
 module.exports = router

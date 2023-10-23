@@ -18,7 +18,7 @@ router.post(
 )
 router.get(
     '/clientes',
-    auth([ROLES.ADMIN]),
+    auth([ROLES.ADMIN, ROLES.MOZO]),
     validate(querySchema, 'query'),
     clienteController.getClientes
 )

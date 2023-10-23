@@ -86,10 +86,28 @@ const addOrRemoveMesaSchema = Joi.object({
     mesas: Joi.array().items(Joi.number()).required(),
 })
 
+const addItemsSchema = Joi.object({
+    items: Joi.array()
+        .items(
+            Joi.object({
+                itemMenuId: Joi.number().required(),
+                cantidad: Joi.number().required(),
+                precio: Joi.number().required(),
+            })
+        )
+        .required(),
+})
+
+const removeItemsSchema = Joi.object({
+    items: Joi.array().items(Joi.number()).required(),
+})
+
 
 module.exports = {
     ordenSchema,
     querySchema,
     updateOrdenSchema,
-    addOrRemoveMesaSchema
+    addOrRemoveMesaSchema,
+    addItemsSchema,
+    removeItemsSchema,
 }

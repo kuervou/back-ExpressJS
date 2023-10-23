@@ -13,11 +13,27 @@ const clienteRepository = {
     findAll: async (options = {}) => {
         const { page = 1, limit = 10, nombre, apellido } = options
 
-        const offset = (page - 1) * limit
-
         const whereClause = {}
         if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
         if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
+
+
+        //si page o limit son -1, no se aplica paginación
+        if (page === -1 || limit === -1) {
+            const result = await Cliente.findAndCountAll({
+                where:  whereClause,
+                order: [['nombre', 'ASC']],
+            })
+
+            return {
+                total: result.count,
+                items: result.rows,
+            }
+        }
+
+        const offset = (page - 1) * limit
+
+        
 
         const result = await Cliente.findAndCountAll({
             where: whereClause,

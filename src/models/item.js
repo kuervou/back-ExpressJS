@@ -15,6 +15,7 @@ module.exports = (sequelize) => {
                 as: 'itemMenu',
             })
         }
+
     }
 
     Item.init(
