@@ -9,6 +9,9 @@ Agregar lo de websocket a la edicion de una orden y sus endpoint derivados
 
 Aumentar el tamaño del blob en el contenedor
 
+HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
+
+
 ### LO QUE LE DIJE A GUZMAN:
 - errores manejo y servicio nuevo
 - url entorno

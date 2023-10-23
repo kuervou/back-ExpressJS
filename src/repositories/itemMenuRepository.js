@@ -119,6 +119,22 @@ const itemMenuRepository = {
             whereConditions.GrupoId = grupoId
         }
 
+        //si page o limit son -1, no se aplica paginación
+        if (page === -1 || limit === -1) {
+            const result = await ItemMenu.findAndCountAll({
+                where: whereConditions,
+                order: [['Nombre', 'ASC']],
+                include: ['grupo'], // incluyendo asociaciones
+                //exlcuir campos imagen, activo, grupoId
+                attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
+            })
+
+            return {
+                total: result.count,
+                items: result.rows,
+            }
+        }
+
         const result = await ItemMenu.findAndCountAll({
             where: whereConditions,
             offset,

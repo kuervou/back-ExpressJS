@@ -20,6 +20,20 @@ const grupoRepository = {
             }
         }
 
+        //Si page o limit son -1, no se aplica paginado
+
+        if (page === -1 || limit === -1) {
+            const result = await Grupo.findAndCountAll({
+                where: whereConditions,
+                order: [['nombre', 'ASC']],
+            })
+
+            return {
+                total: result.count,
+                items: result.rows,
+            }
+        }
+
         const result = await Grupo.findAndCountAll({
             where: whereConditions,
             offset,
