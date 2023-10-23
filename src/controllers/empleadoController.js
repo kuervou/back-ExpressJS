@@ -117,6 +117,7 @@ const empleadoController = {
         res.status(HttpCode.OK).json({
             token,
             empleado: {
+                id: empleado.id,
                 nick: empleado.nick,
                 nombre: empleado.nombre,
                 apellido: empleado.apellido,
