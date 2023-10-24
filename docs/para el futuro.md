@@ -12,15 +12,13 @@ Aumentar el tamaño del blob en el contenedor
 HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
 
 FRONT:
-Homecocina:
-    -ver de mostrar todas las mesas de cada orden
-    -Mostrar el itemMenu nombre en vez del itemMenuId
-    -La hora no se formatea bien y revienta 
-    -
 
 
 - validaciones varias (El cliente está estático)
 - manejar errores y exitos
+
+Mejorar en home cocina: 
+Hay llamadas anidadas, mejor hacer un endpoint para eso y ta. 
 
 
 
