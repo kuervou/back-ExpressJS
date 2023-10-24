@@ -78,7 +78,7 @@ const querySchema = Joi.object({
     clienteId: Joi.number().optional(),
     //estado es opcional y debe pertenecer a ESTADOS
     estado: Joi.string()
-        .valid(...Object.values(ESTADOS))
+        .valid(...Object.values(ESTADOS.ESTADOS))
         .optional(),
 })
 

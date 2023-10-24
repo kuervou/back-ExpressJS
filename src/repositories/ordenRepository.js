@@ -88,7 +88,7 @@ const ordenRepository = {
             where: whereConditions,
             offset,
             limit,
-            order: [['fecha', 'ASC']],
+            order: [['fecha', 'DESC']],
             distinct: true, // Esto asegura que sólo se obtenga una fila por orden
             include: [
                 {
