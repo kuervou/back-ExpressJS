@@ -1,5 +1,5 @@
 // src/repositories/ordenRepository.js
-const { Orden, Item, Mesa } = require('../models')
+const { Orden, Item, Mesa, ItemMenu, Grupo } = require('../models')
 const { Op } = require('sequelize')
 const db = require('../models')
 
@@ -89,11 +89,25 @@ const ordenRepository = {
             offset,
             limit,
             order: [['fecha', 'DESC']],
-            distinct: true, // Esto asegura que sólo se obtenga una fila por orden
+            distinct: true,
             include: [
                 {
                     model: Item,
                     as: 'items',
+                    include: [
+                        {
+                            model: ItemMenu,
+                            as: 'itemMenu',
+                            attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                            include: [
+                                {
+                                    model: Grupo,
+                                    as: 'grupo',
+                                    attributes: ['nombre'] // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     model: Mesa,
@@ -108,7 +122,8 @@ const ordenRepository = {
                     as: 'empleado',
                 },
             ],
-        })
+        });
+        
 
         return {
             total: count,

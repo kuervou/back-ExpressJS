@@ -42,7 +42,7 @@ const ordenSchema = Joi.object({
     ocupacion: Joi.number().required(),
     observaciones: Joi.string().optional(),
     paga: Joi.bool().optional(),
-    clienteId: Joi.number().optional(),
+    clienteId: Joi.number().allow(null).optional(),
     empleadoId: Joi.number().optional(),
     items: Joi.array()
         .items(
