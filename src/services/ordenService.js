@@ -5,7 +5,7 @@ const empleadoRepository = require('../repositories/empleadoRepository')
 const clienteRepository = require('../repositories/clienteRepository')
 const itemRepository = require('../repositories/itemRepository')
 const itemService = require('./itemService')
-const { ESTADOS } = require('../constants/estados/estados')
+//const { ESTADOS } = require('../constants/estados/estados')
 
 const db = require('../models')
 const sequelize = db.sequelize
@@ -74,6 +74,10 @@ const ordenService = {
         return await ordenRepository.findAll(options)
     },
 
+    getOrdenesCaja: async () => {
+        return await ordenRepository.findAllCaja()
+    },
+    
     updateOrden: async (orderId, data) => {
         const t = await sequelize.transaction();
         try {
@@ -121,6 +125,8 @@ const ordenService = {
                 throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
             }
 
+            
+
             const result = await ordenRepository.removeMesas(orderId, mesas, t);
             await t.commit();
             return result;
@@ -138,6 +144,14 @@ const ordenService = {
                 throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
             }
 
+            /* 
+            DEJO ESTA LOGICA ACÁ POR SI ALGÚN DIA LOS CLIENTES QUISIERAN AGREGAR ESTA VALIDACIÓN
+            // si el estado de la orden es distinto de "En cocina" o "Por confirmar" no se pueden añadir items
+            if (orden.estado !== ESTADOS.EN_COCINA && orden.estado !== ESTADOS.POR_CONFIRMAR) {
+                throw new HttpError(HttpCode.BAD_REQUEST, 'No se pueden añadir items a esta orden');
+            }
+            */
+
             const result = await itemService.createItemsForOrder(data, orden, t);
 
             //debemos actualizar el total de la orden
@@ -148,10 +162,8 @@ const ordenService = {
             //el total de la orden será el total actual + el total de los items
             const total = orden.total + totalItems;
 
-            //se debe modificar el estado de la orden a ESTADOS.MODIFICADA
-            const estado = ESTADOS.MODIFICADA;
-
-            await ordenRepository.update(orderId, { total, estado }, t);
+            
+            await ordenRepository.update(orderId, { total}, t);
             
             await t.commit();
             return result;
@@ -168,7 +180,16 @@ const ordenService = {
             if (!orden) {
                 throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
             }
+            
+            /*
+                        DEJO ESTA LOGICA ACÁ POR SI ALGÚN DIA LOS CLIENTES QUISIERAN AGREGAR ESTA VALIDACIÓN
 
+            // si el estado de la orden es distinto de "En cocina" o "Por confirmar" no se pueden eliminar items
+            if (orden.estado !== ESTADOS.EN_COCINA && orden.estado !== ESTADOS.POR_CONFIRMAR) {
+                throw new HttpError(HttpCode.BAD_REQUEST, 'No se pueden eliminar items de esta orden');
+            }
+
+            */
             const result = await itemService.deleteItems(items, t);
 
             await t.commit();

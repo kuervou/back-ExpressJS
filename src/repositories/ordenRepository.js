@@ -1,7 +1,9 @@
 // src/repositories/ordenRepository.js
 const { Orden, Item, Mesa, ItemMenu, Grupo } = require('../models')
-const { Op } = require('sequelize')
+const { Op, literal } = require('sequelize');
 const db = require('../models')
+const { EXCLUDED_GROUPS } = require('../constants/grupos/grupos')
+const { ESTADOS } = require('../constants/estados/estados')
 
 const ordenRepository = {
     createOrden: async (data, transaction) => {
@@ -130,6 +132,80 @@ const ordenRepository = {
             items: rows,
         }
     },
+
+    findAllCaja: async () => {
+        const whereConditions = {}
+      
+        //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, POR_CONFIRMAR
+        whereConditions.estado = {
+            [Op.or]: [ESTADOS.EN_COCINA, ESTADOS.PARA_ENTREGAR, ESTADOS.POR_CONFIRMAR]
+        }
+
+        // Consulta para obtener la cuenta correcta
+        const count = await Orden.count({
+            where: whereConditions,
+        })
+
+        const rows = await Orden.findAll({
+            where: whereConditions,
+            order: [
+                [literal(`
+                    CASE 
+                        WHEN estado = '${ESTADOS.POR_CONFIRMAR}' THEN 1 
+                        WHEN estado = '${ESTADOS.PARA_ENTREGAR}' THEN 2 
+                        ELSE 3 
+                    END
+                `), 'ASC'],
+                ['fecha', 'DESC']
+            ],
+            distinct: true,
+            include: [
+                {
+                    model: Item,
+                    as: 'items',
+                    order: [
+                        literal(`CASE 
+                            WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
+                            WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
+                            ELSE 3 END ASC`)
+                    ]
+                    ,
+                    include: [
+                        {
+                            model: ItemMenu,
+                            as: 'itemMenu',
+                            attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                            include: [
+                                {
+                                    model: Grupo,
+                                    as: 'grupo',
+                                    attributes: ['nombre'] // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    model: Mesa,
+                    as: 'mesas',
+                },
+                {
+                    model: db.Cliente,
+                    as: 'cliente',
+                },
+                {
+                    model: db.Empleado,
+                    as: 'empleado',
+                },
+            ],
+        });
+        return {
+            total: count,
+            items: rows,
+        }
+    },
+
+
     update: async (orderId, data, transaction) => {
         return await Orden.update(data, {
         where: {

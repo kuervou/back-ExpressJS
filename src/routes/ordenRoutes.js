@@ -18,6 +18,12 @@ router.get(
 )
 
 router.get(
+    '/ordenes/caja',
+    auth([ROLES.ADMIN]),
+    ordenController.getOrdenesCaja
+)
+
+router.get(
     '/ordenes/:id',
     auth([ROLES.ADMIN, ROLES.MOZO, ROLES.COCINA]),
     ordenController.getOrdenById

@@ -55,6 +55,16 @@ const ordenController = {
         res.json(ordenes)
     }),
 
+
+    getOrdenesCaja: asyncHandler(async (req, res) => {
+        
+        const ordenes = await ordenService.getOrdenesCaja()
+
+        res.json(ordenes)
+
+    }),
+
+
     getOrdenById: asyncHandler(async (req, res) => {
         const id = req.params.id
 
