@@ -12,11 +12,10 @@ const itemMenuRepository = {
     },
     addItemInventario: async (itemMenu, itemInventarioId, transaction) => {
         const itemInventario = await ItemInventario.findByPk(itemInventarioId)
-       
+
         if (itemMenu && itemInventario) {
             await itemMenu.addItemInventario(itemInventario, { transaction })
         } else {
-         
             throw new HttpError(
                 HttpCode.NOT_FOUND,
                 `ItemInventario con id ${itemInventarioId} no encontrado`
@@ -159,7 +158,6 @@ const itemMenuRepository = {
             include: ['grupo'], // incluyendo asociaciones
             //exlcuir campos imagen, activo, grupoId
             attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
-            
         })
     },
     deleteItemMenu: async (id) => {

@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const ESTADOS  = require('../../constants/estados/estados')
+const ESTADOS = require('../../constants/estados/estados')
 /*
 Una entrada tipica para el create puede ser:
 
@@ -101,7 +101,6 @@ const addItemsSchema = Joi.object({
 const removeItemsSchema = Joi.object({
     items: Joi.array().items(Joi.number()).required(),
 })
-
 
 module.exports = {
     ordenSchema,

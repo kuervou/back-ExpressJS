@@ -1,5 +1,14 @@
 
 # EN LO QUE QUEDÉ:
+Hacer data provider para caja y grupos clave
+
+- MOstrar el total de la caja 
+
+-CRUD movimientos
+
+-Crud pagos
+
+
 
 Verificar que no se quieran eliminar items que no sean de esa orden.
 
@@ -17,8 +26,7 @@ FRONT:
 - validaciones varias (El cliente está estático)
 - manejar errores y exitos
 
-Mejorar en home cocina: 
-Hay llamadas anidadas, mejor hacer un endpoint para eso y ta. 
+Cambiar el orden de las ordenes en home cocina
 
 
 

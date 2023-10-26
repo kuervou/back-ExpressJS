@@ -23,7 +23,7 @@ const categoriaRepository = {
         //si page o limit son -1, no se aplica paginación
         if (page === -1 || limit === -1) {
             const result = await Categoria.findAndCountAll({
-                where:  whereConditions,
+                where: whereConditions,
                 order: [['nombre', 'ASC']],
             })
 

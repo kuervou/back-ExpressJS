@@ -17,11 +17,10 @@ const clienteRepository = {
         if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` }
         if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` }
 
-
         //si page o limit son -1, no se aplica paginación
         if (page === -1 || limit === -1) {
             const result = await Cliente.findAndCountAll({
-                where:  whereClause,
+                where: whereClause,
                 order: [['nombre', 'ASC']],
             })
 
@@ -32,8 +31,6 @@ const clienteRepository = {
         }
 
         const offset = (page - 1) * limit
-
-        
 
         const result = await Cliente.findAndCountAll({
             where: whereClause,

@@ -1,6 +1,6 @@
 // src/repositories/ordenRepository.js
 const { Orden, Item, Mesa, ItemMenu, Grupo } = require('../models')
-const { Op, literal } = require('sequelize');
+const { Op, literal } = require('sequelize')
 const db = require('../models')
 const { EXCLUDED_GROUPS } = require('../constants/grupos/grupos')
 const { ESTADOS } = require('../constants/estados/estados')
@@ -47,7 +47,6 @@ const ordenRepository = {
         }
 
         return orden
-
     },
 
     removeMesas: async (orderId, mesas, transaction) => {
@@ -62,7 +61,6 @@ const ordenRepository = {
 
         return orden
     },
-
 
     findAll: async (options = {}) => {
         const { page = 1, limit = 10, fecha, empleadoId, estado } = options
@@ -105,11 +103,11 @@ const ordenRepository = {
                                 {
                                     model: Grupo,
                                     as: 'grupo',
-                                    attributes: ['nombre'] // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
-                                }
-                            ]
-                        }
-                    ]
+                                    attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                },
+                            ],
+                        },
+                    ],
                 },
                 {
                     model: Mesa,
@@ -124,8 +122,7 @@ const ordenRepository = {
                     as: 'empleado',
                 },
             ],
-        });
-        
+        })
 
         return {
             total: count,
@@ -135,10 +132,14 @@ const ordenRepository = {
 
     findAllCaja: async () => {
         const whereConditions = {}
-      
+
         //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, POR_CONFIRMAR
         whereConditions.estado = {
-            [Op.or]: [ESTADOS.EN_COCINA, ESTADOS.PARA_ENTREGAR, ESTADOS.POR_CONFIRMAR]
+            [Op.or]: [
+                ESTADOS.EN_COCINA,
+                ESTADOS.PARA_ENTREGAR,
+                ESTADOS.POR_CONFIRMAR,
+            ],
         }
 
         // Consulta para obtener la cuenta correcta
@@ -149,14 +150,17 @@ const ordenRepository = {
         const rows = await Orden.findAll({
             where: whereConditions,
             order: [
-                [literal(`
+                [
+                    literal(`
                     CASE 
                         WHEN estado = '${ESTADOS.POR_CONFIRMAR}' THEN 1 
                         WHEN estado = '${ESTADOS.PARA_ENTREGAR}' THEN 2 
                         ELSE 3 
                     END
-                `), 'ASC'],
-                ['fecha', 'DESC']
+                `),
+                    'ASC',
+                ],
+                ['fecha', 'DESC'],
             ],
             distinct: true,
             include: [
@@ -167,9 +171,8 @@ const ordenRepository = {
                         literal(`CASE 
                             WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
                             WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
-                            ELSE 3 END ASC`)
-                    ]
-                    ,
+                            ELSE 3 END ASC`),
+                    ],
                     include: [
                         {
                             model: ItemMenu,
@@ -179,11 +182,11 @@ const ordenRepository = {
                                 {
                                     model: Grupo,
                                     as: 'grupo',
-                                    attributes: ['nombre'] // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
-                                }
-                            ]
-                        }
-                    ]
+                                    attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                },
+                            ],
+                        },
+                    ],
                 },
                 {
                     model: Mesa,
@@ -198,22 +201,39 @@ const ordenRepository = {
                     as: 'empleado',
                 },
             ],
-        });
+        })
         return {
             total: count,
             items: rows,
         }
     },
 
-
     update: async (orderId, data, transaction) => {
         return await Orden.update(data, {
-        where: {
-            id: orderId
-        },
-        transaction
-    })
+            where: {
+                id: orderId,
+            },
+            transaction,
+        })
     },
+
+    countOcupacion: async () => {
+        // Obteniendo la suma de ocupación para los estados deseados
+        const totalOcupacion = await Orden.sum('ocupacion', {
+            where: {
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.ENTREGADA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.EN_COCINA,
+                    ],
+                },
+            },
+        })
+
+        return totalOcupacion
+    },
+
     deleteOrden: async (id) => {
         return await Orden.destroy({ where: { id: id } })
     },
@@ -230,6 +250,7 @@ const ordenRepository = {
             ],
         })
     },
+
     getItemsOrden: async (id) => {
         return await Orden.findByPk(id, {
             include: [
@@ -239,7 +260,7 @@ const ordenRepository = {
                 },
             ],
         })
-    }
+    },
 }
 
 module.exports = ordenRepository

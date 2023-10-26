@@ -14,6 +14,11 @@ const mesaController = {
         res.json(mesas)
     }),
 
+    getMesasOcupadas: asyncHandler(async (req, res) => {
+        const mesas = await mesaService.getMesasOcupadas()
+        res.json(mesas)
+    }),
+
     getMesaById: asyncHandler(async (req, res) => {
         const id = req.params.id
 

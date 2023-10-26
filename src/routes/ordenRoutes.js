@@ -4,7 +4,14 @@ const express = require('express')
 const router = express.Router()
 const ordenController = require('../controllers/ordenController')
 const validate = require('../middleware/validate')
-const { updateOrdenSchema, ordenSchema, querySchema, addOrRemoveMesaSchema, addItemsSchema, removeItemsSchema } = require('./validations/ordenValidations')
+const {
+    updateOrdenSchema,
+    ordenSchema,
+    querySchema,
+    addOrRemoveMesaSchema,
+    addItemsSchema,
+    removeItemsSchema,
+} = require('./validations/ordenValidations')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 
@@ -18,10 +25,12 @@ router.get(
 )
 
 router.get(
-    '/ordenes/caja',
+    '/ordenes/ocupacion',
     auth([ROLES.ADMIN]),
-    ordenController.getOrdenesCaja
+    ordenController.getCountOcupacion
 )
+
+router.get('/ordenes/caja', auth([ROLES.ADMIN]), ordenController.getOrdenesCaja)
 
 router.get(
     '/ordenes/:id',

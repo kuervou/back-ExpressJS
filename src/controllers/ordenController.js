@@ -55,15 +55,11 @@ const ordenController = {
         res.json(ordenes)
     }),
 
-
     getOrdenesCaja: asyncHandler(async (req, res) => {
-        
         const ordenes = await ordenService.getOrdenesCaja()
 
         res.json(ordenes)
-
     }),
-
 
     getOrdenById: asyncHandler(async (req, res) => {
         const id = req.params.id
@@ -77,17 +73,23 @@ const ordenController = {
         res.status(HttpCode.OK).json(orden)
     }),
 
+    getCountOcupacion: asyncHandler(async (req, res) => {
+        const ocupacion = await ordenService.getCountOcupacion()
+        res.status(HttpCode.OK).json(ocupacion)
+    }),
+
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
         const data = req.body
 
         const result = await ordenService.updateOrden(id, data)
-      
+
         if (result[0] === 0) {
             // Si la cantidad de registros actualizados es 0
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
-
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden actualizada' })
         res.status(HttpCode.OK).json({ message: 'Orden actualizada' })
     }),
 
@@ -96,7 +98,7 @@ const ordenController = {
         const mesas = req.body.mesas
 
         const orden = await ordenService.addMesas(id, mesas)
-        
+
         if (!orden) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
@@ -129,7 +131,7 @@ const ordenController = {
 
         res.status(HttpCode.OK).json({ message: 'Items agregados' })
     }),
-    
+
     removeItems: asyncHandler(async (req, res) => {
         const id = req.params.id
         const items = req.body.items
@@ -137,12 +139,15 @@ const ordenController = {
         const orden = await ordenService.removeItems(id, items)
 
         if (!orden) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Algo salió mal, revisa los valores enviados')
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                'Algo salió mal, revisa los valores enviados'
+            )
         }
 
         res.status(HttpCode.OK).json({ message: 'Items removidos' })
     }),
-    
+
     deleteOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
 

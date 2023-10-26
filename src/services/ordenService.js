@@ -74,74 +74,79 @@ const ordenService = {
         return await ordenRepository.findAll(options)
     },
 
+    getOrdenById: async (id) => {
+        return await ordenRepository.getOrdenById(id)
+    },
+
     getOrdenesCaja: async () => {
         return await ordenRepository.findAllCaja()
     },
-    
+
+    getCountOcupacion: async () => {
+        return await ordenRepository.countOcupacion()
+    },
+
     updateOrden: async (orderId, data) => {
-        const t = await sequelize.transaction();
+        const t = await sequelize.transaction()
         try {
             if (data.empleadoId) {
-                await checkEmpleadoExists(data.empleadoId);
+                await checkEmpleadoExists(data.empleadoId)
             }
-    
+
             if (data.clienteId) {
-                await checkClienteExists(data.clienteId);
+                await checkClienteExists(data.clienteId)
             }
 
-            const result = await ordenRepository.update(orderId, data, t);
+            const result = await ordenRepository.update(orderId, data, t)
 
-            await t.commit();
-            return result;
-
+            await t.commit()
+            return result
         } catch (error) {
-            await t.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
     },
 
     addMesas: async (orderId, mesas) => {
-        const t = await sequelize.transaction();
+        const t = await sequelize.transaction()
         try {
-            const orden = await ordenRepository.findById(orderId, t);
+            const orden = await ordenRepository.findById(orderId, t)
             if (!orden) {
-                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
             }
 
-            const result = await ordenRepository.addMesas(orderId, mesas, t);
-            await t.commit();
-            return result;
+            const result = await ordenRepository.addMesas(orderId, mesas, t)
+            await t.commit()
+            return result
         } catch (error) {
-            await t.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
     },
 
     removeMesas: async (orderId, mesas) => {
-        const t = await sequelize.transaction();
+        const t = await sequelize.transaction()
         try {
-            const orden = await ordenRepository.findById(orderId, t);
+            const orden = await ordenRepository.findById(orderId, t)
             if (!orden) {
-                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
             }
 
-            
-
-            const result = await ordenRepository.removeMesas(orderId, mesas, t);
-            await t.commit();
-            return result;
+            const result = await ordenRepository.removeMesas(orderId, mesas, t)
+            await t.commit()
+            return result
         } catch (error) {
-            await t.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
     },
-    
+
     addItems: async (orderId, data) => {
-        const t = await sequelize.transaction();
+        const t = await sequelize.transaction()
         try {
-            const orden = await ordenRepository.findById(orderId, t);
+            const orden = await ordenRepository.findById(orderId, t)
             if (!orden) {
-                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
             }
 
             /* 
@@ -152,35 +157,34 @@ const ordenService = {
             }
             */
 
-            const result = await itemService.createItemsForOrder(data, orden, t);
+            const result = await itemService.createItemsForOrder(data, orden, t)
 
             //debemos actualizar el total de la orden
             const totalItems = data.items.reduce((acc, item) => {
-                return acc + item.cantidad * item.precio;
-            }, 0);
+                return acc + item.cantidad * item.precio
+            }, 0)
 
             //el total de la orden será el total actual + el total de los items
-            const total = orden.total + totalItems;
+            const total = orden.total + totalItems
 
-            
-            await ordenRepository.update(orderId, { total}, t);
-            
-            await t.commit();
-            return result;
+            await ordenRepository.update(orderId, { total }, t)
+
+            await t.commit()
+            return result
         } catch (error) {
-            await t.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
     },
 
     removeItems: async (orderId, items) => {
-        const t = await sequelize.transaction();
+        const t = await sequelize.transaction()
         try {
-            const orden = await ordenRepository.findById(orderId, t);
+            const orden = await ordenRepository.findById(orderId, t)
             if (!orden) {
-                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada');
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
             }
-            
+
             /*
                         DEJO ESTA LOGICA ACÁ POR SI ALGÚN DIA LOS CLIENTES QUISIERAN AGREGAR ESTA VALIDACIÓN
 
@@ -190,23 +194,19 @@ const ordenService = {
             }
 
             */
-            const result = await itemService.deleteItems(items, t);
+            const result = await itemService.deleteItems(items, t)
 
-            await t.commit();
+            await t.commit()
 
             //debemos actualizar el total de la orden y para eso usamos updateOrderTotal de itemRepository
-            await itemRepository.updateOrderTotal(orderId);
+            await itemRepository.updateOrderTotal(orderId)
 
-
-            return result;
-
+            return result
         } catch (error) {
-            await t.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
-    }
-
-
+    },
 }
 
 module.exports = ordenService

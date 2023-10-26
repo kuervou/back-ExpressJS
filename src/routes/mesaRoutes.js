@@ -12,6 +12,13 @@ router.post(
     mesaController.crearMesa
 )
 router.get('/mesas', auth([ROLES.ADMIN, ROLES.MOZO]), mesaController.getMesas)
+
+router.get(
+    '/mesas/ocupadas',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    mesaController.getMesasOcupadas
+)
+
 router.get(
     '/mesas/:id',
     auth([ROLES.ADMIN, ROLES.MOZO]),

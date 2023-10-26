@@ -135,12 +135,9 @@ const itemInventarioRepository = {
         )
     },
     sumarStock: async (itemInventario, cantidad, transaction) => {
-        await itemInventario.increment(
-            { stock: cantidad },
-            { transaction }
-        );
+        await itemInventario.increment({ stock: cantidad }, { transaction })
     },
-    
+
     getStock: async (itemInventario) => {
         return itemInventario.stock
     },

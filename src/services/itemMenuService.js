@@ -32,8 +32,8 @@ const itemMenuService = {
             await checkNombreUnique(data.nombre)
             await checkGrupoExists(data.grupoId)
             //crear el nuevo itemMenu
-            const newItemMenu = await itemMenuRepository.create(data, t)            
-        
+            const newItemMenu = await itemMenuRepository.create(data, t)
+
             if (data.itemsInventario) {
                 for (let itemInventarioData of data.itemsInventario) {
                     // Asociar ItemMenu con ItemInventario aquí

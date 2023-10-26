@@ -12,6 +12,28 @@ const mesaRepository = {
         return await Mesa.findAll()
     },
 
+    findAllOcupadas: async () => {
+        //findandcountall devuelve un array con dos elementos, el primero es el array de mesas y el segundo es la cantidad de mesas
+        const result = await Mesa.findAndCountAll({
+            where: {
+                libre: false,
+            },
+        })
+
+        //contar el total de mesas
+        const total = await Mesa.count()
+
+        //calcular el numero de mesas libres
+        const libres = total - result.count
+
+        return {
+            mesas: result.rows,
+            totalCount: total,
+            libreCount: libres,
+            ocupadasCount: result.count,
+        }
+    },
+
     update: async (id, nroMesa, libre) => {
         return await Mesa.update({ nroMesa, libre }, { where: { id: id } })
     },
