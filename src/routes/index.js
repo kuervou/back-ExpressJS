@@ -9,6 +9,7 @@ const itemMenuRoutes = require('./itemMenuRoutes')
 const ordenRoutes = require('./ordenRoutes')
 const movimientoRoutes = require('./movimientoRoutes')
 const pagoRoutes = require('./pagoRoutes')
+const compraRoutes = require('./compraRoutes')
 
 module.exports = (app) => {
     app.use('/api', mesaRoutes)
@@ -22,4 +23,5 @@ module.exports = (app) => {
     app.use('/api', ordenRoutes)
     app.use('/api', movimientoRoutes)
     app.use('/api', pagoRoutes)
+    app.use('/api', compraRoutes)
 }

@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
                 allowNull: false,
             },
 
-            ItemInventarioId: {
+            itemInventarioId: {
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'ItemsInventario',
