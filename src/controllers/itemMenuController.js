@@ -78,6 +78,14 @@ const itemMenuController = {
         if (grupoId) options.grupoId = +grupoId
 
         const itemMenus = await itemMenuService.getItemsMenuActivos(options)
+
+        itemMenus.items.forEach(item => {
+            if (item.imagen) {
+                // eslint-disable-next-line no-console
+                console.log(item.imagen)
+                item.imagen = item.imagen.toString('base64');
+            }
+        });
         res.json(itemMenus)
     }),
 
@@ -134,6 +142,10 @@ const itemMenuController = {
                     'El campo porUnidad es requerido cuando se envía itemsInventario'
                 )
             }
+        }
+
+        if (data.imagen) {
+            data.imagen = Buffer.from(data.imagen, 'base64');
         }
 
         const itemMenu = await itemMenuService.updateItemMenu(id, data)
