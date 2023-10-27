@@ -49,6 +49,14 @@ const itemMenuController = {
         if (grupoId) options.grupoId = +grupoId
 
         const itemMenus = await itemMenuService.getItemsMenu(options)
+       
+        // Convertir la propiedad imagen de cada item a formato Base64
+        itemMenus.items.forEach(item => {
+            if (item.imagen) {
+                item.imagen = item.imagen.toString('base64');
+            }
+        });
+
         res.json(itemMenus)
     }),
 
