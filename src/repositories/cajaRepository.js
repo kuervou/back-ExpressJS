@@ -24,6 +24,10 @@ const cajaRepository = {
             where: { id: id },
         })
     },
+
+    updateTotal: async (id, total, transaction) => {
+        return await Caja.update({ total }, { where: { id }, transaction })
+    },
 }
 
 module.exports = cajaRepository

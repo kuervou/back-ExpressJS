@@ -261,6 +261,18 @@ const ordenRepository = {
             ],
         })
     },
+
+    updatePaga: async (id, paga, transaction) => {
+        return await Orden.update(
+            { paga: paga },
+            {
+                where: {
+                    id: id,
+                },
+                transaction,
+            }
+        )
+    },
 }
 
 module.exports = ordenRepository

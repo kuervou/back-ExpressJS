@@ -1,20 +1,16 @@
 
 # EN LO QUE QUEDÉ:
+     
 Hacer data provider para caja y grupos clave
 
 - MOstrar el total de la caja 
-
--CRUD movimientos
-
--Crud pagos
-
 
 
 Verificar que no se quieran eliminar items que no sean de esa orden.
 
 Verificar el estado en que esta una orden antes de agregarle o quitarle items.
 
-Agregar lo de websocket a la edicion de una orden y sus endpoint derivados
+Agregar lo de websocket a la edicion de una orden y sus endpoint derivados (Esto incluye tiempo real en movimientos y pagos)
 
 Aumentar el tamaño del blob en el contenedor
 
@@ -22,8 +18,6 @@ HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
 
 FRONT:
 
-
-- validaciones varias (El cliente está estático)
 - manejar errores y exitos
 
 Cambiar el orden de las ordenes en home cocina

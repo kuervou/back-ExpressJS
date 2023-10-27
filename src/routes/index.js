@@ -7,6 +7,9 @@ const grupoRoutes = require('./grupoRoutes')
 const itemInventarioRoutes = require('./itemInventarioRoutes')
 const itemMenuRoutes = require('./itemMenuRoutes')
 const ordenRoutes = require('./ordenRoutes')
+const movimientoRoutes = require('./movimientoRoutes')
+const pagoRoutes = require('./pagoRoutes')
+
 module.exports = (app) => {
     app.use('/api', mesaRoutes)
     app.use('/api', empleadoRoutes)
@@ -17,4 +20,6 @@ module.exports = (app) => {
     app.use('/api', itemInventarioRoutes)
     app.use('/api', itemMenuRoutes)
     app.use('/api', ordenRoutes)
+    app.use('/api', movimientoRoutes)
+    app.use('/api', pagoRoutes)
 }
