@@ -83,7 +83,7 @@ const itemMenuService = {
         return await itemMenuRepository.getItemMenuById(id)
     },
     updateItemMenu: async (id, data) => {
-        if (data.Nombre) {
+        if (data.nombre) {
             await checkNombreUnique(data.nombre, id)
         }
         if (data.grupoId) {

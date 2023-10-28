@@ -33,7 +33,7 @@ module.exports = (sequelize) => {
             },
             cantidadxCasillero: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             cantidad: {
                 type: DataTypes.INTEGER,

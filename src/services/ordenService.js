@@ -5,9 +5,10 @@ const empleadoRepository = require('../repositories/empleadoRepository')
 const clienteRepository = require('../repositories/clienteRepository')
 const itemRepository = require('../repositories/itemRepository')
 const itemService = require('./itemService')
-//const { ESTADOS } = require('../constants/estados/estados')
+const { ESTADOS } = require('../constants/estados/estados')
 
 const db = require('../models')
+const pagoRepository = require('../repositories/pagoRepository')
 const sequelize = db.sequelize
 
 //funcion checkEmpleadoExists
@@ -200,6 +201,44 @@ const ordenService = {
 
             //debemos actualizar el total de la orden y para eso usamos updateOrderTotal de itemRepository
             await itemRepository.updateOrderTotal(orderId)
+
+            return result
+        } catch (error) {
+            await t.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
+        }
+    },
+
+
+    deleteOrden: async (id) => {
+        const t = await sequelize.transaction()
+        try {
+            const orden = await ordenRepository.getOrdenById(id)
+            if (!orden) {
+                throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
+            }
+
+            //debemos verificar si esta orden tiene algun pago asociado, si es asi, no se puede eliminar
+            const pagosOrden = await pagoRepository.findAll({
+                ordenId: id,
+            })
+            if (pagosOrden.total > 0) {
+                throw new HttpError(HttpCode.BAD_REQUEST, 'No se puede eliminar una orden con pagos asociados')
+            }
+
+            //verificamos el estado de la orden, solo se puede eliminar si está en estado "Por confirmar" o "En cocina"
+            if (orden.estado !== ESTADOS.POR_CONFIRMAR && orden.estado !== ESTADOS.EN_COCINA) {
+                throw new HttpError(HttpCode.BAD_REQUEST, 'No se puede eliminar una orden con estado: ' + orden.estado)
+            }
+
+            //si la orden tiene items, debemos eliminarlos
+            if (orden.items) {
+                await itemService.deleteItems(orden.items, t)
+            }
+
+            const result = await ordenRepository.deleteOrden(id, t)
+
+            await t.commit()
 
             return result
         } catch (error) {

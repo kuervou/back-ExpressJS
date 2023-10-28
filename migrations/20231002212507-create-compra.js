@@ -19,7 +19,7 @@ module.exports = {
             },
             cantidadxCasillero: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             cantidad: {
                 type: Sequelize.INTEGER,
@@ -29,7 +29,7 @@ module.exports = {
                 type: Sequelize.FLOAT,
                 allowNull: false,
             },
-            ItemInventarioId: {
+            itemInventarioId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'ItemsInventario',

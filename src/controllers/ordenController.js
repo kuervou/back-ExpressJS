@@ -103,6 +103,9 @@ const ordenController = {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
 
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden actualizada' }) // Emitir evento para actualizar la lista de ordenes
+
         res.status(HttpCode.OK).json({ message: 'Mesas agregadas' })
     }),
 
@@ -116,6 +119,9 @@ const ordenController = {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
 
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden actualizada' }) // Emitir evento para actualizar la lista de ordenes
+
         res.status(HttpCode.OK).json({ message: 'Mesas removidas' })
     }),
 
@@ -128,6 +134,9 @@ const ordenController = {
         if (!orden) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
+
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden actualizada' }) // Emitir evento para actualizar la lista de ordenes
 
         res.status(HttpCode.OK).json({ message: 'Items agregados' })
     }),
@@ -145,6 +154,9 @@ const ordenController = {
             )
         }
 
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden actualizada' }) // Emitir evento para actualizar la lista de ordenes
+
         res.status(HttpCode.OK).json({ message: 'Items removidos' })
     }),
 
@@ -156,6 +168,9 @@ const ordenController = {
         if (resultado === 0) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
         }
+
+        const io = req.io // Socket.io
+        io.emit('fetchOrdenes', { message: 'Orden eliminada' }) // Emitir evento para actualizar la lista de ordenes
 
         res.status(HttpCode.OK).json({ message: 'Orden eliminada' })
     }),

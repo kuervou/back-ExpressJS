@@ -4,8 +4,8 @@ const { Compra } = require('../models')
 //const { Op } = require('sequelize')
 
 const compraRepository = {
-    create: async (data) => {
-        return await Compra.create(data)
+    create: async (data, transaction) => {
+        return await Compra.create(data, { transaction })
     },
     findAll: async (options = {}) => {
         const { page = 1, limit = 10, fecha } = options
@@ -41,18 +41,12 @@ const compraRepository = {
         }
     },
 
-    update: async (id, data) => {
-        return await Compra.update(data, { where: { id: id } })
-    },
-
     getCompraById: async (id) => {
         return await Compra.findByPk(id, { include: ['empleado', 'itemInventario'] })
     },
 
-    deleteCompra: async (id) => {
-        return await Compra.destroy({
-            where: { id: id },
-        })
+    deleteCompra: async (id, transaction) => {
+        return await Compra.destroy({ where: { id } }, { transaction })
     },
 }
 

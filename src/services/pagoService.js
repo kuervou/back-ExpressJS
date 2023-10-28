@@ -14,6 +14,7 @@ const pagoService = {
     crearPago: async (pagoData) => {
         // Iniciar transacción
         const transaction = await sequelize.transaction()
+        let ordenPagada = false;
 
         try {
             // Validar que la orden, el empleado y la caja existen
@@ -89,6 +90,7 @@ const pagoService = {
             //Si el total de los pagos es igual al total de la orden, se marca la orden como pagada
             if (totalPagos === orden.total) {
                 await ordenRepository.updatePaga(orden.id, true, transaction)
+                ordenPagada = true;
             }
 
             // Crear el pago
@@ -97,7 +99,8 @@ const pagoService = {
             // Si todo está bien, confirmar la transacción
             await transaction.commit()
 
-            return nuevoPago
+            return { nuevoPago, ordenPagada };
+
         } catch (error) {
             // Si hay algún error, revertir la transacción
             await transaction.rollback()
@@ -120,7 +123,7 @@ const pagoService = {
     deletePago: async (id) => {
         // Iniciar transacción
         const transaction = await sequelize.transaction()
-
+        let ordenEstabaPagada = false;
         try {
             // Obtener el pago
             const pago = await pagoRepository.findById(id)
@@ -156,6 +159,7 @@ const pagoService = {
             //Si la orden ya ha sido pagada, debemos marcarla como no pagada
             if (orden.paga) {
                 await ordenRepository.updatePaga(orden.id, false, transaction)
+                ordenEstabaPagada = true;
             }
 
             // Eliminar el pago
@@ -164,7 +168,7 @@ const pagoService = {
             // Si todo está bien, confirmar la transacción
             await transaction.commit()
 
-            return resultado
+            return { resultado, ordenEstabaPagada }
         } catch (error) {
             // Si hay algún error, revertir la transacción
             await transaction.rollback()

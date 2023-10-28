@@ -235,8 +235,12 @@ const ordenRepository = {
     },
 
     deleteOrden: async (id) => {
-        return await Orden.destroy({ where: { id: id } })
-    },
+    //la orden se elimina logicamente, es decir se cambia el estado a ESTADOS.CANCELADA    
+        return await Orden.update(
+            { estado: ESTADOS.CANCELADA },
+            { where: { id: id } }
+        )
+},
     findById: async (id, transaction) => {
         return await Orden.findByPk(id, { transaction })
     },

@@ -10,9 +10,13 @@ Verificar que no se quieran eliminar items que no sean de esa orden.
 
 Verificar el estado en que esta una orden antes de agregarle o quitarle items.
 
-Agregar lo de websocket a la edicion de una orden y sus endpoint derivados (Esto incluye tiempo real en movimientos y pagos)
+
+
+
+
 
 Aumentar el tamaño del blob en el contenedor
+
 
 HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
 
@@ -74,3 +78,14 @@ Cambiar el orden de las ordenes en home cocina
 
 
 
+Agregar lo de websocket a la edicion de una orden y sus endpoint derivados (Esto incluye tiempo real en pagos)
+
+C
+U
+D
+de ordenes
+Addmesa
+additem
+removemesa
+removeitem
+si hay un cambio de estado de orden gracias al pago

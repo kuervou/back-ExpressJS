@@ -7,8 +7,12 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const compraController = {
     crearCompra: asyncHandler(async (req, res) => {
         const data = req.body
-        await compraService.crearCompra(data)
-        res.status(HttpCode.CREATED).json({ message: 'Compra creada' })
+        const result = await compraService.crearCompra(data)
+        res.status(HttpCode.CREATED).json({
+            message: 'Compra creada',
+            result,
+        })
+       
     }),
 
     getCompras: asyncHandler(async (req, res) => {
@@ -34,19 +38,6 @@ const compraController = {
         }
 
         res.status(HttpCode.OK).json(compra)
-    }),
-
-    updateCompra: asyncHandler(async (req, res) => {
-        const id = req.params.id
-        const data = req.body
-
-        const compraActualizada = await compraService.updateCompra(id, data)
-
-        if (compraActualizada[0] === 0) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Compra no encontrada')
-        }
-
-        res.status(HttpCode.OK).json({ message: 'Compra actualizada' })
     }),
 
     deleteCompra: asyncHandler(async (req, res) => {

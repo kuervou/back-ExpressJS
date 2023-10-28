@@ -7,8 +7,15 @@ const { HttpCode } = require('../error-handling/http_error')
 const pagoController = {
     crearPago: asyncHandler(async (req, res) => {
         const pagoData = req.body
-        await pagoService.crearPago(pagoData)
-        res.status(HttpCode.CREATED).json({ message: 'Pago creado' })
+        const { nuevoPago, ordenPagada } = await pagoService.crearPago(pagoData);
+        if (ordenPagada) {
+            const io = req.io;
+            io.emit('fetchOrdenes', { message: 'Orden actualizada' });
+        }
+        res.status(HttpCode.CREATED).json({
+            message: 'Pago creado',
+            nuevoPago,
+        })
     }),
 
     getPagos: asyncHandler(async (req, res) => {
@@ -34,8 +41,15 @@ const pagoController = {
 
     deletePago: asyncHandler(async (req, res) => {
         const id = req.params.id
-        await pagoService.deletePago(id)
-        res.status(HttpCode.OK).json({ message: 'Pago eliminado' })
+        const { pagoEliminado, ordenEstabaPagada } = await pagoService.deletePago(id)
+        if (ordenEstabaPagada) {
+            const io = req.io
+            io.emit('fetchOrdenes', { message: 'Orden actualizada' })
+        }
+        res.status(HttpCode.OK).json({
+            message: 'Pago eliminado',
+            pagoEliminado,
+        })
     }),
 }
 

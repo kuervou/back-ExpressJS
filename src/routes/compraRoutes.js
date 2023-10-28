@@ -28,12 +28,6 @@ router.get(
     compraController.getCompraById
 )
 
-router.put(
-    '/compras/:id',
-    auth([ROLES.ADMIN]),
-    compraController.updateCompra
-)
-
 router.delete(
     '/compras/:id',
     auth([ROLES.ADMIN]),
