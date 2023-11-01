@@ -2,12 +2,6 @@
 # EN LO QUE QUEDÉ:
 PROXIMO:
 
-PAGO GET PÖR ID
-
-Hacer data provider para caja y grupos clave
-
-- MOstrar el total de la caja 
-
 - hacer la integracion de los movimientos de caja
 
 Aumentar el tamaño del blob en el contenedor

@@ -42,7 +42,9 @@ const compraRepository = {
     },
 
     getCompraById: async (id) => {
-        return await Compra.findByPk(id, { include: ['empleado', 'itemInventario'] })
+        return await Compra.findByPk(id, {
+            include: ['empleado', 'itemInventario'],
+        })
     },
 
     deleteCompra: async (id, transaction) => {

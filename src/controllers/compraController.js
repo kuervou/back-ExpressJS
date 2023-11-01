@@ -12,7 +12,6 @@ const compraController = {
             message: 'Compra creada',
             result,
         })
-       
     }),
 
     getCompras: asyncHandler(async (req, res) => {

@@ -4,7 +4,7 @@ const compraSchema = Joi.object({
     fecha: Joi.date().required(),
     hora: Joi.string().required(),
     cantidadxCasillero: Joi.number().greater(0).optional(),
-    cantidad : Joi.number().greater(0).required(),
+    cantidad: Joi.number().greater(0).required(),
     empleadoId: Joi.number().required(),
     itemInventarioId: Joi.number().required(),
 })

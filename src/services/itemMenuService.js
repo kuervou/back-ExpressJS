@@ -96,64 +96,63 @@ const itemMenuService = {
     },
     //removeItemsInventario función que dado un itemMenu y un array de itemInventarioId desvincula los itemInventarioId con itemMenu en la tabla intermedia
     removeItemsInventario: async (id, data) => {
-        let transaction;
-        const ItemMenu = await itemMenuRepository.getItemMenuById(id);
+        let transaction
+        const ItemMenu = await itemMenuRepository.getItemMenuById(id)
         if (!ItemMenu) {
-            return null;
+            return null
         }
-    
+
         try {
             // Iniciar transacción
-            transaction = await sequelize.transaction();
+            transaction = await sequelize.transaction()
             if (data.itemsInventario) {
                 for (let itemInventarioData of data.itemsInventario) {
                     // Desasociar ItemMenu con ItemInventario aquí
                     const itemInventario =
                         await itemInventarioRepository.getItemInventarioById(
                             itemInventarioData.id
-                        );
+                        )
                     if (itemInventario) {
                         await itemMenuRepository.removeItemInventario(
                             id,
                             itemInventarioData.id,
-                            transaction 
-                        );
+                            transaction
+                        )
                     } else {
                         throw new HttpError(
                             HttpCode.NOT_FOUND,
                             `ItemInventario con id ${itemInventarioData.id} no encontrado`
-                        );
+                        )
                     }
                     // Actualizar el campo porUnidad del ItemInventario
                     await itemInventarioRepository.updatePorUnidad(
                         itemInventarioData.id,
                         data.porUnidad,
-                        transaction  
-                    );
+                        transaction
+                    )
                 }
             } else {
                 // Si no se envía el array de itemsInventario se advierte al usuario
                 throw new HttpError(
                     HttpCode.BAD_REQUEST,
                     `Debe enviar un array de itemsInventario`
-                );
+                )
             }
-            
+
             // Si todo está bien, confirmar la transacción
-            await transaction.commit();
-            return await itemMenuRepository.getItemMenuById(id);
+            await transaction.commit()
+            return await itemMenuRepository.getItemMenuById(id)
         } catch (error) {
             // Si hay algún error, revertir la transacción
-            if (transaction) await transaction.rollback();
-            throw error;
+            if (transaction) await transaction.rollback()
+            throw error
         }
     },
-    
+
     //addItemsInventario función que dado un itemMenu y un array de itemInventarioId vincula los itemInventarioId con itemMenu en la tabla intermedia
-    addItemsInventario: async (id, data) => {  
+    addItemsInventario: async (id, data) => {
         let transaction
         try {
-            
             const ItemMenu = await itemMenuRepository.getItemMenuById(id)
             if (!ItemMenu) {
                 return null

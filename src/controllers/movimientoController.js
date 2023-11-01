@@ -5,7 +5,12 @@ const { HttpError, HttpCode } = require('../error-handling/http_error')
 const movimientoController = {
     crearMovimiento: asyncHandler(async (req, res) => {
         const movimientoData = req.body
+        //pasar el movimientoData.total a number si es string
+        movimientoData.total = Number(movimientoData.total)
         await movimientoService.crearMovimiento(movimientoData)
+        const io = req.io
+
+        io.emit('fetchTotalCaja', { message: 'Movimiento creado' })
         res.status(HttpCode.CREATED).json({ message: 'Movimiento creado' })
     }),
 
@@ -42,6 +47,9 @@ const movimientoController = {
         if (resultado === 0) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Movimiento no encontrado')
         }
+        const io = req.io
+
+        io.emit('fetchTotalCaja', { message: 'Movimiento eliminado' })
 
         res.status(HttpCode.OK).json({ message: 'Movimiento eliminado' })
     }),

@@ -33,9 +33,8 @@ const itemMenuController = {
         }
 
         if (data.imagen) {
-            data.imagen = Buffer.from(data.imagen, 'base64');
+            data.imagen = Buffer.from(data.imagen, 'base64')
         }
-        
 
         const itemMenu = await itemMenuService.crearItemMenu(data)
         res.status(HttpCode.CREATED).json({
@@ -54,14 +53,13 @@ const itemMenuController = {
         if (grupoId) options.grupoId = +grupoId
 
         const itemMenus = await itemMenuService.getItemsMenu(options)
-       
+
         // Convertir la propiedad imagen de cada item a formato Base64
-        itemMenus.items.forEach(item => {
+        itemMenus.items.forEach((item) => {
             if (item.imagen) {
-               
-                item.imagen = item.imagen.toString('base64');
+                item.imagen = item.imagen.toString('base64')
             }
-        });
+        })
 
         res.json(itemMenus)
     }),
@@ -78,12 +76,11 @@ const itemMenuController = {
 
         const itemMenus = await itemMenuService.getItemsMenuActivos(options)
 
-        itemMenus.items.forEach(item => {
+        itemMenus.items.forEach((item) => {
             if (item.imagen) {
-               
-                item.imagen = item.imagen.toString('base64');
+                item.imagen = item.imagen.toString('base64')
             }
-        });
+        })
         res.json(itemMenus)
     }),
 
@@ -143,7 +140,7 @@ const itemMenuController = {
         }
 
         if (data.imagen) {
-            data.imagen = Buffer.from(data.imagen, 'base64');
+            data.imagen = Buffer.from(data.imagen, 'base64')
         }
 
         const itemMenu = await itemMenuService.updateItemMenu(id, data)

@@ -22,11 +22,7 @@ router.get(
     compraController.getCompras
 )
 
-router.get(
-    '/compras/:id',
-    auth([ROLES.ADMIN]),
-    compraController.getCompraById
-)
+router.get('/compras/:id', auth([ROLES.ADMIN]), compraController.getCompraById)
 
 router.delete(
     '/compras/:id',

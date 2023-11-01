@@ -196,20 +196,19 @@ const ordenService = {
 
             */
 
+            //Debemos verificar que los items que se quieren eliminar pertenezcan a la orden
 
-           //Debemos verificar que los items que se quieren eliminar pertenezcan a la orden
-            
             const existingItems = await itemRepository.findItems(items)
-           
+
             //recorremos los items en existingItems y verificamos que todos pertenezcan a la orden
             existingItems.forEach((item) => {
-
                 if (item.ordenId != orderId) {
-                    throw new HttpError(HttpCode.BAD_REQUEST, 'No se pueden eliminar items que no pertenezcan a la orden')
+                    throw new HttpError(
+                        HttpCode.BAD_REQUEST,
+                        'No se pueden eliminar items que no pertenezcan a la orden'
+                    )
                 }
             })
-
-            
 
             const result = await itemService.deleteItems(items, t)
 
@@ -225,7 +224,6 @@ const ordenService = {
         }
     },
 
-
     deleteOrden: async (id) => {
         const t = await sequelize.transaction()
         try {
@@ -239,12 +237,21 @@ const ordenService = {
                 ordenId: id,
             })
             if (pagosOrden.total > 0) {
-                throw new HttpError(HttpCode.BAD_REQUEST, 'No se puede eliminar una orden con pagos asociados')
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    'No se puede eliminar una orden con pagos asociados'
+                )
             }
 
             //verificamos el estado de la orden, solo se puede eliminar si está en estado "Por confirmar" o "En cocina"
-            if (orden.estado !== ESTADOS.POR_CONFIRMAR && orden.estado !== ESTADOS.EN_COCINA) {
-                throw new HttpError(HttpCode.BAD_REQUEST, 'No se puede eliminar una orden con estado: ' + orden.estado)
+            if (
+                orden.estado !== ESTADOS.POR_CONFIRMAR &&
+                orden.estado !== ESTADOS.EN_COCINA
+            ) {
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    'No se puede eliminar una orden con estado: ' + orden.estado
+                )
             }
 
             //si la orden tiene items, debemos eliminarlos
