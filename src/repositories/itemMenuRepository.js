@@ -22,11 +22,19 @@ const itemMenuRepository = {
             )
         }
     },
-    removeItemInventario: async (itemMenuId, itemInventarioId) => {
+    removeItemInventario: async (itemMenuId, itemInventarioId, transaction) => {
         const itemMenu = await ItemMenu.findByPk(itemMenuId)
         const itemInventario = await ItemInventario.findByPk(itemInventarioId)
+
         if (itemMenu && itemInventario) {
-            await itemMenu.removeItemInventario(itemInventario)
+            await itemMenu.removeItemInventario(itemInventario, {
+                transaction,
+            })
+        } else {
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                `ItemInventario con id ${itemInventarioId} no encontrado`
+            )
         }
     },
 

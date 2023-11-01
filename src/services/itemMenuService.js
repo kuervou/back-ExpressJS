@@ -96,53 +96,68 @@ const itemMenuService = {
     },
     //removeItemsInventario función que dado un itemMenu y un array de itemInventarioId desvincula los itemInventarioId con itemMenu en la tabla intermedia
     removeItemsInventario: async (id, data) => {
-        const ItemMenu = await itemMenuRepository.getItemMenuById(id)
+        let transaction;
+        const ItemMenu = await itemMenuRepository.getItemMenuById(id);
         if (!ItemMenu) {
-            return null
+            return null;
         }
-        if (data.itemsInventario) {
-            for (let itemInventarioData of data.itemsInventario) {
-                // Desasociar ItemMenu con ItemInventario aquí
-                const itemInventario =
-                    await itemInventarioRepository.getItemInventarioById(
-                        itemInventarioData.id
-                    )
-                if (itemInventario) {
-                    await itemMenuRepository.removeItemInventario(
-                        id,
-                        itemInventarioData.id
-                    )
-                } else {
-                    throw new HttpError(
-                        HttpCode.NOT_FOUND,
-                        `ItemInventario con id ${itemInventarioData.id} no encontrado`
-                    )
-                }
-                // Actualizar el campo porUnidad del ItemInventario
-                await itemInventarioRepository.updatePorUnidad(
-                    itemInventarioData.id,
-                    data.porUnidad
-                )
-            }
-        } else {
-            //si no se envia el array de itemsInventario se advierte al usuario
-            throw new HttpError(
-                HttpCode.BAD_REQUEST,
-                `Debe enviar un array de itemsInventario`
-            )
-        }
-        return await itemMenuRepository.getItemMenuById(id)
-    },
-    //addItemsInventario función que dado un itemMenu y un array de itemInventarioId vincula los itemInventarioId con itemMenu en la tabla intermedia
-    addItemsInventario: async (id, data) => {
-        let transaction
-
-        const ItemMenu = await itemMenuRepository.getItemMenuById(id)
-        if (!ItemMenu) {
-            return null
-        }
-
+    
         try {
+            // Iniciar transacción
+            transaction = await sequelize.transaction();
+            if (data.itemsInventario) {
+                for (let itemInventarioData of data.itemsInventario) {
+                    // Desasociar ItemMenu con ItemInventario aquí
+                    const itemInventario =
+                        await itemInventarioRepository.getItemInventarioById(
+                            itemInventarioData.id
+                        );
+                    if (itemInventario) {
+                        await itemMenuRepository.removeItemInventario(
+                            id,
+                            itemInventarioData.id,
+                            transaction 
+                        );
+                    } else {
+                        throw new HttpError(
+                            HttpCode.NOT_FOUND,
+                            `ItemInventario con id ${itemInventarioData.id} no encontrado`
+                        );
+                    }
+                    // Actualizar el campo porUnidad del ItemInventario
+                    await itemInventarioRepository.updatePorUnidad(
+                        itemInventarioData.id,
+                        data.porUnidad,
+                        transaction  
+                    );
+                }
+            } else {
+                // Si no se envía el array de itemsInventario se advierte al usuario
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    `Debe enviar un array de itemsInventario`
+                );
+            }
+            
+            // Si todo está bien, confirmar la transacción
+            await transaction.commit();
+            return await itemMenuRepository.getItemMenuById(id);
+        } catch (error) {
+            // Si hay algún error, revertir la transacción
+            if (transaction) await transaction.rollback();
+            throw error;
+        }
+    },
+    
+    //addItemsInventario función que dado un itemMenu y un array de itemInventarioId vincula los itemInventarioId con itemMenu en la tabla intermedia
+    addItemsInventario: async (id, data) => {  
+        let transaction
+        try {
+            
+            const ItemMenu = await itemMenuRepository.getItemMenuById(id)
+            if (!ItemMenu) {
+                return null
+            }
             // Iniciar transacción
             transaction = await sequelize.transaction()
             if (data.itemsInventario) {
@@ -155,7 +170,7 @@ const itemMenuService = {
                     if (itemInventario) {
                         await itemMenuRepository.addItemInventario(
                             ItemMenu,
-                            id,
+                            itemInventarioData.id,
                             transaction
                         )
                     } else {
