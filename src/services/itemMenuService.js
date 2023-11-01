@@ -135,42 +135,58 @@ const itemMenuService = {
     },
     //addItemsInventario función que dado un itemMenu y un array de itemInventarioId vincula los itemInventarioId con itemMenu en la tabla intermedia
     addItemsInventario: async (id, data) => {
+        let transaction
+
         const ItemMenu = await itemMenuRepository.getItemMenuById(id)
         if (!ItemMenu) {
             return null
         }
-        if (data.itemsInventario) {
-            for (let itemInventarioData of data.itemsInventario) {
-                // Asociar ItemMenu con ItemInventario aquí
-                const itemInventario =
-                    await itemInventarioRepository.getItemInventarioById(
-                        itemInventarioData.id
-                    )
-                if (itemInventario) {
-                    await itemMenuRepository.addItemInventario(
-                        id,
-                        itemInventarioData.id
-                    )
-                } else {
-                    throw new HttpError(
-                        HttpCode.NOT_FOUND,
-                        `ItemInventario con id ${itemInventarioData.id} no encontrado`
+
+        try {
+            // Iniciar transacción
+            transaction = await sequelize.transaction()
+            if (data.itemsInventario) {
+                for (let itemInventarioData of data.itemsInventario) {
+                    // Asociar ItemMenu con ItemInventario aquí
+                    const itemInventario =
+                        await itemInventarioRepository.getItemInventarioById(
+                            itemInventarioData.id
+                        )
+                    if (itemInventario) {
+                        await itemMenuRepository.addItemInventario(
+                            ItemMenu,
+                            id,
+                            transaction
+                        )
+                    } else {
+                        throw new HttpError(
+                            HttpCode.NOT_FOUND,
+                            `ItemInventario con id ${itemInventarioData.id} no encontrado`
+                        )
+                    }
+                    // Actualizar el campo porUnidad del ItemInventario
+                    await itemInventarioRepository.updatePorUnidad(
+                        itemInventarioData.id,
+                        data.porUnidad,
+                        transaction
                     )
                 }
-                // Actualizar el campo porUnidad del ItemInventario
-                await itemInventarioRepository.updatePorUnidad(
-                    itemInventarioData.id,
-                    data.porUnidad
+            } else {
+                //si no se envia el array de itemsInventario se advierte al usuario
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    `Debe enviar un array de itemsInventario`
                 )
             }
-        } else {
-            //si no se envia el array de itemsInventario se advierte al usuario
-            throw new HttpError(
-                HttpCode.BAD_REQUEST,
-                `Debe enviar un array de itemsInventario`
-            )
+
+            // Si todo está bien, confirmar la transacción
+            await transaction.commit()
+            return await itemMenuRepository.getItemMenuById(id)
+        } catch (error) {
+            // Si hay algún error, revertir la transacción
+            await transaction.rollback()
+            throw error
         }
-        return await itemMenuRepository.getItemMenuById(id)
     },
 }
 

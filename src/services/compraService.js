@@ -13,9 +13,7 @@ const compraService = {
         // Iniciar transacción
         const transaction = await sequelize.transaction()
         try{
-            
-            // eslint-disable-next-line no-console
-            console.log(data)
+
             //Validar que el empleado y el itemInventario existen
             const empleado = await empleadoRepository.getEmpleadoById(data.empleadoId)
             const itemInventario = await itemInventarioRepository.getItemInventarioById(data.itemInventarioId)
@@ -32,12 +30,10 @@ const compraService = {
 
             //Si no hay quiere decir que es una compra por unidad (data.cantidad representa las unidades), procedemos a actualizar el stock del itemInventario
             if (!data.cantidadxCasillero) {
-                // eslint-disable-next-line no-console
-                console.log(data.cantidad)
+
                 await itemInventarioRepository.sumarStock(itemInventario, data.cantidad, transaction)
                 total = data.cantidad * itemInventario.costo
-                // eslint-disable-next-line no-console
-                console.log(total)
+
             }
             //Si no es null quiere decir que es una compra por casillero (data.cantidad representa la cantidad de casilleros), procedemos a actualizar el stock del itemInventario
             else {

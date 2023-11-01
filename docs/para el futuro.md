@@ -1,19 +1,14 @@
 
 # EN LO QUE QUEDÉ:
-     
+PROXIMO:
+
+PAGO GET PÖR ID
+
 Hacer data provider para caja y grupos clave
 
 - MOstrar el total de la caja 
 
-
-Verificar que no se quieran eliminar items que no sean de esa orden.
-
-Verificar el estado en que esta una orden antes de agregarle o quitarle items.
-
-
-
-
-
+- hacer la integracion de los movimientos de caja
 
 Aumentar el tamaño del blob en el contenedor
 
@@ -21,7 +16,7 @@ Aumentar el tamaño del blob en el contenedor
 HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
 
 FRONT:
-
+Verificar el estado en que esta una orden antes de agregarle o quitarle items.
 - manejar errores y exitos
 
 Cambiar el orden de las ordenes en home cocina

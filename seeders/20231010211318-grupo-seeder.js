@@ -8,12 +8,12 @@ module.exports = {
             'Grupos',
             [
                 {
-                    nombre: 'Grupo A',
+                    nombre: 'tragos',
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
                 {
-                    nombre: 'Grupo B',
+                    nombre: 'bebidas',
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },

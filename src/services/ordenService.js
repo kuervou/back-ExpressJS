@@ -195,6 +195,22 @@ const ordenService = {
             }
 
             */
+
+
+           //Debemos verificar que los items que se quieren eliminar pertenezcan a la orden
+            
+            const existingItems = await itemRepository.findItems(items)
+           
+            //recorremos los items en existingItems y verificamos que todos pertenezcan a la orden
+            existingItems.forEach((item) => {
+
+                if (item.ordenId != orderId) {
+                    throw new HttpError(HttpCode.BAD_REQUEST, 'No se pueden eliminar items que no pertenezcan a la orden')
+                }
+            })
+
+            
+
             const result = await itemService.deleteItems(items, t)
 
             await t.commit()

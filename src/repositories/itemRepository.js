@@ -15,11 +15,6 @@ const itemRepository = {
     },
 
     updateOrderTotal: async (ordenId) => {
-        // eslint-disable-next-line no-console
-        console.log('updateOrderTotal')
-        // eslint-disable-next-line no-console
-        console.log(ordenId)
-
         const order = await Orden.findByPk(ordenId, {
             include: [{ model: Item, as: 'items' }],
         })
