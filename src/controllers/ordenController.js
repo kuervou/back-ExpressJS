@@ -19,7 +19,14 @@ const ordenController = {
             const rol = decoded.rol
 
             if (rol === ROLES.ADMIN || rol === ROLES.MOZO) {
+                if(data.estado && data.estado == ESTADOS.ENTREGADA)
+                 {
+                    data.estado = ESTADOS.ENTREGADA
+                    data.paga = false
+                } else {
                 data.estado = ESTADOS.EN_COCINA
+                data.paga = false
+                }
             } else {
                 data.estado = ESTADOS.POR_CONFIRMAR
                 data.paga = false

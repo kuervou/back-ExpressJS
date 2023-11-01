@@ -134,13 +134,11 @@ const ordenRepository = {
         const whereConditions = {}
 
         //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, POR_CONFIRMAR
-        whereConditions.estado = {
-            [Op.or]: [
-                ESTADOS.EN_COCINA,
-                ESTADOS.PARA_ENTREGAR,
-                ESTADOS.POR_CONFIRMAR,
-            ],
-        }
+        whereConditions[Op.or] = [
+            { estado: { [Op.in]: [ESTADOS.EN_COCINA, ESTADOS.PARA_ENTREGAR, ESTADOS.POR_CONFIRMAR] } },
+            { estado: ESTADOS.ENTREGADA, paga: false }
+        ];
+        
 
         // Consulta para obtener la cuenta correcta
         const count = await Orden.count({
