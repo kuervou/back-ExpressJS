@@ -44,18 +44,19 @@ const itemMenuController = {
     }),
 
     getItemsMenu: asyncHandler(async (req, res) => {
-        const { page, limit, nombre, grupoId } = req.query
-
+        const { page, limit, nombre } = req.query
+        let { grupoId } = req.query
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
         if (grupoId) {
-            if (Array.isArray(grupoId)) {
-                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            if (typeof grupoId === 'string') {
+                grupoId = grupoId.split(',').map(id => parseInt(id));
             } else {
-                options.grupoId = +grupoId
+                grupoId = [grupoId];
             }
+            options.grupoId = grupoId;
         }
 
         const itemMenus = await itemMenuService.getItemsMenu(options)
@@ -72,19 +73,21 @@ const itemMenuController = {
 
     //getItemsMenuActivos es una función para obtener los itemsMenu activos
     getItemsMenuActivos: asyncHandler(async (req, res) => {
-        const { page, limit, nombre, grupoId } = req.query
-    
+        const { page, limit, nombre} = req.query
+        let { grupoId } = req.query
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
         if (grupoId) {
-            if (Array.isArray(grupoId)) {
-                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            if (typeof grupoId === 'string') {
+                grupoId = grupoId.split(',').map(id => parseInt(id));
             } else {
-                options.grupoId = +grupoId
+                grupoId = [grupoId];
             }
+            options.grupoId = grupoId;
         }
+        
     
         const itemMenus = await itemMenuService.getItemsMenuActivos(options)
     
@@ -99,18 +102,19 @@ const itemMenuController = {
 
     //getItemsMenuActivosBasic es una función para obtener los itemsMenu activos con menos campos en la response (sirve para el menu de los mozos por ejemplo)
     getItemsMenuActivosBasic: asyncHandler(async (req, res) => {
-        const { page, limit, nombre, grupoId } = req.query
-     
+        const { page, limit, nombre } = req.query
+        let { grupoId } = req.query
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
         if (grupoId) {
-            if (Array.isArray(grupoId)) {
-                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            if (typeof grupoId === 'string') {
+                grupoId = grupoId.split(',').map(id => parseInt(id));
             } else {
-                options.grupoId = +grupoId
+                grupoId = [grupoId];
             }
+            options.grupoId = grupoId;
         }
 
         const itemMenus =
