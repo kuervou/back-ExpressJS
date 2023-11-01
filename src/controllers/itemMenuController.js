@@ -50,7 +50,13 @@ const itemMenuController = {
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
-        if (grupoId) options.grupoId = +grupoId
+        if (grupoId) {
+            if (Array.isArray(grupoId)) {
+                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            } else {
+                options.grupoId = +grupoId
+            }
+        }
 
         const itemMenus = await itemMenuService.getItemsMenu(options)
 
@@ -67,15 +73,21 @@ const itemMenuController = {
     //getItemsMenuActivos es una función para obtener los itemsMenu activos
     getItemsMenuActivos: asyncHandler(async (req, res) => {
         const { page, limit, nombre, grupoId } = req.query
-
+    
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
-        if (grupoId) options.grupoId = +grupoId
-
+        if (grupoId) {
+            if (Array.isArray(grupoId)) {
+                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            } else {
+                options.grupoId = +grupoId
+            }
+        }
+    
         const itemMenus = await itemMenuService.getItemsMenuActivos(options)
-
+    
         itemMenus.items.forEach((item) => {
             if (item.imagen) {
                 item.imagen = item.imagen.toString('base64')
@@ -83,16 +95,23 @@ const itemMenuController = {
         })
         res.json(itemMenus)
     }),
+    
 
     //getItemsMenuActivosBasic es una función para obtener los itemsMenu activos con menos campos en la response (sirve para el menu de los mozos por ejemplo)
     getItemsMenuActivosBasic: asyncHandler(async (req, res) => {
         const { page, limit, nombre, grupoId } = req.query
-
+     
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
-        if (grupoId) options.grupoId = +grupoId
+        if (grupoId) {
+            if (Array.isArray(grupoId)) {
+                options.grupoId = grupoId.map(id => +id);  // Convertir cada valor del array a número
+            } else {
+                options.grupoId = +grupoId
+            }
+        }
 
         const itemMenus =
             await itemMenuService.getItemsMenuActivosBasic(options)

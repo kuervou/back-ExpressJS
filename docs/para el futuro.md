@@ -2,7 +2,6 @@
 # EN LO QUE QUEDÉ:
 PROXIMO:
 
-- hacer la integracion de los movimientos de caja
 
 Aumentar el tamaño del blob en el contenedor
 

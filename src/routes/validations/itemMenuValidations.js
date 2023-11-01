@@ -28,7 +28,11 @@ const querySchema = Joi.object({
     page: Joi.number().min(-1).optional(),
     limit: Joi.number().min(-1).optional(),
     nombre: Joi.string().max(255).optional(),
-    grupoId: Joi.number().integer().positive().optional(),
+    grupoId: Joi.alternatives().try(
+        Joi.number().integer().positive(),
+        Joi.array().items(Joi.number().integer().positive())
+    ).optional(),
+    
 })
 
 const updateItemsMenuInventarioSchema = Joi.object({

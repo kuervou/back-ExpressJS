@@ -53,7 +53,13 @@ const itemMenuRepository = {
             }
         }
         if (grupoId) {
-            whereConditions.GrupoId = grupoId
+            if (Array.isArray(grupoId)) {
+                whereConditions.GrupoId = {
+                    [Op.in]: grupoId,
+                };
+            } else {
+                whereConditions.GrupoId = grupoId;
+            }
         }
 
         const result = await ItemMenu.findAndCountAll({
@@ -94,8 +100,15 @@ const itemMenuRepository = {
             }
         }
         if (grupoId) {
-            whereConditions.GrupoId = grupoId
+            if (Array.isArray(grupoId)) {
+                whereConditions.GrupoId = {
+                    [Op.in]: grupoId,
+                };
+            } else {
+                whereConditions.GrupoId = grupoId;
+            }
         }
+        
 
         const result = await ItemMenu.findAndCountAll({
             where: whereConditions,
@@ -123,7 +136,13 @@ const itemMenuRepository = {
             }
         }
         if (grupoId) {
-            whereConditions.GrupoId = grupoId
+            if (Array.isArray(grupoId)) {
+                whereConditions.GrupoId = {
+                    [Op.in]: grupoId,
+                };
+            } else {
+                whereConditions.GrupoId = grupoId;
+            }
         }
 
         //si page o limit son -1, no se aplica paginación
