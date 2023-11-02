@@ -45,6 +45,12 @@ router.get(
     itemMenuController.getItemMenuById
 )
 
+router.get(
+    '/itemsMenu/:id/itemsMenuInventario',
+    auth([ROLES.ADMIN]),
+    itemMenuController.getItemMenuInventarioById
+)
+
 router.put(
     '/itemsMenu/:id',
     [auth([ROLES.ADMIN]), validate(updateItemMenuSchema)],

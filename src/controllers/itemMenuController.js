@@ -134,6 +134,19 @@ const itemMenuController = {
         res.status(HttpCode.OK).json(itemMenu)
     }),
 
+    getItemMenuInventarioById: asyncHandler(async (req, res) => {
+        const id = req.params.id
+
+        const itemMenu = await itemMenuService.getItemMenuInventarioById(id)
+
+        if (!itemMenu) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'ItemMenu no encontrado')
+        }
+
+        res.status(HttpCode.OK).json(itemMenu)
+
+    }),
+
     updateItemMenu: asyncHandler(async (req, res) => {
         const id = req.params.id
         const data = req.body

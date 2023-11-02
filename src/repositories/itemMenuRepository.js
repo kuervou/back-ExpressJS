@@ -187,6 +187,25 @@ const itemMenuRepository = {
             attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
         })
     },
+    getItemMenuInventarioById: async (id) => {
+        return await ItemMenu.findByPk(id, {
+            include: [
+                {
+                    model: Grupo, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'grupo',
+                },
+                {
+                    model: ItemInventario, // Asegúrate de importar este modelo al principio del archivo
+                    as: 'ItemInventarios', // Por convención, Sequelize usa el nombre plural del modelo
+                    through: {
+                        attributes: [], // Si quieres excluir todos los campos de la tabla intermedia. Si deseas incluir algunos, coloca sus nombres aquí.
+                    },
+                },
+            ],
+            //exlcuir campos imagen, activo, grupoId
+            attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
+        })
+    },
     deleteItemMenu: async (id) => {
         //borrado logico
         return await ItemMenu.update({ activo: false }, { where: { id: id } })
