@@ -65,8 +65,6 @@ const ordenRepository = {
     findAll: async (options = {}) => {
         const { page = 1, limit = 10, fecha, empleadoId, estado, mesaId } = options
         const offset = (page - 1) * limit
-        // eslint-disable-next-line no-console
-        console.log('mesaId', mesaId);
         const whereConditions = {}
         if (fecha) {
             whereConditions.fecha = {
@@ -111,8 +109,6 @@ const ordenRepository = {
         ]
 
         if(mesaId) {
-            // eslint-disable-next-line no-console
-            console.log('mesaId', mesaId);
             include.push({
                 model: Mesa,
                 as: 'mesas',

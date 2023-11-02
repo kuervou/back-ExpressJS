@@ -89,7 +89,7 @@ module.exports = (sequelize) => {
         {
             sequelize,
             modelName: 'Orden',
-            tableName: 'ordenes',
+            tableName: 'Ordenes',
             timestamps: true,
         }
     )
