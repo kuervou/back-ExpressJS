@@ -20,6 +20,12 @@ router.get(
 )
 
 router.get(
+    '/mesas/libres',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    mesaController.getMesasLibres
+)
+
+router.get(
     '/mesas/:id',
     auth([ROLES.ADMIN, ROLES.MOZO]),
     mesaController.getMesaById

@@ -19,6 +19,12 @@ const mesaController = {
         res.json(mesas)
     }),
 
+    getMesasLibres: asyncHandler(async (req, res) => {
+        const mesas = await mesaService.getMesasLibres()
+        res.json(mesas)
+    }
+    ),
+
     getMesaById: asyncHandler(async (req, res) => {
         const id = req.params.id
 

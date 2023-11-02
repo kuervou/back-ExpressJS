@@ -26,6 +26,10 @@ const mesaService = {
         return await mesaRepository.findAllOcupadas()
     },
 
+    getMesasLibres: async function () {
+        return await mesaRepository.findAllLibres()
+    },
+
     getMesaById: async (id) => {
         return await mesaRepository.getMesaById(id)
     },
