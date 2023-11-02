@@ -188,9 +188,24 @@ const itemMenuController = {
 
         res.status(HttpCode.OK).json({
             message: 'ItemMenu desactivado',
-            itemMenu,
         })
     }),
+
+
+    activateItemMenu: asyncHandler(async (req, res) => {
+        const id = req.params.id
+
+        const itemMenu = await itemMenuService.activateItemMenu(id)
+
+        if (!itemMenu) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'ItemMenu no encontrado')
+        }
+
+        res.status(HttpCode.OK).json({
+            message: 'ItemMenu activado',
+        })
+    }),
+
 
     //removeItemsInventario función que dado un itemMenu y un array de itemInventarioId desvincula los itemInventarioId con itemMenu en la tabla intermedia
     removeItemsInventario: asyncHandler(async (req, res) => {

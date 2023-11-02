@@ -191,6 +191,10 @@ const itemMenuRepository = {
         //borrado logico
         return await ItemMenu.update({ activo: false }, { where: { id: id } })
     },
+
+    activateItemMenu: async (id) => {
+        return await ItemMenu.update({ activo: true }, { where: { id: id } })
+    },
     findByNombre: async (nombre) => {
         return await ItemMenu.findOne({
             where: { nombre: nombre.toLowerCase() },

@@ -94,6 +94,11 @@ const itemMenuService = {
     deleteItemMenu: async (id) => {
         return await itemMenuRepository.deleteItemMenu(id)
     },
+
+    activateItemMenu: async (id) => {
+        return await itemMenuRepository.activateItemMenu(id)
+    },
+
     //removeItemsInventario función que dado un itemMenu y un array de itemInventarioId desvincula los itemInventarioId con itemMenu en la tabla intermedia
     removeItemsInventario: async (id, data) => {
         let transaction
