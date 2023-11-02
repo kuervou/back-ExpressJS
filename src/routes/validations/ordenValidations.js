@@ -80,6 +80,7 @@ const querySchema = Joi.object({
     estado: Joi.string()
         .valid(...Object.values(ESTADOS.ESTADOS))
         .optional(),
+    mesaId: Joi.number().optional(),
 })
 
 const addOrRemoveMesaSchema = Joi.object({

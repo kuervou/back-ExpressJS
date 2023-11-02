@@ -63,9 +63,10 @@ const ordenRepository = {
     },
 
     findAll: async (options = {}) => {
-        const { page = 1, limit = 10, fecha, empleadoId, estado } = options
+        const { page = 1, limit = 10, fecha, empleadoId, estado, mesaId } = options
         const offset = (page - 1) * limit
-
+        // eslint-disable-next-line no-console
+        console.log('mesaId', mesaId);
         const whereConditions = {}
         if (fecha) {
             whereConditions.fecha = {
@@ -79,54 +80,60 @@ const ordenRepository = {
             whereConditions.estado = estado
         }
 
-        // Consulta para obtener la cuenta correcta
-        const count = await Orden.count({
-            where: whereConditions,
-        })
 
-        const rows = await Orden.findAll({
+        const include = [
+            {
+                model: Item,
+                as: 'items',
+                include: [
+                    {
+                        model: ItemMenu,
+                        as: 'itemMenu',
+                        attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                        include: [
+                            {
+                                model: Grupo,
+                                as: 'grupo',
+                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                model: db.Cliente,
+                as: 'cliente',
+            },
+            {
+                model: db.Empleado,
+                as: 'empleado',
+            },
+        ]
+
+        if(mesaId) {
+            // eslint-disable-next-line no-console
+            console.log('mesaId', mesaId);
+            include.push({
+                model: Mesa,
+                as: 'mesas',
+                where: { id: mesaId },
+                through: { attributes: [] }
+            });
+        }
+
+
+        const result = await Orden.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
             order: [['fecha', 'DESC']],
             distinct: true,
-            include: [
-                {
-                    model: Item,
-                    as: 'items',
-                    include: [
-                        {
-                            model: ItemMenu,
-                            as: 'itemMenu',
-                            attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
-                            include: [
-                                {
-                                    model: Grupo,
-                                    as: 'grupo',
-                                    attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    model: Mesa,
-                    as: 'mesas',
-                },
-                {
-                    model: db.Cliente,
-                    as: 'cliente',
-                },
-                {
-                    model: db.Empleado,
-                    as: 'empleado',
-                },
-            ],
+            include: include, 
         })
 
         return {
-            total: count,
-            items: rows,
+            total: result.count,
+            items: result.rows,
         }
     },
 

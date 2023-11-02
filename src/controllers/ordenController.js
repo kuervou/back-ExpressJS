@@ -48,7 +48,7 @@ const ordenController = {
     }),
 
     getOrdenes: asyncHandler(async (req, res) => {
-        const { page, limit, empleadoId, clienteId, estado } = req.query
+        const { page, limit, empleadoId, clienteId, estado, mesaId } = req.query
 
         const options = {}
         if (page) options.page = +page
@@ -56,6 +56,7 @@ const ordenController = {
         if (empleadoId) options.empleadoId = +empleadoId
         if (clienteId) options.clienteId = +clienteId
         if (estado) options.estado = estado
+        if (mesaId) options.mesaId = +mesaId
 
         const ordenes = await ordenService.getOrdenes(options)
 
