@@ -56,9 +56,9 @@ const itemMenuRepository = {
             if (Array.isArray(grupoId)) {
                 whereConditions.GrupoId = {
                     [Op.in]: grupoId,
-                };
+                }
             } else {
-                whereConditions.GrupoId = grupoId;
+                whereConditions.GrupoId = grupoId
             }
         }
 
@@ -103,12 +103,11 @@ const itemMenuRepository = {
             if (Array.isArray(grupoId)) {
                 whereConditions.GrupoId = {
                     [Op.in]: grupoId,
-                };
+                }
             } else {
-                whereConditions.GrupoId = grupoId;
+                whereConditions.GrupoId = grupoId
             }
         }
-        
 
         const result = await ItemMenu.findAndCountAll({
             where: whereConditions,
@@ -139,9 +138,9 @@ const itemMenuRepository = {
             if (Array.isArray(grupoId)) {
                 whereConditions.GrupoId = {
                     [Op.in]: grupoId,
-                };
+                }
             } else {
-                whereConditions.GrupoId = grupoId;
+                whereConditions.GrupoId = grupoId
             }
         }
 

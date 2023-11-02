@@ -81,6 +81,6 @@ router.patch(
     '/itemsMenu/:id/activate',
     auth([ROLES.ADMIN]),
     itemMenuController.activateItemMenu
-)	
+)
 
 module.exports = router

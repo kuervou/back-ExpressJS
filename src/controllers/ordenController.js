@@ -19,13 +19,12 @@ const ordenController = {
             const rol = decoded.rol
 
             if (rol === ROLES.ADMIN || rol === ROLES.MOZO) {
-                if(data.estado && data.estado == ESTADOS.ENTREGADA)
-                 {
+                if (data.estado && data.estado == ESTADOS.ENTREGADA) {
                     data.estado = ESTADOS.ENTREGADA
                     data.paga = false
                 } else {
-                data.estado = ESTADOS.EN_COCINA
-                data.paga = false
+                    data.estado = ESTADOS.EN_COCINA
+                    data.paga = false
                 }
             } else {
                 data.estado = ESTADOS.POR_CONFIRMAR
@@ -65,6 +64,18 @@ const ordenController = {
 
     getOrdenesCaja: asyncHandler(async (req, res) => {
         const ordenes = await ordenService.getOrdenesCaja()
+
+        res.json(ordenes)
+    }),
+
+    getOrdenesMozo: asyncHandler(async (req, res) => {
+        const { mesaId } = req.query
+
+        const options = {}
+
+        if (mesaId) options.mesaId = +mesaId
+
+        const ordenes = await ordenService.getOrdenesMozo(options)
 
         res.json(ordenes)
     }),

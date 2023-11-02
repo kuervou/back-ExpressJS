@@ -52,11 +52,11 @@ const itemMenuController = {
         if (nombre) options.nombre = nombre
         if (grupoId) {
             if (typeof grupoId === 'string') {
-                grupoId = grupoId.split(',').map(id => parseInt(id));
+                grupoId = grupoId.split(',').map((id) => parseInt(id))
             } else {
-                grupoId = [grupoId];
+                grupoId = [grupoId]
             }
-            options.grupoId = grupoId;
+            options.grupoId = grupoId
         }
 
         const itemMenus = await itemMenuService.getItemsMenu(options)
@@ -73,7 +73,7 @@ const itemMenuController = {
 
     //getItemsMenuActivos es una función para obtener los itemsMenu activos
     getItemsMenuActivos: asyncHandler(async (req, res) => {
-        const { page, limit, nombre} = req.query
+        const { page, limit, nombre } = req.query
         let { grupoId } = req.query
         const options = {}
         if (page) options.page = +page
@@ -81,16 +81,15 @@ const itemMenuController = {
         if (nombre) options.nombre = nombre
         if (grupoId) {
             if (typeof grupoId === 'string') {
-                grupoId = grupoId.split(',').map(id => parseInt(id));
+                grupoId = grupoId.split(',').map((id) => parseInt(id))
             } else {
-                grupoId = [grupoId];
+                grupoId = [grupoId]
             }
-            options.grupoId = grupoId;
+            options.grupoId = grupoId
         }
-        
-    
+
         const itemMenus = await itemMenuService.getItemsMenuActivos(options)
-    
+
         itemMenus.items.forEach((item) => {
             if (item.imagen) {
                 item.imagen = item.imagen.toString('base64')
@@ -98,7 +97,6 @@ const itemMenuController = {
         })
         res.json(itemMenus)
     }),
-    
 
     //getItemsMenuActivosBasic es una función para obtener los itemsMenu activos con menos campos en la response (sirve para el menu de los mozos por ejemplo)
     getItemsMenuActivosBasic: asyncHandler(async (req, res) => {
@@ -110,11 +108,11 @@ const itemMenuController = {
         if (nombre) options.nombre = nombre
         if (grupoId) {
             if (typeof grupoId === 'string') {
-                grupoId = grupoId.split(',').map(id => parseInt(id));
+                grupoId = grupoId.split(',').map((id) => parseInt(id))
             } else {
-                grupoId = [grupoId];
+                grupoId = [grupoId]
             }
-            options.grupoId = grupoId;
+            options.grupoId = grupoId
         }
 
         const itemMenus =
@@ -144,7 +142,6 @@ const itemMenuController = {
         }
 
         res.status(HttpCode.OK).json(itemMenu)
-
     }),
 
     updateItemMenu: asyncHandler(async (req, res) => {
@@ -204,7 +201,6 @@ const itemMenuController = {
         })
     }),
 
-
     activateItemMenu: asyncHandler(async (req, res) => {
         const id = req.params.id
 
@@ -218,7 +214,6 @@ const itemMenuController = {
             message: 'ItemMenu activado',
         })
     }),
-
 
     //removeItemsInventario función que dado un itemMenu y un array de itemInventarioId desvincula los itemInventarioId con itemMenu en la tabla intermedia
     removeItemsInventario: asyncHandler(async (req, res) => {

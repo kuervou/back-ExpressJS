@@ -83,6 +83,10 @@ const ordenService = {
         return await ordenRepository.findAllCaja()
     },
 
+    getOrdenesMozo: async (options = {}) => {
+        return await ordenRepository.findAllMozo(options)
+    },
+
     getCountOcupacion: async () => {
         return await ordenRepository.countOcupacion()
     },

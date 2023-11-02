@@ -63,7 +63,14 @@ const ordenRepository = {
     },
 
     findAll: async (options = {}) => {
-        const { page = 1, limit = 10, fecha, empleadoId, estado, mesaId } = options
+        const {
+            page = 1,
+            limit = 10,
+            fecha,
+            empleadoId,
+            estado,
+            mesaId,
+        } = options
         const offset = (page - 1) * limit
         const whereConditions = {}
         if (fecha) {
@@ -77,7 +84,6 @@ const ordenRepository = {
         if (estado) {
             whereConditions.estado = estado
         }
-
 
         const include = [
             {
@@ -108,15 +114,14 @@ const ordenRepository = {
             },
         ]
 
-        if(mesaId) {
+        if (mesaId) {
             include.push({
                 model: Mesa,
                 as: 'mesas',
                 where: { id: mesaId },
-                through: { attributes: [] }
-            });
+                through: { attributes: [] },
+            })
         }
-
 
         const result = await Orden.findAndCountAll({
             where: whereConditions,
@@ -124,7 +129,7 @@ const ordenRepository = {
             limit,
             order: [['fecha', 'DESC']],
             distinct: true,
-            include: include, 
+            include: include,
         })
 
         return {
@@ -138,10 +143,17 @@ const ordenRepository = {
 
         //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, POR_CONFIRMAR
         whereConditions[Op.or] = [
-            { estado: { [Op.in]: [ESTADOS.EN_COCINA, ESTADOS.PARA_ENTREGAR, ESTADOS.POR_CONFIRMAR] } },
-            { estado: ESTADOS.ENTREGADA, paga: false }
-        ];
-        
+            {
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.EN_COCINA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.POR_CONFIRMAR,
+                    ],
+                },
+            },
+            { estado: ESTADOS.ENTREGADA, paga: false },
+        ]
 
         // Consulta para obtener la cuenta correcta
         const count = await Orden.count({
@@ -203,9 +215,91 @@ const ordenRepository = {
                 },
             ],
         })
+
         return {
             total: count,
             items: rows,
+        }
+    },
+
+    findAllMozo: async (options) => {
+        const { mesaId } = options
+
+        const whereConditions = {}
+
+        //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, MODIFICADA
+        whereConditions[Op.or] = [
+            {
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.EN_COCINA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.MODIFICADA,
+                    ],
+                },
+            },
+        ]
+
+        const include = [
+            {
+                model: Item,
+                as: 'items',
+                include: [
+                    {
+                        model: ItemMenu,
+                        as: 'itemMenu',
+                        attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                        include: [
+                            {
+                                model: Grupo,
+                                as: 'grupo',
+                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                model: db.Cliente,
+                as: 'cliente',
+            },
+            {
+                model: db.Empleado,
+                as: 'empleado',
+            },
+        ]
+
+        if (mesaId) {
+            include.push({
+                model: Mesa,
+                as: 'mesas',
+                where: { id: mesaId },
+                through: { attributes: [] },
+            })
+        }
+
+        const result = await Orden.findAndCountAll({
+            where: whereConditions,
+            order: [
+                [
+                    literal(`
+                    CASE 
+                        WHEN estado = '${ESTADOS.PARA_ENTREGAR}' THEN 1
+                        WHEN estado = '${ESTADOS.EN_COCINA}' THEN 2 
+                        WHEN estado = '${ESTADOS.MODIFICADA}' THEN 3
+                        ELSE 4
+                    END
+                `),
+                    'ASC',
+                ],
+                ['fecha', 'DESC'],
+            ],
+            distinct: true,
+            include: include,
+        })
+        return {
+            total: result.count,
+            items: result.rows,
         }
     },
 
