@@ -25,6 +25,10 @@ module.exports = (sequelize) => {
                 unique: true,
                 allowNull: false,
             },
+            esBebida: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+            },
         },
         {
             sequelize,

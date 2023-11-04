@@ -2,23 +2,33 @@ const { Grupo } = require('../models')
 const { Op } = require('sequelize')
 
 const grupoRepository = {
-    create: async (nombre) => {
+    create: async (nombre, esBebida) => {
         const nuevoGrupo = await Grupo.create({
             nombre,
+            esBebida
         })
         return nuevoGrupo
     },
     findAll: async (options = {}) => {
-        const { page = 1, limit = 10, nombre } = options
+        const { page = 1, limit = 10, nombre, esBebida } = options
 
         const offset = (page - 1) * limit
-
+        // eslint-disable-next-line no-console
+        console.log("esBebida", esBebida)
         const whereConditions = {}
         if (nombre) {
             whereConditions.nombre = {
                 [Op.like]: `%${nombre}%`, // Búsqueda insensible a mayúsculas/minúsculas
             }
         }
+
+        if (esBebida !== undefined) {
+            whereConditions.esBebida = esBebida === 'true' || esBebida === true; // true si esBebida es 'true' o true
+            if (esBebida === 'false' || esBebida === false) {
+                whereConditions.esBebida = false; // false si esBebida es 'false' o false
+            }
+        }
+        
 
         //Si page o limit son -1, no se aplica paginado
 
@@ -47,8 +57,8 @@ const grupoRepository = {
         }
     },
 
-    update: async (id, nombre) => {
-        return await Grupo.update({ nombre }, { where: { id: id } })
+    update: async (id, nombre, esBebida) => {
+        return await Grupo.update({ nombre, esBebida }, { where: { id: id } })
     },
 
     getGrupoById: async (id) => {

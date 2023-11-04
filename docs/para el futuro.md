@@ -2,6 +2,11 @@
 # EN LO QUE QUEDÉ:
 PROXIMO:
 
+ getEstadoPagos en OrdenService esta sin terminar
+
+debo ver el pagar todo VER DE HACER UN ENDPOINT NUEVO
+debo ver las notas
+
 
 Aumentar el tamaño del blob en el contenedor
 

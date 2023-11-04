@@ -10,6 +10,7 @@ const {
     querySchema,
     addOrRemoveMesaSchema,
     addItemsSchema,
+    porMesaSchema,
     removeItemsSchema,
 } = require('./validations/ordenValidations')
 const auth = require('../middleware/auth')
@@ -30,11 +31,17 @@ router.get(
     ordenController.getCountOcupacion
 )
 
-router.get('/ordenes/caja', auth([ROLES.ADMIN]), ordenController.getOrdenesCaja)
+router.get(
+    '/ordenes/caja',
+    auth([ROLES.ADMIN]), 
+    validate(porMesaSchema, 'query'),
+    ordenController.getOrdenesCaja
+)
 
 router.get(
     '/ordenes/mozo',
     auth([ROLES.ADMIN, ROLES.MOZO]),
+    validate(porMesaSchema, 'query'),
     ordenController.getOrdenesMozo
 )
 
@@ -64,6 +71,14 @@ router.delete(
     auth([ROLES.ADMIN, ROLES.MOZO]),
     validate(addOrRemoveMesaSchema),
     ordenController.removeMesas
+)
+
+
+//endpoint que dado un id de orden devuelve información de su pago
+router.get(
+    '/ordenes/:id/estadoPagos',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    ordenController.getEstadoPagos
 )
 
 //rutas para add y remove items

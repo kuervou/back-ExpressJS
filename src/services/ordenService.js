@@ -79,8 +79,8 @@ const ordenService = {
         return await ordenRepository.getOrdenById(id)
     },
 
-    getOrdenesCaja: async () => {
-        return await ordenRepository.findAllCaja()
+    getOrdenesCaja: async (options = {}) => {
+        return await ordenRepository.findAllCaja(options)
     },
 
     getOrdenesMozo: async (options = {}) => {
@@ -89,6 +89,32 @@ const ordenService = {
 
     getCountOcupacion: async () => {
         return await ordenRepository.countOcupacion()
+    },
+
+
+    //Esta sin terminar esta función
+    getEstadoPagos: async (id) => {
+        const orden = await ordenRepository.getOrdenById(id)
+        if (!orden) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Orden no encontrada')
+        }
+
+        const pagos = await pagoRepository.findAll({
+            ordenId: id,
+        })
+
+        let totalPagado = 0
+        pagos.forEach((pago) => {
+            totalPagado += pago.total
+        })
+
+        const estadoPagos = {
+            totalPagado,
+            totalOrden: orden.total,
+            paga: orden.paga,
+        }
+
+        return estadoPagos
     },
 
     updateOrden: async (orderId, data) => {

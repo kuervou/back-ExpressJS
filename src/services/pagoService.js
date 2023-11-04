@@ -15,7 +15,8 @@ const pagoService = {
         // Iniciar transacción
         const transaction = await sequelize.transaction()
         let ordenPagada = false
-
+        //pasar el pagoData.total a number si es string
+        pagoData.total = Number(pagoData.total)
         try {
             // Validar que la orden, el empleado y la caja existen
             const orden = await ordenRepository.getOrdenById(pagoData.ordenId)
@@ -41,6 +42,7 @@ const pagoService = {
 
             // Si el método de pago es "Efectivo", se suma el total del pago al total de la caja
             if (pagoData.metodoPago === METODOSPAGO.EFECTIVO) {
+                
                 let nuevoTotalCaja = caja.total + pagoData.total
                 await cajaRepository.updateTotal(
                     caja.id,
@@ -74,6 +76,8 @@ const pagoService = {
             let totalPagos = 0
             pagosOrden.items.forEach((pago) => {
                 totalPagos += pago.total
+                // eslint-disable-next-line no-console
+                console.log(totalPagos)
             })
 
             //Sumamos el total del pago que se quiere hacer
@@ -81,6 +85,10 @@ const pagoService = {
 
             //Si el total de los pagos es mayor al total de la orden, no se puede hacer el pago
             if (totalPagos > orden.total) {
+                // eslint-disable-next-line no-console
+                console.log(totalPagos)
+                // eslint-disable-next-line no-console
+                console.log(orden.total)
                 throw new HttpError(
                     HttpCode.BAD_REQUEST,
                     'El pago actual sumado a los demas pagos parciales es mayor al total de la orden'

@@ -138,7 +138,8 @@ const ordenRepository = {
         }
     },
 
-    findAllCaja: async () => {
+    findAllCaja: async (options) => {
+        const { mesaId } = options
         const whereConditions = {}
 
         //agregar a la condicion que el estado sea ESTADOS.EN_COCINA, PARA_ENTREGAR, POR_CONFIRMAR
@@ -155,12 +156,55 @@ const ordenRepository = {
             { estado: ESTADOS.ENTREGADA, paga: false },
         ]
 
-        // Consulta para obtener la cuenta correcta
-        const count = await Orden.count({
-            where: whereConditions,
-        })
+        const include = [
+            {
+                model: Item,
+                as: 'items',
+                order: [
+                    literal(`CASE 
+                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
+                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
+                        ELSE 3 END ASC`),
+                ],
+                include: [
+                    {
+                        model: ItemMenu,
+                        as: 'itemMenu',
+                        attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                        include: [
+                            {
+                                model: Grupo,
+                                as: 'grupo',
+                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                model: Mesa,
+                as: 'mesas',
+            },
+            {
+                model: db.Cliente,
+                as: 'cliente',
+            },
+            {
+                model: db.Empleado,
+                as: 'empleado',
+            },
+        ]
 
-        const rows = await Orden.findAll({
+        if (mesaId) {
+            include.push({
+                model: Mesa,
+                as: 'mesas',
+                where: { id: mesaId },
+                through: { attributes: [] },
+            })
+        }
+        
+        const result = await Orden.findAndCountAll({
             where: whereConditions,
             order: [
                 [
@@ -176,51 +220,15 @@ const ordenRepository = {
                 ['fecha', 'DESC'],
             ],
             distinct: true,
-            include: [
-                {
-                    model: Item,
-                    as: 'items',
-                    order: [
-                        literal(`CASE 
-                            WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
-                            WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
-                            ELSE 3 END ASC`),
-                    ],
-                    include: [
-                        {
-                            model: ItemMenu,
-                            as: 'itemMenu',
-                            attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
-                            include: [
-                                {
-                                    model: Grupo,
-                                    as: 'grupo',
-                                    attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    model: Mesa,
-                    as: 'mesas',
-                },
-                {
-                    model: db.Cliente,
-                    as: 'cliente',
-                },
-                {
-                    model: db.Empleado,
-                    as: 'empleado',
-                },
-            ],
+            include: include,
         })
 
         return {
-            total: count,
-            items: rows,
+            total: result.count,
+            items: result.rows,
         }
     },
+
 
     findAllMozo: async (options) => {
         const { mesaId } = options

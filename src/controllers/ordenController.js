@@ -63,7 +63,13 @@ const ordenController = {
     }),
 
     getOrdenesCaja: asyncHandler(async (req, res) => {
-        const ordenes = await ordenService.getOrdenesCaja()
+        const { mesaId } = req.query
+
+        const options = {}
+
+        if (mesaId) options.mesaId = +mesaId
+
+        const ordenes = await ordenService.getOrdenesCaja(options)
 
         res.json(ordenes)
     }),
@@ -96,6 +102,13 @@ const ordenController = {
         const ocupacion = await ordenService.getCountOcupacion()
         res.status(HttpCode.OK).json(ocupacion)
     }),
+
+    getEstadoPagos: asyncHandler(async (req, res) => {
+        const id = req.params.id
+        const estadoPagos = await ordenService.getEstadoPagos(id)
+        res.status(HttpCode.OK).json(estadoPagos)
+    }),
+    
 
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id

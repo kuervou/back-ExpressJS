@@ -103,6 +103,10 @@ const removeItemsSchema = Joi.object({
     items: Joi.array().items(Joi.number()).required(),
 })
 
+const porMesaSchema = Joi.object({
+    mesaId: Joi.number().optional(),
+})
+
 module.exports = {
     ordenSchema,
     querySchema,
@@ -110,4 +114,5 @@ module.exports = {
     addOrRemoveMesaSchema,
     addItemsSchema,
     removeItemsSchema,
+    porMesaSchema,
 }

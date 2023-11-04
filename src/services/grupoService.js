@@ -14,9 +14,9 @@ const checkNombreUnique = async (nombre, excludeId = null) => {
 }
 
 const grupoService = {
-    crearGrupo: async (nombre) => {
+    crearGrupo: async (nombre, esBebida) => {
         await checkNombreUnique(nombre)
-        return await grupoRepository.create(nombre)
+        return await grupoRepository.create(nombre, esBebida)
     },
     getGrupos: async function (options = {}) {
         return await grupoRepository.findAll(options)
@@ -26,11 +26,11 @@ const grupoService = {
         return await grupoRepository.getGrupoById(id)
     },
 
-    updateGrupo: async (id, nombre) => {
+    updateGrupo: async (id, nombre, esBebida) => {
         if (nombre) {
             await checkNombreUnique(nombre, id)
         }
-        return await grupoRepository.update(id, nombre)
+        return await grupoRepository.update(id, nombre, esBebida)
     },
     deleteGrupo: async (id) => {
         return await grupoRepository.deleteGrupo(id)
