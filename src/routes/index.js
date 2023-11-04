@@ -10,7 +10,7 @@ const ordenRoutes = require('./ordenRoutes')
 const movimientoRoutes = require('./movimientoRoutes')
 const pagoRoutes = require('./pagoRoutes')
 const compraRoutes = require('./compraRoutes')
-
+const logRoutes = require('./logRoutes')
 module.exports = (app) => {
     app.use('/api', mesaRoutes)
     app.use('/api', empleadoRoutes)
@@ -24,4 +24,5 @@ module.exports = (app) => {
     app.use('/api', movimientoRoutes)
     app.use('/api', pagoRoutes)
     app.use('/api', compraRoutes)
+    app.use('/api', logRoutes)
 }

@@ -87,10 +87,13 @@ const ordenService = {
         return await ordenRepository.findAllMozo(options)
     },
 
+    getOrdenesHistorial: async (options = {}) => {
+        return await ordenRepository.findAllHistorial(options)
+    },
+
     getCountOcupacion: async () => {
         return await ordenRepository.countOcupacion()
     },
-
 
     //Esta sin terminar esta función
     getEstadoPagos: async (id) => {

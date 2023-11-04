@@ -33,7 +33,7 @@ router.get(
 
 router.get(
     '/ordenes/caja',
-    auth([ROLES.ADMIN]), 
+    auth([ROLES.ADMIN]),
     validate(porMesaSchema, 'query'),
     ordenController.getOrdenesCaja
 )
@@ -43,6 +43,13 @@ router.get(
     auth([ROLES.ADMIN, ROLES.MOZO]),
     validate(porMesaSchema, 'query'),
     ordenController.getOrdenesMozo
+)
+
+router.get(
+    '/ordenes/historial',
+    auth([ROLES.ADMIN, ROLES.MOZO]),
+    validate(porMesaSchema, 'query'),
+    ordenController.getOrdenesHistorial
 )
 
 router.get(
@@ -72,7 +79,6 @@ router.delete(
     validate(addOrRemoveMesaSchema),
     ordenController.removeMesas
 )
-
 
 //endpoint que dado un id de orden devuelve información de su pago
 router.get(

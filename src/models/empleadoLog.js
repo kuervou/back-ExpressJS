@@ -22,10 +22,15 @@ module.exports = (sequelize) => {
 
     EmpleadoLog.init(
         {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
             empleadoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                primaryKey: true,
                 references: {
                     model: 'Empleados',
                     key: 'id',
@@ -34,7 +39,6 @@ module.exports = (sequelize) => {
             logId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                primaryKey: true,
                 references: {
                     model: 'Logs',
                     key: 'id',

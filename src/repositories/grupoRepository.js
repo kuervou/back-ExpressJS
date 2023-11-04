@@ -5,7 +5,7 @@ const grupoRepository = {
     create: async (nombre, esBebida) => {
         const nuevoGrupo = await Grupo.create({
             nombre,
-            esBebida
+            esBebida,
         })
         return nuevoGrupo
     },
@@ -13,8 +13,7 @@ const grupoRepository = {
         const { page = 1, limit = 10, nombre, esBebida } = options
 
         const offset = (page - 1) * limit
-        // eslint-disable-next-line no-console
-        console.log("esBebida", esBebida)
+
         const whereConditions = {}
         if (nombre) {
             whereConditions.nombre = {
@@ -23,12 +22,11 @@ const grupoRepository = {
         }
 
         if (esBebida !== undefined) {
-            whereConditions.esBebida = esBebida === 'true' || esBebida === true; // true si esBebida es 'true' o true
+            whereConditions.esBebida = esBebida === 'true' || esBebida === true // true si esBebida es 'true' o true
             if (esBebida === 'false' || esBebida === false) {
-                whereConditions.esBebida = false; // false si esBebida es 'false' o false
+                whereConditions.esBebida = false // false si esBebida es 'false' o false
             }
         }
-        
 
         //Si page o limit son -1, no se aplica paginado
 

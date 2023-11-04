@@ -203,7 +203,7 @@ const ordenRepository = {
                 through: { attributes: [] },
             })
         }
-        
+
         const result = await Orden.findAndCountAll({
             where: whereConditions,
             order: [
@@ -228,7 +228,6 @@ const ordenRepository = {
             items: result.rows,
         }
     },
-
 
     findAllMozo: async (options) => {
         const { mesaId } = options
@@ -305,6 +304,96 @@ const ordenRepository = {
             distinct: true,
             include: include,
         })
+        return {
+            total: result.count,
+            items: result.rows,
+        }
+    },
+
+    findAllHistorial: async (options) => {
+        const { mesaId } = options
+        const whereConditions = {}
+
+        whereConditions[Op.or] = [
+            {
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.FINALIZADA,
+                        ESTADOS.CANCELADA,
+                        ESTADOS.MODIFICADA,
+                    ],
+                },
+            },
+            { estado: ESTADOS.ENTREGADA, paga: true },
+        ]
+
+        const include = [
+            {
+                model: Item,
+                as: 'items',
+                order: [
+                    literal(`CASE 
+                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
+                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
+                        ELSE 3 END ASC`),
+                ],
+                include: [
+                    {
+                        model: ItemMenu,
+                        as: 'itemMenu',
+                        attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                        include: [
+                            {
+                                model: Grupo,
+                                as: 'grupo',
+                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                model: Mesa,
+                as: 'mesas',
+            },
+            {
+                model: db.Cliente,
+                as: 'cliente',
+            },
+            {
+                model: db.Empleado,
+                as: 'empleado',
+            },
+        ]
+
+        if (mesaId) {
+            include.push({
+                model: Mesa,
+                as: 'mesas',
+                where: { id: mesaId },
+                through: { attributes: [] },
+            })
+        }
+
+        const result = await Orden.findAndCountAll({
+            where: whereConditions,
+            order: [
+                [
+                    literal(`
+                    CASE 
+                        WHEN estado = '${ESTADOS.POR_CONFIRMAR}' THEN 1 
+                        WHEN estado = '${ESTADOS.PARA_ENTREGAR}' THEN 2 
+                        ELSE 3 
+                    END
+                `),
+                    'ASC',
+                ],
+                ['fecha', 'DESC'],
+            ],
+            distinct: true,
+            include: include,
+        })
+
         return {
             total: result.count,
             items: result.rows,

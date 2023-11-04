@@ -86,6 +86,18 @@ const ordenController = {
         res.json(ordenes)
     }),
 
+    getOrdenesHistorial: asyncHandler(async (req, res) => {
+        const { mesaId } = req.query
+
+        const options = {}
+
+        if (mesaId) options.mesaId = +mesaId
+
+        const ordenes = await ordenService.getOrdenesHistorial(options)
+
+        res.json(ordenes)
+    }),
+
     getOrdenById: asyncHandler(async (req, res) => {
         const id = req.params.id
 
@@ -108,7 +120,6 @@ const ordenController = {
         const estadoPagos = await ordenService.getEstadoPagos(id)
         res.status(HttpCode.OK).json(estadoPagos)
     }),
-    
 
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id

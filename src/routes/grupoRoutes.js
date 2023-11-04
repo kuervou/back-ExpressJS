@@ -2,7 +2,11 @@ const express = require('express')
 const router = express.Router()
 const grupoController = require('../controllers/grupoController')
 const validate = require('../middleware/validate')
-const { querySchema, grupoSchema, updateGrupoSchema } = require('./validations/grupoValidation')
+const {
+    querySchema,
+    grupoSchema,
+    updateGrupoSchema,
+} = require('./validations/grupoValidation')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 

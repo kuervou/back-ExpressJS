@@ -42,7 +42,11 @@ const grupoController = {
         let { nombre, esBebida } = req.body
 
         nombre = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
-        const grupoActualizado = await grupoService.updateGrupo(id, nombre, esBebida)
+        const grupoActualizado = await grupoService.updateGrupo(
+            id,
+            nombre,
+            esBebida
+        )
 
         if (grupoActualizado[0] === 0) {
             // Si la cantidad de registros actualizados es 0
