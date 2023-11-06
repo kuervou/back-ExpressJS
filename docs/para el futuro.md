@@ -2,7 +2,9 @@
 # EN LO QUE QUEDÉ:
 PROXIMO:
 
+OJO: los gurises tienen que migrar empleadoLog para el proximo pull del back
  getEstadoPagos en OrdenService esta sin terminar
+
 
 debo ver el pagar todo VER DE HACER UN ENDPOINT NUEVO
 debo ver las notas

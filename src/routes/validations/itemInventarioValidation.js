@@ -25,6 +25,7 @@ const querySchema = Joi.object({
     limit: Joi.number().integer().min(1).max(100).optional(),
     nombre: Joi.string().max(255).optional(),
     categoriaId: Joi.number().integer().positive().optional(),
+    porUnidad: Joi.bool().optional(),
 })
 
 const updateStockSchema = Joi.object({
