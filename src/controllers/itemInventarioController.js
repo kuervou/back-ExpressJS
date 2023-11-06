@@ -27,13 +27,14 @@ const itemInventarioController = {
     }),
 
     getItemsInventario: asyncHandler(async (req, res) => {
-        const { page, limit, nombre, categoriaId } = req.query
+        const { page, limit, nombre, categoriaId, porUnidad } = req.query
 
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
         if (nombre) options.nombre = nombre
         if (categoriaId) options.categoriaId = +categoriaId
+        if (porUnidad) options.porUnidad = porUnidad
 
         const itemsInventario =
             await itemInventarioService.getItemsInventario(options)
