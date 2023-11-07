@@ -24,6 +24,13 @@ const logController = {
             })
         }
     }),
+
+    getLog: asyncHandler(async (req, res) => {
+        const { itemInventarioId, empleadoId } = req.query
+        const log = await logService.getLog(itemInventarioId, empleadoId)
+        res.status(200).json(log)
+    }),
+
 }
 
 module.exports = logController

@@ -8,19 +8,26 @@ const validate = require('../middleware/validate')
 const {
     abrirBotellaSchema,
     cerrarBotellaSchema,
+    logQuerySchema,
 } = require('./validations/logValidations')
 
 router.post(
     '/log/abrirBotella',
-    auth([ROLES.ADMIN, ROLES.USER]),
+    auth([ROLES.ADMIN]),
     validate(abrirBotellaSchema),
     logController.abrirBotella
 )
 router.post(
     '/log/cerrarBotella',
-    auth([ROLES.ADMIN, ROLES.USER]),
+    auth([ROLES.ADMIN]),
     validate(cerrarBotellaSchema),
     logController.cerrarBotella
+)
+router.get(
+    '/log',
+    auth([ROLES.ADMIN]),
+    validate(logQuerySchema),
+    logController.getLog
 )
 
 module.exports = router

@@ -1,5 +1,6 @@
 const logRepository = require('../repositories/logRepository')
 const empleadoLogRepository = require('../repositories/empleadoLogRepository')
+const itemInventarioRepository  = require('../repositories/itemInventarioRepository')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const db = require('../models')
 const sequelize = db.sequelize
@@ -52,6 +53,17 @@ const logService = {
                     ' ))'
             )
         }
+        
+        //si no alcanza el stock para abrir la botella, no se puede abrir
+        if (itemInventario.stock < 1) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'No hay stock suficiente para abrir la botella. ( ItemInventarioId: ' +
+                    itemInventarioId +
+                    ' ))'
+            )
+        }
+        
 
         //si ambos existen y se vende por tragos, primero debemos validar que no exista un log abierto para el itemInventarioId
         const openLog =
@@ -66,6 +78,12 @@ const logService = {
         }
 
         try {
+            //descontar el stock del itemInventario
+            await itemInventarioRepository.descontarStock(
+                itemInventario,
+                1,
+                transaction
+            )
             // Crear el log
             const log = await logRepository.createLog(
                 {
