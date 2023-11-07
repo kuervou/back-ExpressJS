@@ -218,8 +218,6 @@ const itemMenuRepository = {
             where: { nombre: nombre.toLowerCase() },
         })
     },
-
-    
 }
 
 module.exports = itemMenuRepository

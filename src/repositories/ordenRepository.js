@@ -121,8 +121,7 @@ const ordenRepository = {
                 where: { id: mesaId },
                 through: { attributes: [] },
             })
-        }
-        else{
+        } else {
             include.push({
                 model: Mesa,
                 as: 'mesas',
@@ -478,11 +477,21 @@ const ordenRepository = {
     },
 
     //función getOrdenesConItemsEntreFechas
-    getOrdenesConItemsEntreFechas: async (fechaDesde, fechaHasta, transaction) => {
+    getOrdenesConItemsEntreFechas: async (
+        fechaDesde,
+        horaDesde,
+        fechaHasta,
+        horaHasta,
+        transaction
+    ) => {
         return await Orden.findAll({
             where: {
                 fecha: {
                     [Op.between]: [fechaDesde, fechaHasta],
+                },
+                hora: {
+                    [Op.gte]: horaDesde,
+                    [Op.lte]: horaHasta,
                 },
                 estado: {
                     [Op.in]: [
@@ -500,8 +509,7 @@ const ordenRepository = {
             ],
             transaction,
         })
-    }
-
+    },
 }
 
 module.exports = ordenRepository

@@ -26,13 +26,12 @@ const logController = {
     }),
 
     getLogs: asyncHandler(async (req, res) => {
-        const { itemInventarioId } = req.params;
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const { itemInventarioId } = req.params
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
         const log = await logService.getLogs(itemInventarioId, page, limit)
         res.status(200).json(log)
     }),
-
 }
 
 module.exports = logController

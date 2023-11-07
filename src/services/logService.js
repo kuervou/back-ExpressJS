@@ -1,6 +1,6 @@
 const logRepository = require('../repositories/logRepository')
 const empleadoLogRepository = require('../repositories/empleadoLogRepository')
-const itemInventarioRepository  = require('../repositories/itemInventarioRepository')
+const itemInventarioRepository = require('../repositories/itemInventarioRepository')
 const ordenRepository = require('../repositories/ordenRepository')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const db = require('../models')
@@ -54,7 +54,7 @@ const logService = {
                     ' ))'
             )
         }
-        
+
         //si no alcanza el stock para abrir la botella, no se puede abrir
         if (itemInventario.stock < 1) {
             throw new HttpError(
@@ -64,7 +64,6 @@ const logService = {
                     ' ))'
             )
         }
-
 
         //si ambos existen y se vende por tragos, primero debemos validar que no exista un log abierto para el itemInventarioId
         const openLog =
@@ -226,60 +225,97 @@ const logService = {
                     ' ))'
             )
         }
-        
-        const logs = await logRepository.getLogs(itemInventarioId, page, limit)
-         
-        
-        transaction = await sequelize.transaction()
-        
-        try{
 
+        const logs = await logRepository.getLogs(itemInventarioId, page, limit)
+
+        transaction = await sequelize.transaction()
+
+        try {
             // usamos la funcion  getItemsMenuByItemInventarioId: async (itemInventarioId, transaction)  para obtener los itemsmenu del item inventario
-            const itemMenu = await itemInventarioRepository.getItemsMenuByItemInventarioId(itemInventarioId, transaction);
-                //eslint-disable-next-line no-console
-            //console.log('itemsMenu', itemMenu.itemMenus)
+            const itemMenu =
+                await itemInventarioRepository.getItemsMenuByItemInventarioId(
+                    itemInventarioId,
+                    transaction
+                )
 
             // Obtenemos los IDs de los ItemMenu relacionados con el ItemInventario
-            const itemMenusRelacionados = itemMenu.itemMenus.map((itemMenu) => itemMenu.id);
+            const itemMenusRelacionados = itemMenu.itemMenus.map(
+                (itemMenu) => itemMenu.id
+            )
 
             // Recorrer cada log y obtener las ordenes con items en el rango de fechas
             for (const log of logs.rows) {
-                const ordenesConItems = await ordenRepository.getOrdenesConItemsEntreFechas(log.fechaHoraAbierta, log.fechaHoraCerrada, transaction);
-                
-                let cantTragos = 0; // Esta será la suma de los tragos vendidos
+                //NOTA IMPORTANTE:
+                //PRIMERO:
+                //Los logs tienen fechaHoraAbierta y fechaHoraCerrada en formato UTC, pero las ordenes tienen fecha y hora por separado
+                //Por lo tanto, para obtener las ordenes con items en el rango de fechas y hora, debemos convertir las fechas de los logs a fecha y hora por separado
+                //SEGUNDO:
+                //Los logs guardan en zona horaria UTC, es decir 3 horas mas que montevideo.
+                //Por lo tanto, para obtener las ordenes con items en el rango de fechas y hora, debemos restar 3 horas a las fechas de los logs
+                //Las ordenes siempre tendrán la hora local porque se guardan con la fecha y hora que provee el cliente
+
+                const fechaHoraAbierta = new Date(log.fechaHoraAbierta)
+                const fechaHoraCerrada = new Date(log.fechaHoraCerrada)
+
+                // Ajuste para la zona horaria de Montevideo
+                fechaHoraAbierta.setHours(fechaHoraAbierta.getHours() - 3)
+                fechaHoraCerrada.setHours(fechaHoraCerrada.getHours() - 3)
+
+                const fechaAbierta = fechaHoraAbierta
+                    .toISOString()
+                    .split('T')[0] // formato "2023-11-07"
+                const horaAbierta = fechaHoraAbierta
+                    .toISOString()
+                    .split('T')[1]
+                    .slice(0, 8) // formato "16:59:00"
+
+                const fechaCerrada = fechaHoraCerrada
+                    .toISOString()
+                    .split('T')[0] // formato "2023-11-07"
+                const horaCerrada = fechaHoraCerrada
+                    .toISOString()
+                    .split('T')[1]
+                    .slice(0, 8) // formato "16:59:00"
+
+                const ordenesConItems =
+                    await ordenRepository.getOrdenesConItemsEntreFechas(
+                        fechaAbierta,
+                        horaAbierta,
+                        fechaCerrada,
+                        horaCerrada,
+                        transaction
+                    )
+                let cantTragos = 0 // Esta será la suma de los tragos vendidos
 
                 // Filtrar items y sumar cantidades
                 for (const orden of ordenesConItems) {
                     // Filtramos solo los items que pertenecen a los itemMenus relacionados
-                    const itemsRelacionados = orden.items.filter(item => itemMenusRelacionados.includes(item.itemMenuId));
-                    
+                    const itemsRelacionados = orden.items.filter((item) =>
+                        itemMenusRelacionados.includes(item.itemMenuId)
+                    )
+
                     // Sumamos las cantidades de los items relacionados
                     for (const item of itemsRelacionados) {
-                        cantTragos += item.cantidad;
+                        cantTragos += item.cantidad
                     }
                 }
 
                 // Agregar cantTragos al log actual
-                log.dataValues.cantTragos = cantTragos;
+                log.dataValues.cantTragos = cantTragos
+                log.dataValues.fechaAbiertaUy = fechaAbierta // Añade la fecha ajustada a UTC-3
+                log.dataValues.horaAbiertaUy = horaAbierta // Añade la hora ajustada a UTC-3
+                log.dataValues.fechaCerradaUy = fechaCerrada // Añade la fecha ajustada a UTC-3 (si existe)
+                log.dataValues.horaCerradaUy = horaCerrada // Añade la hora ajustada a UTC-3 (si existe)
             }
 
-            await transaction.commit();
+            await transaction.commit()
             // Devolver los logs actualizados
-            return logs;
+            return logs
         } catch (error) {
-            await transaction.rollback();
-            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message);
+            await transaction.rollback()
+            throw new HttpError(HttpCode.INTERNAL_SERVER, error.message)
         }
-
-       
-
     },
-
-
-};
-
-
-
-
+}
 
 module.exports = logService

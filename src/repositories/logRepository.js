@@ -17,7 +17,7 @@ const logRepository = {
 
     closeLog: async (logId, fechaHoraCerrada, transaction) => {
         return await Log.update(
-            { fechaHoraCerrada },
+            { fechaHoraCerrada: fechaHoraCerrada },
             {
                 where: {
                     id: logId,
@@ -27,7 +27,7 @@ const logRepository = {
         )
     },
 
-    getLogs: async (itemInventarioId, page = 1, limit = 10) => { 
+    getLogs: async (itemInventarioId, page = 1, limit = 10) => {
         const offset = (page - 1) * limit
 
         return await Log.findAndCountAll({
@@ -40,7 +40,7 @@ const logRepository = {
             limit,
             order: [['fechaHoraAbierta', 'DESC']],
         })
-    }
+    },
 }
 
 module.exports = logRepository

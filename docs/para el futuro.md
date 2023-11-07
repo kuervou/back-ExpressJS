@@ -1,5 +1,7 @@
 
 # EN LO QUE QUEDÉ:
+
+
 -Filtrar por ordenes en la funcion de get logs.
 Testear un poco mas con casos mas complejos
 esta en logService
