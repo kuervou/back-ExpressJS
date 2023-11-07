@@ -122,6 +122,13 @@ const ordenRepository = {
                 through: { attributes: [] },
             })
         }
+        else{
+            include.push({
+                model: Mesa,
+                as: 'mesas',
+                through: { attributes: [] },
+            })
+        }
 
         const result = await Orden.findAndCountAll({
             where: whereConditions,
@@ -477,6 +484,13 @@ const ordenRepository = {
                 fecha: {
                     [Op.between]: [fechaDesde, fechaHasta],
                 },
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.FINALIZADA,
+                        ESTADOS.ENTREGADA,
+                        ESTADOS.PARA_ENTREGAR,
+                    ],
+                },
             },
             include: [
                 {
@@ -487,6 +501,7 @@ const ordenRepository = {
             transaction,
         })
     }
+
 }
 
 module.exports = ordenRepository

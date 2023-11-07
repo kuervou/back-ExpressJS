@@ -1,4 +1,5 @@
 const { Log } = require('../models')
+const db = require('../models')
 
 const logRepository = {
     createLog: async (data, transaction) => {
@@ -31,7 +32,9 @@ const logRepository = {
 
         return await Log.findAndCountAll({
             where: {
-                itemInventarioId,
+                itemInventarioId: itemInventarioId,
+                fechaHoraAbierta: { [db.Sequelize.Op.ne]: null }, // Op.ne es "not equal"
+                fechaHoraCerrada: { [db.Sequelize.Op.ne]: null },
             },
             offset,
             limit,
