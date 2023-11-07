@@ -40,7 +40,8 @@ const ordenSchema = Joi.object({
         .valid(...Object.values(ESTADOS.ESTADOS))
         .optional(),
     ocupacion: Joi.number().required(),
-    observaciones: Joi.string().optional(),
+    //observaciones, puede ser un string vacio y es opcional
+    observaciones: Joi.string().allow('').optional(),
     paga: Joi.bool().optional(),
     clienteId: Joi.number().allow(null).optional(),
     empleadoId: Joi.number().optional(),
