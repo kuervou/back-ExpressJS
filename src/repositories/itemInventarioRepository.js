@@ -26,7 +26,8 @@ const itemInventarioRepository = {
 
     findAll: async (options = {}) => {
         const { page = 1, limit = 10, nombre, categoriaId, porUnidad } = options
-
+        //eslint-disable-next-line no-console
+        console.log('por unidad', porUnidad)
         const offset = (page - 1) * limit
 
         const whereConditions = {}
@@ -38,9 +39,10 @@ const itemInventarioRepository = {
         if (categoriaId) {
             whereConditions.categoriaId = categoriaId
         }
-        if (porUnidad) {
-            whereConditions.porUnidad = porUnidad
+        if (porUnidad !== undefined) {
+            whereConditions.porUnidad = porUnidad === 'true';
         }
+        
 
         const result = await ItemInventario.findAndCountAll({
             where: whereConditions,
