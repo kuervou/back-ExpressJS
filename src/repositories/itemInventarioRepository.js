@@ -1,4 +1,4 @@
-const { ItemInventario, Categoria } = require('../models')
+const { ItemInventario, Categoria, ItemMenu } = require('../models')
 const sequelize = require('sequelize')
 const { Op } = require('sequelize')
 
@@ -149,6 +149,27 @@ const itemInventarioRepository = {
     getStock: async (itemInventario) => {
         return itemInventario.stock
     },
+    getItemsMenuByItemInventarioId: async (itemInventarioId, transaction) => {
+        return await ItemInventario.findByPk(itemInventarioId, {
+            include: [
+                {
+                    model: ItemMenu,
+                    as: 'itemMenus',
+                    through: {
+                        attributes: [],
+                    },
+                    attributes: {
+                        exclude: ['imagen', 'activo', 'grupoId'],
+                    },
+                },
+            ],
+            attributes: {
+                exclude: ['categoriaId', 'porUnidad'],
+            },
+            transaction,
+        })
+    }
+
 }
 
 module.exports = itemInventarioRepository

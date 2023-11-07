@@ -24,10 +24,10 @@ router.post(
     logController.cerrarBotella
 )
 router.get(
-    '/log',
+    '/logs/:itemInventarioId',
     auth([ROLES.ADMIN]),
     validate(logQuerySchema),
-    logController.getLog
+    logController.getLogs
 )
 
 module.exports = router

@@ -12,7 +12,6 @@ const cerrarBotellaSchema = Joi.object({
 const logQuerySchema = Joi.object({
     page: Joi.number().min(1),
     limit: Joi.number().min(1),
-    itemInventarioId: Joi.number().min(1)
 })
 
 module.exports = {

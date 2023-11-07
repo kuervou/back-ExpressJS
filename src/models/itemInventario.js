@@ -18,6 +18,7 @@ module.exports = (sequelize) => {
             ItemInventario.belongsToMany(models.ItemMenu, {
                 through: 'ItemMenuInventario',
                 foreignKey: 'itemInventarioId',
+                as: 'itemMenus',
             })
         }
     }

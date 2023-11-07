@@ -25,6 +25,19 @@ const logRepository = {
             }
         )
     },
+
+    getLogs: async (itemInventarioId, page = 1, limit = 10) => { 
+        const offset = (page - 1) * limit
+
+        return await Log.findAndCountAll({
+            where: {
+                itemInventarioId,
+            },
+            offset,
+            limit,
+            order: [['fechaHoraAbierta', 'DESC']],
+        })
+    }
 }
 
 module.exports = logRepository

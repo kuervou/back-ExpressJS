@@ -25,9 +25,11 @@ const logController = {
         }
     }),
 
-    getLog: asyncHandler(async (req, res) => {
-        const { itemInventarioId, empleadoId } = req.query
-        const log = await logService.getLog(itemInventarioId, empleadoId)
+    getLogs: asyncHandler(async (req, res) => {
+        const { itemInventarioId } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const log = await logService.getLogs(itemInventarioId, page, limit)
         res.status(200).json(log)
     }),
 

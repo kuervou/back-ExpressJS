@@ -469,6 +469,24 @@ const ordenRepository = {
             }
         )
     },
+
+    //función getOrdenesConItemsEntreFechas
+    getOrdenesConItemsEntreFechas: async (fechaDesde, fechaHasta, transaction) => {
+        return await Orden.findAll({
+            where: {
+                fecha: {
+                    [Op.between]: [fechaDesde, fechaHasta],
+                },
+            },
+            include: [
+                {
+                    model: Item,
+                    as: 'items',
+                },
+            ],
+            transaction,
+        })
+    }
 }
 
 module.exports = ordenRepository
