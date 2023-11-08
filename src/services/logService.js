@@ -243,9 +243,6 @@ const logService = {
                 (itemMenu) => itemMenu.id
             )
 
-            // eslint-disable-next-line no-console
-            console.log(itemMenusRelacionados)
-
             // Recorrer cada log y obtener las ordenes con items en el rango de fechas
             for (const log of logs.rows) {
                 //NOTA IMPORTANTE:
@@ -288,8 +285,6 @@ const logService = {
                         horaCerrada,
                         transaction
                     )
-                // eslint-disable-next-line no-console
-                console.log(ordenesConItems)
                 let cantTragos = 0 // Esta será la suma de los tragos vendidos
 
                 // Filtrar items y sumar cantidades
