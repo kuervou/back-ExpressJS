@@ -16,10 +16,6 @@ module.exports = {
         database: process.env.DEVELOPMENT_DB_NAME,
         host: process.env.DEVELOPMENT_DB_HOST,
         dialect: 'mysql',
-        dialectOptions: {
-            useUTC: true, // para MySQL
-        },
-        timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
     },
     TEST: {
         username: process.env.TEST_DB_USER,
@@ -27,10 +23,6 @@ module.exports = {
         database: process.env.TEST_DB_NAME,
         host: process.env.TEST_DB_HOST,
         dialect: 'mysql',
-        dialectOptions: {
-            useUTC: true, // para MySQL
-        },
-        timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
     },
     LOCAL: {
         username: process.env.LOCAL_DB_USER,
@@ -40,8 +32,9 @@ module.exports = {
         dialect: 'mysql',
         dialectOptions: {
             useUTC: true, // para MySQL
-        },
-        timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
+          },
+          timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
         logging: console.log,
     },
 }
+
