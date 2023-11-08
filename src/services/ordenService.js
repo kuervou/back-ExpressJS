@@ -54,6 +54,27 @@ const ordenService = {
                 }
             }
 
+            //debemos validar que los items no sean []
+            if (!data.items || data.items.length === 0) {
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    'Debe enviar al menos un item'
+                )
+            }
+
+            //debemos validar que hayan enviado items y que cada item tenga un itemMenuId, cantidad y precio
+            if (data.items) {
+                data.items.forEach((item) => {
+                    if (!item.itemMenuId || !item.cantidad || !item.precio) {
+                        throw new HttpError(
+                            HttpCode.BAD_REQUEST,
+                            'Los items deben tener un itemMenuId, cantidad y precio'
+                        )
+                    }
+                })
+            }
+            
+
             //calcular total recorriendo todos los items, y para cada uno de ellos multiplicar cantidad por precio, y sumarlos
             const total = data.items.reduce((acc, item) => {
                 return acc + item.cantidad * item.precio
