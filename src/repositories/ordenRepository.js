@@ -484,7 +484,16 @@ const ordenRepository = {
         horaHasta,
         transaction
     ) => {
-        return await Orden.findAll({
+        // eslint-disable-next-line no-console
+        console.log("fechaDesde", fechaDesde)
+        // eslint-disable-next-line no-console
+        console.log("horaDesde", horaDesde)
+        // eslint-disable-next-line no-console
+        console.log("fechaHasta", fechaHasta)
+        // eslint-disable-next-line no-console
+        console.log("horaHasta", horaHasta)
+
+        const xd = await Orden.findAll({
             where: {
                 fecha: {
                     [Op.between]: [fechaDesde, fechaHasta],
@@ -509,6 +518,9 @@ const ordenRepository = {
             ],
             transaction,
         })
+        // eslint-disable-next-line no-console
+        console.log("xdxd", xd)
+        return xd
     },
 }
 
