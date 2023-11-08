@@ -12,6 +12,22 @@ const mesaRepository = {
         return await Mesa.findAll()
     },
 
+    //funcion para verificar si un array de ids de mesas existe
+    checkMesas: async (mesas) => {
+        const mesasExistentes = await Mesa.findAll({
+            where: {
+                id: mesas,
+            },
+        })
+
+        if (mesasExistentes.length !== mesas.length) {
+            return false
+        }
+
+        return true
+    },
+
+
     findAllOcupadas: async () => {
         //findandcountall devuelve un array con dos elementos, el primero es el array de mesas y el segundo es la cantidad de mesas
         const result = await Mesa.findAndCountAll({

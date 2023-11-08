@@ -9,6 +9,7 @@ const { ESTADOS } = require('../constants/estados/estados')
 
 const db = require('../models')
 const pagoRepository = require('../repositories/pagoRepository')
+const mesaRepository = require('../repositories/mesaRepository')
 const sequelize = db.sequelize
 
 //funcion checkEmpleadoExists
@@ -37,9 +38,20 @@ const ordenService = {
                 await checkEmpleadoExists(data.empleadoId)
             }
 
-            //si envian un cliente, validar que exista
+            //si envian un cliente, validar que exista 
             if (data.clienteId) {
                 await checkClienteExists(data.clienteId)
+            }
+
+            //debemos validar que las mesas existan
+            if (data.mesas) {
+                const existenMesas = await mesaRepository.checkMesas(data.mesas)
+                if (!existenMesas) {
+                    throw new HttpError(
+                        HttpCode.BAD_REQUEST,
+                        'Una o más mesas no existen'
+                    )
+                }
             }
 
             //calcular total recorriendo todos los items, y para cada uno de ellos multiplicar cantidad por precio, y sumarlos
