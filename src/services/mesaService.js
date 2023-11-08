@@ -35,7 +35,11 @@ const mesaService = {
     },
 
     updateMesa: async (id, nroMesa, libre) => {
-        await checkNroMesaUnique(nroMesa, id)
+        //validamos que nroMesa no sea null o undefined
+        if (nroMesa) {
+            await checkNroMesaUnique(nroMesa, id)
+        }
+        
         return await mesaRepository.update(id, nroMesa, libre)
     },
 
