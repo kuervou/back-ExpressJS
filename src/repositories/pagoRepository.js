@@ -59,6 +59,21 @@ const pagoRepository = {
         return await Pago.findByPk(id)
     },
 
+    getPagosByCajaId: async (id) => {
+        const result = await Pago.findAndCountAll({
+            where: { cajaId: id },
+            order: [
+                ['fecha', 'ASC'],
+                ['hora', 'ASC'],
+            ],
+        })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
+    },
+
     deletePago: async (id, transaction) => {
         const pago = await Pago.findByPk(id, { transaction })
         await pago.destroy({ transaction })

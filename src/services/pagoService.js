@@ -120,6 +120,14 @@ const pagoService = {
         return pago
     },
 
+    getPagosByCajaId: async (id) => {
+        const pagos = await pagoRepository.getPagosByCajaId(id)
+        if (!pagos) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Pagos no encontrados')
+        }
+        return pagos
+    },
+
     deletePago: async (id) => {
         // Iniciar transacción
         const transaction = await sequelize.transaction()

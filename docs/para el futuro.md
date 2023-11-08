@@ -6,9 +6,7 @@ PROXIMO:
 
 OJO: los gurises tienen que migrar empleadoLog para el proximo pull del back
 
-
 debo ver el pagar todo VER DE HACER UN ENDPOINT NUEVO
-endpoint movimiento de caja
 Lo del borrado logico de ordenes (Fijarme de reflejar todos los cambios que implica)
 debo ver las notas
 

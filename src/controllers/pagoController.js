@@ -2,7 +2,8 @@
 
 const pagoService = require('../services/pagoService')
 const asyncHandler = require('express-async-handler')
-const { HttpCode } = require('../error-handling/http_error')
+const { HttpCode, HttpError } = require('../error-handling/http_error')
+const cajaService = require('../services/cajaService')
 
 const pagoController = {
     crearPago: asyncHandler(async (req, res) => {
@@ -38,6 +39,19 @@ const pagoController = {
         const id = req.params.id
         const pago = await pagoService.getPagoById(id)
         res.status(HttpCode.OK).json(pago)
+    }),
+
+    getPagosByCajaId: asyncHandler(async (req, res) => {
+        const id = req.params.id
+
+        //validamos que la caja exista
+        const caja = await cajaService.getCajaById(id)
+
+        if (!caja) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Caja no encontrada')
+        }
+        const pagos = await pagoService.getPagosByCajaId(id)
+        res.status(HttpCode.OK).json(pagos)
     }),
 
     deletePago: asyncHandler(async (req, res) => {

@@ -27,7 +27,6 @@ const mesaRepository = {
         return true
     },
 
-
     findAllOcupadas: async () => {
         //findandcountall devuelve un array con dos elementos, el primero es el array de mesas y el segundo es la cantidad de mesas
         const result = await Mesa.findAndCountAll({

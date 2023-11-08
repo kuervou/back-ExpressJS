@@ -21,6 +21,11 @@ router.get(
     pagoController.getPagos
 )
 router.get('/pagos/:id', auth([ROLES.ADMIN]), pagoController.getPagoById)
+router.get(
+    '/pagos/caja/:id',
+    auth([ROLES.ADMIN]),
+    pagoController.getPagosByCajaId
+)
 router.delete('/pagos/:id', auth([ROLES.ADMIN]), pagoController.deletePago)
 
 module.exports = router

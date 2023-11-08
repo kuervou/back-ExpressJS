@@ -32,9 +32,8 @@ module.exports = {
         dialect: 'mysql',
         dialectOptions: {
             useUTC: true, // para MySQL
-          },
-          timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
+        },
+        timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
         logging: console.log,
     },
 }
-

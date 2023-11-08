@@ -56,6 +56,21 @@ const movimientoRepository = {
         return await Movimiento.findByPk(id)
     },
 
+    getMovimientosByCajaId: async (id) => {
+        const result = await Movimiento.findAndCountAll({
+            where: { cajaId: id },
+            order: [
+                ['fecha', 'ASC'],
+                ['hora', 'ASC'],
+            ],
+        })
+
+        return {
+            total: result.count,
+            items: result.rows,
+        }
+    },
+
     deleteMovimiento: async (id, transaction) => {
         const movimiento = await Movimiento.findByPk(id, { transaction })
         await movimiento.destroy({ transaction })

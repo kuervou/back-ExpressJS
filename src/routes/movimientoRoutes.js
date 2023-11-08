@@ -27,6 +27,12 @@ router.get(
     movimientoController.getMovimientoById
 )
 
+router.get(
+    '/movimientos/caja/:id',
+    auth([ROLES.ADMIN]),
+    movimientoController.getMovimientosByCajaId
+)
+
 router.delete(
     '/movimientos/:id',
     auth([ROLES.ADMIN]),

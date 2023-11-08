@@ -1,5 +1,6 @@
 const movimientoService = require('../services/movimientoService')
 const asyncHandler = require('express-async-handler')
+const cajaService = require('../services/cajaService')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 
 const movimientoController = {
@@ -37,6 +38,28 @@ const movimientoController = {
         }
 
         res.status(HttpCode.OK).json(movimiento)
+    }),
+
+    getMovimientosByCajaId: asyncHandler(async (req, res) => {
+        const id = req.params.id
+
+        //validamos que la caja exista
+        const caja = await cajaService.getCajaById(id)
+
+        if (!caja) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Caja no encontrada')
+        }
+
+        const movimientos = await movimientoService.getMovimientosByCajaId(id)
+
+        if (!movimientos) {
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                'Movimientos no encontrados'
+            )
+        }
+
+        res.status(HttpCode.OK).json(movimientos)
     }),
 
     deleteMovimiento: asyncHandler(async (req, res) => {

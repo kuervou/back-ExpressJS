@@ -38,7 +38,7 @@ const ordenService = {
                 await checkEmpleadoExists(data.empleadoId)
             }
 
-            //si envian un cliente, validar que exista 
+            //si envian un cliente, validar que exista
             if (data.clienteId) {
                 await checkClienteExists(data.clienteId)
             }
@@ -73,7 +73,6 @@ const ordenService = {
                     }
                 })
             }
-            
 
             //calcular total recorriendo todos los items, y para cada uno de ellos multiplicar cantidad por precio, y sumarlos
             const total = data.items.reduce((acc, item) => {

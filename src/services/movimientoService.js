@@ -65,6 +65,10 @@ const movimientoService = {
         return await movimientoRepository.findById(id)
     },
 
+    getMovimientosByCajaId: async (id) => {
+        return await movimientoRepository.getMovimientosByCajaId(id)
+    },
+
     deleteMovimiento: async (id) => {
         //cuando se elimina el movimiento debemos actualizar el total de la caja
         // Iniciar transacción
