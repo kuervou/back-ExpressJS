@@ -5,7 +5,7 @@ const itemInventarioSchema = Joi.object({
     descripcion: Joi.string().min(4).optional(),
     costo: Joi.number().required(),
     stock: Joi.number().optional(),
-    cantxCasillero: Joi.number().optional(),
+    cantxCasillero: Joi.number().allow(null).optional(),
     porUnidad: Joi.bool().optional(),
     categoriaId: Joi.number().required(),
 })
