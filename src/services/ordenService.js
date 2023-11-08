@@ -107,7 +107,6 @@ const ordenService = {
         return await ordenRepository.countOcupacion()
     },
 
-    //Esta sin terminar esta función
     getEstadoPagos: async (id) => {
         const orden = await ordenRepository.getOrdenById(id)
         if (!orden) {
@@ -119,7 +118,8 @@ const ordenService = {
         })
 
         let totalPagado = 0
-        pagos.forEach((pago) => {
+
+        pagos.items.forEach((pago) => {
             totalPagado += pago.total
         })
 
@@ -127,6 +127,7 @@ const ordenService = {
             totalPagado,
             totalOrden: orden.total,
             paga: orden.paga,
+            infoPagos: pagos.items,
         }
 
         return estadoPagos
