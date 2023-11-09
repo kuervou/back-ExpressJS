@@ -103,6 +103,23 @@ router.get(
     validate(statsSchema, 'query'),
     ordenController.getCantOrdenesProcesadas
 )
+
+//Estadísticas de consumo por cliente id
+router.get(
+    '/ordenes/estadisticas/consumoPorClienteId/:id',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getConsumoPorClienteId
+)
+
+//Estadísticas de consumo de todos los clientes
+router.get(
+    '/ordenes/estadisticas/consumoClientes',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getConsumoClientes
+)
+
 //rutas para add y remove items
 router.post(
     '/ordenes/:id/items',

@@ -243,6 +243,77 @@ const ordenService = {
         }
     },
 
+    getConsumoPorClienteId: async (id, options = {}) => {
+        //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
+
+        //Si envío el parametro día, debo devolver las estadisticas de ese día
+        if (options.dia) {
+            //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
+            return await ordenRepository.getConsumoPorClienteIdPorDia(
+                id,
+                options.dia
+            )
+        } else if (options.mes) {
+            // Calculamos el rango del mes más reciente
+            const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
+
+            options.fechaInicio = primerDia
+            options.fechaFin = ultimoDia
+
+            return await ordenRepository.getConsumoPorClienteId(id, options)
+        } else if (options.anio) {
+            //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
+            const primerDiaDelAño = new Date(options.anio, 0, 1)
+            const primerDiaDelAñoISO = primerDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            const ultimoDiaDelAño = new Date(options.anio, 11, 31)
+            const ultimoDiaDelAñoISO = ultimoDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            options.fechaInicio = primerDiaDelAñoISO
+            options.fechaFin = ultimoDiaDelAñoISO
+
+            return await ordenRepository.getConsumoPorClienteId(id, options)
+        }
+    },
+
+    getConsumoClientes: async (options = {}) => {
+        //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
+
+        //Si envío el parametro día, debo devolver las estadisticas de ese día
+        if (options.dia) {
+            //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
+            return await ordenRepository.getConsumoClientesPorDia(options.dia)
+        } else if (options.mes) {
+            // Calculamos el rango del mes más reciente
+            const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
+
+            options.fechaInicio = primerDia
+            options.fechaFin = ultimoDia
+
+            return await ordenRepository.getConsumoClientes(options)
+        } else if (options.anio) {
+            //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
+            const primerDiaDelAño = new Date(options.anio, 0, 1)
+            const primerDiaDelAñoISO = primerDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            const ultimoDiaDelAño = new Date(options.anio, 11, 31)
+            const ultimoDiaDelAñoISO = ultimoDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            options.fechaInicio = primerDiaDelAñoISO
+            options.fechaFin = ultimoDiaDelAñoISO
+
+            return await ordenRepository.getConsumoClientes(options)
+        }
+    },
+
     updateOrden: async (orderId, data) => {
         const t = await sequelize.transaction()
         try {

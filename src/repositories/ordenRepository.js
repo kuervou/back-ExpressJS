@@ -132,6 +132,68 @@ const ordenRepository = {
         return cantOrdenes
     },
 
+    getConsumoPorClienteIdPorDia: async (clienteId, dia) => {
+        //Debemos devolver la suma de los totales de las ordenes cuyo atributo paga sea true y el clienteId sea el pasado por parámetro
+        const totalConsumo = await Orden.sum('total', {
+            where: {
+                fecha: dia,
+                paga: true,
+                clienteId: clienteId,
+            },
+        })
+
+        return totalConsumo
+    },
+
+    getConsumoPorClienteId: async (clienteId, options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const totalConsumo = await Orden.sum('total', {
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+                clienteId: clienteId,
+            },
+        })
+
+        return totalConsumo
+    },
+
+    getConsumoClientesPorDia: async (dia) => {
+        //Debemos devolver la suma de los totales de las ordenes cuyo atributo paga sea true y tengan algun clienteId asociado
+        const totalConsumo = await Orden.sum('total', {
+            where: {
+                fecha: dia,
+                paga: true,
+                clienteId: {
+                    [Op.ne]: null,
+                },
+            },
+        })
+
+        return totalConsumo
+    },
+
+    getConsumoClientes: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const totalConsumo = await Orden.sum('total', {
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+                clienteId: {
+                    [Op.ne]: null,
+                },
+            },
+        })
+
+        return totalConsumo
+    },
+
     findAll: async (options = {}) => {
         const {
             page = 1,
