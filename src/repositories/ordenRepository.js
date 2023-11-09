@@ -218,6 +218,54 @@ const ordenRepository = {
         return horasPico
     },
 
+    getIngresoEnMes: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        //La idea es que la respuesta mapee los dias del mes con el total de ingresos de ese dia (El total de ingresos es la suma de los totales de las ordenes cuyo atributo paga sea true)
+
+        const ingresoEnMes = await Orden.findAll({
+            attributes: [
+                'fecha',
+                [literal('SUM(total)'), 'totalIngresos'],
+                [literal('COUNT(id)'), 'cantidadOrdenes'],
+            ],
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+            },
+            group: ['fecha'],
+            order: [['fecha', 'ASC']],
+        })
+
+        return ingresoEnMes
+    },
+
+    getIngresoEnAnio: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        //La idea es que la respuesta mapee los meses del año con el total de ingresos de ese mes (El total de ingresos es la suma de los totales de las ordenes cuyo atributo paga sea true)
+
+        const ingresoEnAnio = await Orden.findAll({
+            attributes: [
+                [literal('MONTH(fecha)'), 'mes'],
+                [literal('SUM(total)'), 'totalIngresos'],
+                [literal('COUNT(id)'), 'cantidadOrdenes'],
+            ],
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+            },
+            group: ['mes'],
+            order: [['mes', 'ASC']],
+        })
+
+        return ingresoEnAnio
+    },
+
     findAll: async (options = {}) => {
         const {
             page = 1,

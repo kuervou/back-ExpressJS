@@ -16,6 +16,8 @@ const {
 const {
     statsSchema,
     diaSchema,
+    mesSchema,
+    anioSchema,
 } = require('./validations/estadisticaValidation')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
@@ -128,6 +130,20 @@ router.get(
     auth([ROLES.ADMIN]),
     validate(diaSchema, 'query'),
     ordenController.getHorasPico
+)
+
+router.get(
+    '/ordenes/estadisticas/ingresoEnMes',
+    auth([ROLES.ADMIN]),
+    validate(mesSchema, 'query'),
+    ordenController.getIngresoEnMes
+)
+
+router.get(
+    '/ordenes/estadisticas/ingresoEnAnio',
+    auth([ROLES.ADMIN]),
+    validate(anioSchema, 'query'),
+    ordenController.getIngresoEnAnio
 )
 
 //rutas para add y remove items

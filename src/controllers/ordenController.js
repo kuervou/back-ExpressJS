@@ -349,6 +349,50 @@ const ordenController = {
         res.status(HttpCode.OK).json(estadisticas)
     }),
 
+    getIngresoEnMes: asyncHandler(async (req, res) => {
+        //obtener parametros de la query
+        const { mes } = req.query
+
+        //crear objeto con los parametros
+        const options = {}
+
+        if (mes) options.mes = mes
+
+        //validamos que el mes sea un numero entre 1 y 12
+        if (mes && (mes < 1 || mes > 12)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El mes debe ser un numero entre 1 y 12'
+            )
+        }
+
+        //obtener estadisticas
+        const estadisticas = await ordenService.getIngresoEnMes(options)
+        res.status(HttpCode.OK).json(estadisticas)
+    }),
+
+    getIngresoEnAnio: asyncHandler(async (req, res) => {
+        //obtener parametros de la query
+        const { anio } = req.query
+
+        //crear objeto con los parametros
+        const options = {}
+
+        if (anio) options.anio = anio
+
+        //validamos que el anio sea un numero entre 2020 y 2050
+        if (anio && (anio < 2020 || anio > 2050)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El año debe ser un numero entre 2020 y 2050'
+            )
+        }
+
+        //obtener estadisticas
+        const estadisticas = await ordenService.getIngresoEnAnio(options)
+        res.status(HttpCode.OK).json(estadisticas)
+    }),
+
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
         const data = req.body

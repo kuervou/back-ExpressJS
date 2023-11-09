@@ -10,7 +10,17 @@ const diaSchema = Joi.object({
     dia: Joi.date().iso().required(),
 })
 
+const mesSchema = Joi.object({
+    mes: Joi.number().required(),
+})
+
+const anioSchema = Joi.object({
+    anio: Joi.number().required(),
+})
+
 module.exports = {
     statsSchema,
     diaSchema,
+    mesSchema,
+    anioSchema,
 }

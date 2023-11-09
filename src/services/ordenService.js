@@ -318,6 +318,30 @@ const ordenService = {
         return await ordenRepository.getHorasPico(options)
     },
 
+    getIngresoEnMes: async (options = {}) => {
+        const { mes } = options
+        const { primerDia, ultimoDia } = getRangoDelMes(mes)
+
+        options.fechaInicio = primerDia
+        options.fechaFin = ultimoDia
+
+        return await ordenRepository.getIngresoEnMes(options)
+    },
+
+    getIngresoEnAnio: async (options = {}) => {
+        //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
+        const primerDiaDelAño = new Date(options.anio, 0, 1)
+        const primerDiaDelAñoISO = primerDiaDelAño.toISOString().split('T')[0]
+
+        const ultimoDiaDelAño = new Date(options.anio, 11, 31)
+        const ultimoDiaDelAñoISO = ultimoDiaDelAño.toISOString().split('T')[0]
+
+        options.fechaInicio = primerDiaDelAñoISO
+        options.fechaFin = ultimoDiaDelAñoISO
+
+        return await ordenRepository.getIngresoEnAnio(options)
+    },
+
     updateOrden: async (orderId, data) => {
         const t = await sequelize.transaction()
         try {
