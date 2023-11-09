@@ -29,6 +29,24 @@ const checkClienteExists = async (clienteId) => {
     }
 }
 
+const getRangoDelMes = (mes) => {
+    const fechaActual = new Date()
+    const mesActual = fechaActual.getMonth() + 1 // Enero es 0, Febrero es 1, y así sucesivamente
+    const añoActual = fechaActual.getFullYear()
+
+    let añoDelMes = mes > mesActual ? añoActual - 1 : añoActual
+    const primerDiaDelMes = new Date(añoDelMes, mes - 1, 1)
+    const ultimoDiaDelMes = new Date(añoDelMes, mes, 0) // El día 0 del siguiente mes es el último día del mes actual
+
+    const primerDiaDelMesISO = primerDiaDelMes.toISOString().split('T')[0]
+    const ultimoDiaDelMesISO = ultimoDiaDelMes.toISOString().split('T')[0]
+
+    return {
+        primerDia: primerDiaDelMesISO,
+        ultimoDia: ultimoDiaDelMesISO,
+    }
+}
+
 const ordenService = {
     crearOrden: async (data) => {
         const t = await sequelize.transaction()
@@ -151,6 +169,78 @@ const ordenService = {
         }
 
         return estadoPagos
+    },
+
+    getEstadisticasVentas: async (options = {}) => {
+        //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
+
+        //Si envío el parametro día, debo devolver las estadisticas de ese día
+        if (options.dia) {
+            //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
+            return await ordenRepository.getEstadisticasVentasPorDia(
+                options.dia
+            )
+        } else if (options.mes) {
+            // Calculamos el rango del mes más reciente
+            const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
+
+            options.fechaInicio = primerDia
+            options.fechaFin = ultimoDia
+
+            return await ordenRepository.getEstadisticasVentas(options)
+        } else if (options.anio) {
+            //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
+            const primerDiaDelAño = new Date(options.anio, 0, 1)
+            const primerDiaDelAñoISO = primerDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            const ultimoDiaDelAño = new Date(options.anio, 11, 31)
+            const ultimoDiaDelAñoISO = ultimoDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            options.fechaInicio = primerDiaDelAñoISO
+            options.fechaFin = ultimoDiaDelAñoISO
+
+            return await ordenRepository.getEstadisticasVentas(options)
+        }
+    },
+
+    getCantOrdenesProcesadas: async (options = {}) => {
+        //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
+
+        //Si envío el parametro día, debo devolver las estadisticas de ese día
+        if (options.dia) {
+            //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
+            return await ordenRepository.getCantOrdenesProcesadasPorDia(
+                options.dia
+            )
+        } else if (options.mes) {
+            // Calculamos el rango del mes más reciente
+            const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
+
+            options.fechaInicio = primerDia
+            options.fechaFin = ultimoDia
+
+            return await ordenRepository.getCantOrdenesProcesadas(options)
+        } else if (options.anio) {
+            //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
+            const primerDiaDelAño = new Date(options.anio, 0, 1)
+            const primerDiaDelAñoISO = primerDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            const ultimoDiaDelAño = new Date(options.anio, 11, 31)
+            const ultimoDiaDelAñoISO = ultimoDiaDelAño
+                .toISOString()
+                .split('T')[0]
+
+            options.fechaInicio = primerDiaDelAñoISO
+            options.fechaFin = ultimoDiaDelAñoISO
+
+            return await ordenRepository.getCantOrdenesProcesadas(options)
+        }
     },
 
     updateOrden: async (orderId, data) => {

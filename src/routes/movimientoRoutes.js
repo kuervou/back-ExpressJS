@@ -6,6 +6,7 @@ const { ROLES } = require('../constants/roles/roles')
 const {
     movimientoSchema,
     querySchema,
+    getByCajaIdSchema,
 } = require('./validations/movimientoValidation')
 const validate = require('../middleware/validate')
 
@@ -30,6 +31,7 @@ router.get(
 router.get(
     '/movimientos/caja/:id',
     auth([ROLES.ADMIN]),
+    validate(getByCajaIdSchema),
     movimientoController.getMovimientosByCajaId
 )
 

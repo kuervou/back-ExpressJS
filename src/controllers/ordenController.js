@@ -121,6 +121,110 @@ const ordenController = {
         res.status(HttpCode.OK).json(estadoPagos)
     }),
 
+    getEstadisticasVentas: asyncHandler(async (req, res) => {
+        //obtener parametros de la query
+        const { dia, mes, anio } = req.query
+
+        //crear objeto con los parametros
+        const options = {}
+        if (dia) options.dia = dia
+        if (mes) options.mes = mes
+        if (anio) options.anio = anio
+
+        //Validamos que haya enviado al menos un parametro
+        if (!dia && !mes && !anio) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'Debe enviar al menos un parametro'
+            )
+        }
+
+        //Validamos que solo haya enviado un parametro, sino es bad request
+        if (
+            (dia && mes) ||
+            (dia && anio) ||
+            (mes && anio) ||
+            (dia && mes && anio)
+        ) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'Solo puede enviar un parametro'
+            )
+        }
+        //mes debe ser un numero entre 1 y 12
+        if (mes && (mes < 1 || mes > 12)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El mes debe ser un numero entre 1 y 12'
+            )
+        }
+
+        //anio debe ser un numero entre 2020 y 2050
+        if (anio && (anio < 2020 || anio > 2050)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El año debe ser un numero entre 2020 y 2050'
+            )
+        }
+
+        //obtener estadisticas
+        const estadisticas = await ordenService.getEstadisticasVentas(options)
+        res.status(HttpCode.OK).json(estadisticas)
+    }),
+
+    getCantOrdenesProcesadas: asyncHandler(async (req, res) => {
+        //obtener parametros de la query
+        const { dia, mes, anio } = req.query
+
+        //crear objeto con los parametros
+        const options = {}
+        if (dia) options.dia = dia
+        if (mes) options.mes = mes
+        if (anio) options.anio = anio
+
+        //Validamos que haya enviado al menos un parametro
+        if (!dia && !mes && !anio) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'Debe enviar al menos un parametro'
+            )
+        }
+
+        //Validamos que solo haya enviado un parametro, sino es bad request
+        if (
+            (dia && mes) ||
+            (dia && anio) ||
+            (mes && anio) ||
+            (dia && mes && anio)
+        ) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'Solo puede enviar un parametro'
+            )
+        }
+
+        //mes debe ser un numero entre 1 y 12
+        if (mes && (mes < 1 || mes > 12)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El mes debe ser un numero entre 1 y 12'
+            )
+        }
+
+        //anio debe ser un numero entre 2020 y 2050
+        if (anio && (anio < 2020 || anio > 2050)) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El año debe ser un numero entre 2020 y 2050'
+            )
+        }
+
+        //obtener estadisticas
+        const estadisticas =
+            await ordenService.getCantOrdenesProcesadas(options)
+        res.status(HttpCode.OK).json(estadisticas)
+    }),
+
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
         const data = req.body

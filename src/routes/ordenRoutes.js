@@ -13,6 +13,7 @@ const {
     porMesaSchema,
     removeItemsSchema,
 } = require('./validations/ordenValidations')
+const { statsSchema } = require('./validations/estadisticaValidation')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 
@@ -87,6 +88,21 @@ router.get(
     ordenController.getEstadoPagos
 )
 
+//Estadísticas de ventas
+router.get(
+    '/ordenes/estadisticas/ventas',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getEstadisticasVentas
+)
+
+//Estadísticas de cantidad de ordenes
+router.get(
+    '/ordenes/estadisticas/cantOrdenesProcesadas',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getCantOrdenesProcesadas
+)
 //rutas para add y remove items
 router.post(
     '/ordenes/:id/items',

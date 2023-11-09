@@ -56,9 +56,28 @@ const movimientoRepository = {
         return await Movimiento.findByPk(id)
     },
 
-    getMovimientosByCajaId: async (id) => {
+    getMovimientosByCajaId: async (id, options) => {
+        const { page = 1, limit = 10 } = options
+        const offset = (page - 1) * limit
+
+        if (page === -1 || limit === -1) {
+            const result = await Movimiento.findAndCountAll({
+                where: { cajaId: id },
+                order: [
+                    ['fecha', 'ASC'],
+                    ['hora', 'ASC'],
+                ],
+            })
+
+            return {
+                total: result.count,
+                items: result.rows,
+            }
+        }
         const result = await Movimiento.findAndCountAll({
             where: { cajaId: id },
+            offset,
+            limit,
             order: [
                 ['fecha', 'ASC'],
                 ['hora', 'ASC'],

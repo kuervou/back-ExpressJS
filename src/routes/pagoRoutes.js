@@ -6,6 +6,7 @@ const pagoController = require('../controllers/pagoController')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 const { pagoSchema, querySchema } = require('./validations/pagoValidation')
+const { getByCajaIdSchema } = require('./validations/movimientoValidation')
 const validate = require('../middleware/validate')
 
 router.post(
@@ -24,6 +25,7 @@ router.get('/pagos/:id', auth([ROLES.ADMIN]), pagoController.getPagoById)
 router.get(
     '/pagos/caja/:id',
     auth([ROLES.ADMIN]),
+    validate(getByCajaIdSchema),
     pagoController.getPagosByCajaId
 )
 router.delete('/pagos/:id', auth([ROLES.ADMIN]), pagoController.deletePago)

@@ -19,7 +19,13 @@ const querySchema = Joi.object({
     limit: Joi.number().optional(),
 })
 
+const getByCajaIdSchema = Joi.object({
+    page: Joi.number().optional(),
+    limit: Joi.number().optional(),
+})
+
 module.exports = {
     movimientoSchema,
     querySchema,
+    getByCajaIdSchema,
 }

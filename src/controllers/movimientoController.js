@@ -43,6 +43,15 @@ const movimientoController = {
     getMovimientosByCajaId: asyncHandler(async (req, res) => {
         const id = req.params.id
 
+        //obtenemos los datos para el paginado
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+
+        const options = {
+            page,
+            limit,
+        }
+
         //validamos que la caja exista
         const caja = await cajaService.getCajaById(id)
 
@@ -50,7 +59,10 @@ const movimientoController = {
             throw new HttpError(HttpCode.NOT_FOUND, 'Caja no encontrada')
         }
 
-        const movimientos = await movimientoService.getMovimientosByCajaId(id)
+        const movimientos = await movimientoService.getMovimientosByCajaId(
+            id,
+            options
+        )
 
         if (!movimientos) {
             throw new HttpError(

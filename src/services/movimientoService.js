@@ -65,8 +65,8 @@ const movimientoService = {
         return await movimientoRepository.findById(id)
     },
 
-    getMovimientosByCajaId: async (id) => {
-        return await movimientoRepository.getMovimientosByCajaId(id)
+    getMovimientosByCajaId: async (id, options) => {
+        return await movimientoRepository.getMovimientosByCajaId(id, options)
     },
 
     deleteMovimiento: async (id) => {

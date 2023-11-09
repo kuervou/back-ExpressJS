@@ -120,8 +120,8 @@ const pagoService = {
         return pago
     },
 
-    getPagosByCajaId: async (id) => {
-        const pagos = await pagoRepository.getPagosByCajaId(id)
+    getPagosByCajaId: async (id, options) => {
+        const pagos = await pagoRepository.getPagosByCajaId(id, options)
         if (!pagos) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Pagos no encontrados')
         }

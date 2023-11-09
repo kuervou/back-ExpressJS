@@ -62,6 +62,76 @@ const ordenRepository = {
         return orden
     },
 
+    getEstadisticasVentasPorDia: async (dia) => {
+        //Debemos devolver la suma de los totales de las ordenes cuyo atributo paga sea true
+        const totalVentas = await Orden.sum('total', {
+            where: {
+                fecha: dia,
+                paga: true,
+            },
+        })
+
+        return totalVentas
+    },
+
+    getEstadisticasVentas: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const totalVentas = await Orden.sum('total', {
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+            },
+        })
+
+        return totalVentas
+    },
+
+    getCantOrdenesProcesadasPorDia: async (dia) => {
+        //Debemos devolver la cantidad de ordenes cuyo estado sea ENTREGADA, PARA_ENTREGAR, EN_COCINA, MODIFICADA, FINALIZADA
+        const cantOrdenes = await Orden.count({
+            where: {
+                fecha: dia,
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.ENTREGADA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.EN_COCINA,
+                        ESTADOS.MODIFICADA,
+                        ESTADOS.FINALIZADA,
+                    ],
+                },
+            },
+        })
+
+        return cantOrdenes
+    },
+
+    getCantOrdenesProcesadas: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const cantOrdenes = await Orden.count({
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.ENTREGADA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.EN_COCINA,
+                        ESTADOS.MODIFICADA,
+                        ESTADOS.FINALIZADA,
+                    ],
+                },
+            },
+        })
+
+        return cantOrdenes
+    },
+
     findAll: async (options = {}) => {
         const {
             page = 1,

@@ -44,13 +44,22 @@ const pagoController = {
     getPagosByCajaId: asyncHandler(async (req, res) => {
         const id = req.params.id
 
+        //obtenemos los datos para el paginado
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+
+        const options = {
+            page,
+            limit,
+        }
+
         //validamos que la caja exista
         const caja = await cajaService.getCajaById(id)
 
         if (!caja) {
             throw new HttpError(HttpCode.NOT_FOUND, 'Caja no encontrada')
         }
-        const pagos = await pagoService.getPagosByCajaId(id)
+        const pagos = await pagoService.getPagosByCajaId(id, options)
         res.status(HttpCode.OK).json(pagos)
     }),
 
