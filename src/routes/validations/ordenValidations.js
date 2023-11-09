@@ -83,6 +83,8 @@ const querySchema = Joi.object({
         .valid(...Object.values(ESTADOS.ESTADOS))
         .optional(),
     mesaId: Joi.number().optional(),
+    fecha: Joi.date().iso().optional(),
+
 })
 
 const addOrRemoveMesaSchema = Joi.object({
