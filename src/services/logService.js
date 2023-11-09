@@ -254,12 +254,17 @@ const logService = {
                 //Por lo tanto, para obtener las ordenes con items en el rango de fechas y hora, debemos restar 3 horas a las fechas de los logs
                 //Las ordenes siempre tendrán la hora local porque se guardan con la fecha y hora que provee el cliente
 
-                const fechaHoraAbierta = new Date(log.fechaHoraAbierta)
-                const fechaHoraCerrada = new Date(log.fechaHoraCerrada)
+                let fechaHoraAbierta = new Date(log.fechaHoraAbierta)
+                let fechaHoraCerrada = new Date(log.fechaHoraCerrada)
 
                 // Ajuste para la zona horaria de Montevideo
-                fechaHoraAbierta.setHours(fechaHoraAbierta.getHours() - 3)
-                fechaHoraCerrada.setHours(fechaHoraCerrada.getHours() - 3)
+                // Restamos tres horas en milisegundos (3 horas * 60 minutos * 60 segundos * 1000 milisegundos)
+                fechaHoraAbierta = new Date(
+                    fechaHoraAbierta.getTime() - 3 * 60 * 60 * 1000
+                )
+                fechaHoraCerrada = new Date(
+                    fechaHoraCerrada.getTime() - 3 * 60 * 60 * 1000
+                )
 
                 const fechaAbierta = fechaHoraAbierta
                     .toISOString()

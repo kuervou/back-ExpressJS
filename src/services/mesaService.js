@@ -39,7 +39,7 @@ const mesaService = {
         if (nroMesa) {
             await checkNroMesaUnique(nroMesa, id)
         }
-        
+
         return await mesaRepository.update(id, nroMesa, libre)
     },
 
