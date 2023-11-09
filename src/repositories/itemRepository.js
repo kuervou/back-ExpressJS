@@ -5,6 +5,14 @@ const itemRepository = {
         return await Item.create(data, { transaction })
     },
 
+    findAll: async (options) => {
+        return await Item.findAll({
+            where: {
+                ordenId: options.ordenId,
+            },
+        })
+    },
+
     deleteItems: async (items, transaction) => {
         return await Item.destroy({
             where: {

@@ -12,6 +12,7 @@ const {
     addItemsSchema,
     porMesaSchema,
     removeItemsSchema,
+    pagarTodoSchema,
 } = require('./validations/ordenValidations')
 const {
     statsSchema,
@@ -23,6 +24,13 @@ const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 
 router.post('/ordenes', validate(ordenSchema), ordenController.crearOrden)
+
+router.post(
+    '/ordenes/pagarTodo',
+    auth([ROLES.ADMIN]),
+    validate(pagarTodoSchema),
+    ordenController.pagarTodo
+)
 
 router.get(
     '/ordenes',

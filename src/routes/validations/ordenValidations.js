@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const { METODOSPAGO } = require('../../constants/metodosPago/metodosPago')
 
 const ESTADOS = require('../../constants/estados/estados')
 /*
@@ -108,6 +109,15 @@ const porMesaSchema = Joi.object({
     mesaId: Joi.number().optional(),
 })
 
+const pagarTodoSchema = Joi.object({
+    ordenes: Joi.array().items(Joi.number()).required(),
+    metodoPago: Joi.string()
+        .valid(...Object.values(METODOSPAGO))
+        .required(),
+    cajaId: Joi.number().required(),
+    empleadoId: Joi.number().required(),
+})
+
 module.exports = {
     ordenSchema,
     querySchema,
@@ -116,4 +126,5 @@ module.exports = {
     addItemsSchema,
     removeItemsSchema,
     porMesaSchema,
+    pagarTodoSchema,
 }

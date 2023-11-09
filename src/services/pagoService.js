@@ -11,9 +11,12 @@ const db = require('../models')
 const sequelize = db.sequelize
 
 const pagoService = {
-    crearPago: async (pagoData) => {
-        // Iniciar transacción
-        const transaction = await sequelize.transaction()
+    crearPago: async (pagoData, transaction) => {
+        //Si envian una transaction la usamos, sino Iniciar transacción
+        if (!transaction) {
+            transaction = await sequelize.transaction()
+        }
+
         let ordenPagada = false
         //pasar el pagoData.total a number si es string
         pagoData.total = Number(pagoData.total)

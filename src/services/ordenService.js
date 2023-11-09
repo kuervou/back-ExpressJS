@@ -5,6 +5,7 @@ const empleadoRepository = require('../repositories/empleadoRepository')
 const clienteRepository = require('../repositories/clienteRepository')
 const itemRepository = require('../repositories/itemRepository')
 const itemService = require('./itemService')
+const pagoService = require('./pagoService')
 const { ESTADOS } = require('../constants/estados/estados')
 
 const db = require('../models')
@@ -121,12 +122,55 @@ const ordenService = {
         }
     },
 
+    pagarTodo: async (data) => {
+        const transaction = await sequelize.transaction()
+        try {
+            //creamos un objeto para guardar los pagos
+            const pagos = []
+
+            //Recorremos las ordenes no pagadas
+            for (const orden of data.ordenesNoPagadas) {
+                //Creamos un objeto pagoData con los datos necesarios para crear un pago
+                const pagoData = {
+                    fecha: data.fecha,
+                    hora: data.hora,
+                    metodoPago: data.metodoPago,
+                    total: orden.total,
+                    empleadoId: data.empleadoId,
+                    cajaId: data.cajaId,
+                    ordenId: orden.id,
+                }
+
+                //Creamos el pago
+                const nuevoPago = await pagoService.crearPago(
+                    pagoData,
+                    transaction
+                )
+
+                //Agregamos el pago al array de pagos
+                pagos.push(nuevoPago)
+            }
+
+            //Si todo está bien, confirmar la transacción
+            await transaction.commit()
+
+            return pagos
+        } catch (error) {
+            // Si hay algún error, revertir la transacción
+            await transaction.rollback()
+            throw error
+        }
+    },
+
     getOrdenes: async (options = {}) => {
         return await ordenRepository.findAll(options)
     },
 
     getOrdenById: async (id) => {
         return await ordenRepository.getOrdenById(id)
+    },
+    getOrdenesByIds: async (ids) => {
+        return await ordenRepository.getOrdenesByIds(ids)
     },
 
     getOrdenesCaja: async (options = {}) => {
@@ -353,6 +397,24 @@ const ordenService = {
                 await checkClienteExists(data.clienteId)
             }
 
+            if (data.estado) {
+                //Obtenemos la informacion de la orden que se quiere actualizar
+                const orden = await ordenRepository.getOrdenById(orderId)
+
+                //Si el estado de la orden es POR_CONFIRMAR y se desea actualizar a EN_COCINA o ENTREGADA
+                if (
+                    orden.estado === ESTADOS.POR_CONFIRMAR &&
+                    (data.estado === ESTADOS.EN_COCINA ||
+                        data.estado === ESTADOS.ENTREGADA)
+                ) {
+                    //Si la orden tiene mesas debemos marcarlas como ocupadas
+                    if (orden.mesas) {
+                        //usamos el handleMesas de ordenRepository para marcar las mesas como ocupadas
+                        await ordenRepository.handleMesas(orden, orden, t)
+                    }
+                }
+            }
+
             const result = await ordenRepository.update(orderId, data, t)
 
             await t.commit()
@@ -465,6 +527,18 @@ const ordenService = {
                 }
             })
 
+            //debemos vereificar que la orden no quede sin items luego de eliminar los items
+            const itemsOrden = await itemRepository.findAll({
+                ordenId: orderId,
+            })
+
+            if (itemsOrden.length - items.length === 0) {
+                throw new HttpError(
+                    HttpCode.BAD_REQUEST,
+                    'No se puede eliminar todos los items de la orden'
+                )
+            }
+
             const result = await itemService.deleteItems(items, t)
 
             await t.commit()
@@ -512,6 +586,11 @@ const ordenService = {
             //si la orden tiene items, debemos eliminarlos
             if (orden.items) {
                 await itemService.deleteItems(orden.items, t)
+            }
+
+            //si la orden tiene mesas, debemos desvincularlas
+            if (orden.mesas) {
+                await ordenRepository.desvincularMesas(id, orden.mesas, t)
             }
 
             const result = await ordenRepository.deleteOrden(id, t)

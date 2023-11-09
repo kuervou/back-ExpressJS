@@ -1,5 +1,7 @@
 // src/controllers/ordenController.js
 const ordenService = require('../services/ordenService')
+const cajaService = require('../services/cajaService')
+const empleadoService = require('../services/empleadoService')
 const asyncHandler = require('express-async-handler')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const jwt = require('jsonwebtoken')
@@ -44,6 +46,87 @@ const ordenController = {
             message: 'Orden creada',
             newOrden,
         })
+    }),
+
+    pagarTodo: asyncHandler(async (req) => {
+        // Primero obtenemos el array de Ids de las ordenes a pagar del body
+        const ordenes = req.body.ordenes
+
+        //tambien debemos obtener la cajaId y el empleadoId
+        const cajaId = req.body.cajaId
+        const empleadoId = req.body.empleadoId
+
+        //Por ultimo obtenemos metodoPago del body
+        const metodoPago = req.body.metodoPago
+
+        //validamos que la caja exista
+        const caja = await cajaService.getCajaById(cajaId)
+
+        if (!caja) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Caja no encontrada')
+        }
+
+        //validamos que el empleado exista
+        const empleado = await empleadoService.getEmpleadoById(empleadoId)
+
+        if (!empleado) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Empleado no encontrado')
+        }
+
+        //validamos que las ordenes existan
+        const ordenesExistentes = await ordenService.getOrdenesByIds(ordenes)
+
+        if (ordenesExistentes.length !== ordenes.length) {
+            throw new HttpError(
+                HttpCode.NOT_FOUND,
+                'Alguna de las ordenes no existe'
+            )
+        }
+
+        //filtramos aquellas ordenes que ya esten pagadas, y nos quedamos con las que no
+        const ordenesNoPagadas = ordenesExistentes.filter(
+            (orden) => orden.paga === false
+        )
+
+        //si no hay ordenes para pagar, devolvemos un error
+        if (ordenesNoPagadas.length === 0) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'No hay ordenes para pagar'
+            )
+        }
+
+        //Fecha y hora actual
+
+        const ahora = new Date()
+
+        const fecha = `${ahora.getFullYear()}-${String(
+            ahora.getMonth() + 1
+        ).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`
+
+        const hora = `${String(ahora.getHours()).padStart(2, '0')}:${String(
+            ahora.getMinutes()
+        ).padStart(2, '0')}:${String(ahora.getSeconds()).padStart(2, '0')}`
+
+        //Enviamos a una funcion de orden Service toda la informacion dentro de un objeto
+
+        const pagoData = {
+            fecha,
+            hora,
+            metodoPago,
+            ordenId: 0,
+            cajaId,
+            empleadoId,
+            ordenesNoPagadas,
+        }
+
+        const pagos = await ordenService.pagarTodo(pagoData)
+
+        const io = req.io // Socket.io
+
+        io.emit('fetchOrdenes', { message: 'Pagos realizados' }) // Emitir evento para actualizar la lista de ordenes
+
+        return pagos
     }),
 
     getOrdenes: asyncHandler(async (req, res) => {

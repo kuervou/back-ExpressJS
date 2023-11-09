@@ -28,10 +28,13 @@ const ordenRepository = {
         if (data.mesas) {
             // si se envian mesas, se crean las relaciones con las mesas
             await order.addMesas(data.mesas, { transaction }) //
-            await Mesa.update(
-                { libre: false },
-                { where: { id: data.mesas }, transaction }
-            )
+            //Si el estado de la orden es distinto de ESTADOS.POR_CONFIRMAR hacemos el handle de las mesas
+            if (order.estado !== ESTADOS.POR_CONFIRMAR) {
+                await Mesa.update(
+                    { libre: false },
+                    { where: { id: data.mesas }, transaction }
+                )
+            }
         }
     },
 
@@ -44,6 +47,16 @@ const ordenRepository = {
                 { libre: false },
                 { where: { id: mesas }, transaction }
             )
+        }
+
+        return orden
+    },
+
+    //desvincularMesas, es como removeMesas pero sin cambiar el estado de las mesas
+    desvincularMesas: async (orderId, mesas, transaction) => {
+        const orden = await Orden.findByPk(orderId)
+        if (orden) {
+            await orden.removeMesas(mesas, { transaction })
         }
 
         return orden
@@ -654,6 +667,16 @@ const ordenRepository = {
                     as: 'items',
                 },
             ],
+        })
+    },
+
+    getOrdenesByIds: async (ids) => {
+        return await Orden.findAll({
+            where: {
+                id: {
+                    [Op.in]: ids,
+                },
+            },
         })
     },
 
