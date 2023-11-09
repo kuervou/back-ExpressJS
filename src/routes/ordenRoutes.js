@@ -13,7 +13,10 @@ const {
     porMesaSchema,
     removeItemsSchema,
 } = require('./validations/ordenValidations')
-const { statsSchema } = require('./validations/estadisticaValidation')
+const {
+    statsSchema,
+    diaSchema,
+} = require('./validations/estadisticaValidation')
 const auth = require('../middleware/auth')
 const { ROLES } = require('../constants/roles/roles')
 
@@ -118,6 +121,13 @@ router.get(
     auth([ROLES.ADMIN]),
     validate(statsSchema, 'query'),
     ordenController.getConsumoClientes
+)
+
+router.get(
+    '/ordenes/estadisticas/horasPico',
+    auth([ROLES.ADMIN]),
+    validate(diaSchema, 'query'),
+    ordenController.getHorasPico
 )
 
 //rutas para add y remove items

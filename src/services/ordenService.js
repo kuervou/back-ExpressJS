@@ -314,6 +314,10 @@ const ordenService = {
         }
     },
 
+    getHorasPico: async (options = {}) => {
+        return await ordenRepository.getHorasPico(options)
+    },
+
     updateOrden: async (orderId, data) => {
         const t = await sequelize.transaction()
         try {

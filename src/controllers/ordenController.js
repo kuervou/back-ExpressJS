@@ -335,6 +335,20 @@ const ordenController = {
         res.status(HttpCode.OK).json(estadisticas)
     }),
 
+    getHorasPico: asyncHandler(async (req, res) => {
+        //obtener parametros de la query
+        const { dia } = req.query
+
+        //crear objeto con los parametros
+        const options = {}
+
+        if (dia) options.dia = dia
+
+        //obtener estadisticas
+        const estadisticas = await ordenService.getHorasPico(options)
+        res.status(HttpCode.OK).json(estadisticas)
+    }),
+
     updateOrden: asyncHandler(async (req, res) => {
         const id = req.params.id
         const data = req.body

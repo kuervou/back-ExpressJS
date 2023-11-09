@@ -6,6 +6,11 @@ const statsSchema = Joi.object({
     anio: Joi.number().optional(),
 })
 
+const diaSchema = Joi.object({
+    dia: Joi.date().iso().required(),
+})
+
 module.exports = {
     statsSchema,
+    diaSchema,
 }

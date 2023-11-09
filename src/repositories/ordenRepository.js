@@ -194,6 +194,30 @@ const ordenRepository = {
         return totalConsumo
     },
 
+    getHorasPico: async (options) => {
+        const { dia } = options
+        //la idea es devolver un array de objetos con la hora (desde las 19:00 a las 07:00 )y la cantidad de ordenes dentro de ese rango de hora para el dia pasado por parametro
+        const horasPico = await Orden.findAll({
+            attributes: ['hora', [literal('COUNT(hora)'), 'cantidadOrdenes']],
+            where: {
+                fecha: dia,
+                estado: {
+                    [Op.in]: [
+                        ESTADOS.ENTREGADA,
+                        ESTADOS.PARA_ENTREGAR,
+                        ESTADOS.EN_COCINA,
+                        ESTADOS.MODIFICADA,
+                        ESTADOS.FINALIZADA,
+                    ],
+                },
+            },
+            group: ['hora'],
+            order: [['hora', 'ASC']],
+        })
+
+        return horasPico
+    },
+
     findAll: async (options = {}) => {
         const {
             page = 1,
