@@ -56,6 +56,33 @@ const itemService = {
         return items
     },
 
+    //quitarItems: Funcion que dado un conjunto de items, ubicamos su itemMenu asociado y si el itemMenu tiene asociado un unico itemInventario, entonces debemos restar al stock la cantidad del item
+    manejarStockItems: async (items, transaction) => {
+        //ubicamos los items a borrar a partir de su id
+        const itemsToQuit = await itemRepository.findItems(items)
+        //para cada item a borrar, ubicamos el itemMenu asociado y si el item menu tiene asociado un unico itemInventario, entonces debemos restar al stock la cantidad del item
+        await Promise.all(
+            itemsToQuit.map(async (item) => {
+                const itemMenu = await itemMenuRepository.getItemMenuById(
+                    item.itemMenuId
+                )
+                const itemInventarios =
+                    await itemMenuRepository.findItemInventarios(itemMenu)
+                if (
+                    itemInventarios.length === 1 &&
+                    itemInventarios[0].porUnidad === true
+                ) {
+                    await itemInventarioRepository.descontarStock(
+                        itemInventarios[0],
+                        item.cantidad,
+                        transaction
+                    )
+                }
+            })
+        )
+    },
+
+
     deleteItems: async (items, transaction) => {
         //ubicamos los items a borrar a partir de su id
         const itemsToDelete = await itemRepository.findItems(items)

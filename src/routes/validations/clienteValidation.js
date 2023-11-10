@@ -21,7 +21,7 @@ const updateClienteSchema = Joi.object({
         .pattern(/^\d{8,9}$/)
         .message('El teléfono debe tener 8 o 9 dígitos.')
         .optional(),
-    cuenta: Joi.number().optional(),
+    cuenta: Joi.number().min(0).optional(),
 })
 
 module.exports = {

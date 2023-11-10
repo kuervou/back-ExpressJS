@@ -583,9 +583,9 @@ const ordenService = {
                 )
             }
 
-            //si la orden tiene items, debemos eliminarlos
+            //si la orden tiene items, no los eliminamos, pero si debemos manejar el stock si es necesario
             if (orden.items) {
-                await itemService.deleteItems(orden.items, t)
+                await itemService.manejarStockItems(orden.items)
             }
 
             //si la orden tiene mesas, debemos desvincularlas

@@ -3,6 +3,7 @@
 const pagoRepository = require('../repositories/pagoRepository')
 const ordenRepository = require('../repositories/ordenRepository')
 const empleadoRepository = require('../repositories/empleadoRepository')
+const clienteRepository = require('../repositories/clienteRepository')
 const cajaRepository = require('../repositories/cajaRepository')
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const { METODOSPAGO } = require('../constants/metodosPago/metodosPago')
@@ -43,16 +44,6 @@ const pagoService = {
                 throw new HttpError(HttpCode.BAD_REQUEST, 'Caja no encontrada')
             }
 
-            // Si el método de pago es "Efectivo", se suma el total del pago al total de la caja
-            if (pagoData.metodoPago === METODOSPAGO.EFECTIVO) {
-                let nuevoTotalCaja = caja.total + pagoData.total
-                await cajaRepository.updateTotal(
-                    caja.id,
-                    nuevoTotalCaja,
-                    transaction
-                )
-            }
-
             //Debemos comprobar que estamos haciendo un pago a una orden que no ha sido pagada
             if (orden.paga) {
                 throw new HttpError(
@@ -91,10 +82,37 @@ const pagoService = {
                 )
             }
 
+            // Si el metodo de pago es "Credito", debemos comprobar que la orden tenga un cliente asociado
+            if (pagoData.metodoPago === METODOSPAGO.CREDITO) {
+                if (!orden.clienteId) {
+                    throw new HttpError(
+                        HttpCode.BAD_REQUEST,
+                        'La orden no tiene un cliente asociado'
+                    )
+                } else {
+                    // Si la orden tiene un cliente asociado, debemos aumentar la cuenta por cobrar del cliente
+                    await clienteRepository.aumentarCuentaPorCobrar(
+                        orden.clienteId,
+                        pagoData.total,
+                        transaction
+                    )
+                }
+            }
+
             //Si el total de los pagos es igual al total de la orden, se marca la orden como pagada
             if (totalPagos === orden.total) {
                 await ordenRepository.updatePaga(orden.id, true, transaction)
                 ordenPagada = true
+            }
+
+             // Si el método de pago es "Efectivo", se suma el total del pago al total de la caja
+             if (pagoData.metodoPago === METODOSPAGO.EFECTIVO) {
+                let nuevoTotalCaja = caja.total + pagoData.total
+                await cajaRepository.updateTotal(
+                    caja.id,
+                    nuevoTotalCaja,
+                    transaction
+                )
             }
 
             // Crear el pago
@@ -173,6 +191,17 @@ const pagoService = {
                 ordenEstabaPagada = true
             }
 
+            // Si el método de pago es "Credito", debemos comprobar que la orden tenga un cliente asociado
+            if (pago.metodoPago === METODOSPAGO.CREDITO) {
+                if (orden.clienteId) {
+                // Si la orden tiene un cliente asociado, debemos disminuir la cuenta por cobrar del cliente
+                await clienteRepository.disminuirCuentaPorCobrar(
+                    orden.clienteId,
+                    pago.total,
+                    transaction
+                )
+                }
+            }
             // Eliminar el pago
             const resultado = await pagoRepository.deletePago(id, transaction)
 

@@ -1,5 +1,6 @@
 const { Cliente } = require('../models')
 const { Op } = require('sequelize')
+const { HttpCode, HttpError } = require('../error-handling/http_error')
 
 const clienteRepository = {
     create: async (nombre, apellido, telefono) => {
@@ -49,6 +50,37 @@ const clienteRepository = {
         return await Cliente.update(
             { nombre, apellido, telefono, cuenta },
             { where: { id: id } }
+        )
+    },
+
+    FindByPk: async (id, transaction) => {
+        return await Cliente.findByPk(id, { transaction })
+    },
+
+    aumentarCuentaPorCobrar: async (id, total, transaction) => {
+        //Se debe aumentar la cuenta por cobrar del cliente, sumandole el total a lo que ya tiene
+        const cliente = await Cliente.findByPk(id, { transaction })
+        const cuentaPorCobrar = cliente.cuentaPorCobrar + total
+        await Cliente.update(
+            { cuentaPorCobrar },
+            { where: { id: id }, transaction }
+        )
+    },
+
+    disminuirCuentaPorCobrar: async (id, total, transaction) => {
+        //Se debe aumentar la cuenta por cobrar del cliente, RESTANDO el total a lo que ya tiene
+        const cliente = await Cliente.findByPk(id, { transaction })
+        //No se puede restar un valor mayor al que ya tiene
+        if (total > cliente.cuentaPorCobrar) {
+            throw new HttpError(
+                HttpCode.BAD_REQUEST,
+                'El total del pago no puede ser mayor a la cuenta por cobrar del cliente'
+            )
+        }
+        const cuentaPorCobrar = cliente.cuentaPorCobrar - total
+        await Cliente.update(
+            { cuentaPorCobrar },
+            { where: { id: id }, transaction }
         )
     },
 
