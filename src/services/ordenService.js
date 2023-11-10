@@ -412,6 +412,16 @@ const ordenService = {
                         //usamos el handleMesas de ordenRepository para marcar las mesas como ocupadas
                         await ordenRepository.handleMesas(orden, orden, t)
                     }
+                    //También debemos manejar el stock de los items
+                    if (orden.items) {
+                        //crear un array con los ids de los items
+                        const idsItems = []
+                        orden.items.forEach((item) => {
+                            idsItems.push(item.id)
+                        })
+
+                        await itemService.manejarStockItemsOnConfirmar(idsItems, t)
+                    }
                 }
             }
 
@@ -538,8 +548,21 @@ const ordenService = {
                     'No se puede eliminar todos los items de la orden'
                 )
             }
+            let result = 0
+            //Debemos verificar el estado de la orden y evaluar si debemos eliminar los items (itemRepository.deleteItems) o si eliminarlos y manejar el stock de los items (itemService.deleteItems) 
+            if (orden.estado == ESTADOS.POR_CONFIRMAR) {
+                result = await itemRepository.deleteItems(items, t)
+            } else {
+                //crear un array con los ids de los items
+                const idsItems = []
+                items.forEach((item) => {
+                    idsItems.push(item.id)
+                })
 
-            const result = await itemService.deleteItems(items, t)
+                result = await itemService.deleteItems(items, t)
+
+                
+            }
 
             await t.commit()
 
@@ -583,15 +606,24 @@ const ordenService = {
                 )
             }
 
-            //si la orden tiene items, no los eliminamos, pero si debemos manejar el stock si es necesario
-            if (orden.items) {
-                await itemService.manejarStockItems(orden.items)
-            }
+            //si la orden tiene items, no los eliminamos, pero si debemos manejar el stock si es necesario (Solo si es una orden que no está "Por confirmar")
+            // eslint-disable-next-line no-console
+            console.log("estado orden: ", orden.estado)
+            if(orden.estado !== ESTADOS.POR_CONFIRMAR){
+                //crear un array con los ids de los items
+                const idsItems = []
+                orden.items.forEach((item) => {
+                    idsItems.push(item.id)
+                })
 
-            //si la orden tiene mesas, debemos desvincularlas
-            if (orden.mesas) {
-                await ordenRepository.desvincularMesas(id, orden.mesas, t)
+
+
+                if (orden.items) {
+                    await itemService.manejarStockItemsOnCancelar(idsItems, t)
+                }
+                
             }
+            
 
             const result = await ordenRepository.deleteOrden(id, t)
 

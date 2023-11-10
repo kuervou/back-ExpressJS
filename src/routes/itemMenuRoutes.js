@@ -20,7 +20,6 @@ router.post(
 
 router.get(
     '/itemsMenu',
-    auth([ROLES.ADMIN]),
     validate(querySchema, 'query'),
     itemMenuController.getItemsMenu
 )
@@ -41,7 +40,6 @@ router.get(
 
 router.get(
     '/itemsMenu/:id',
-    auth([ROLES.ADMIN]),
     itemMenuController.getItemMenuById
 )
 

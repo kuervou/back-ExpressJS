@@ -17,11 +17,10 @@ router.post(
 )
 router.get(
     '/grupos',
-    auth([]),
     validate(querySchema, 'query'),
     grupoController.getGrupos
 )
-router.get('/grupos/:id', auth([]), grupoController.getGrupoById)
+router.get('/grupos/:id', grupoController.getGrupoById)
 router.put(
     '/grupos/:id',
     [auth([ROLES.ADMIN]), validate(updateGrupoSchema)],
