@@ -139,6 +139,22 @@ router.get(
     ordenController.getConsumoClientes
 )
 
+//Estadisticas top 5 clientes
+router.get(
+    '/ordenes/estadisticas/top5Clientes',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getTop5Clientes
+)
+
+//Estadisticas top 5 ItemsMenu
+router.get(
+    '/ordenes/estadisticas/top5ItemsMenu',
+    auth([ROLES.ADMIN]),
+    validate(statsSchema, 'query'),
+    ordenController.getTop5ItemsMenu
+)
+
 router.get(
     '/ordenes/estadisticas/horasPico',
     auth([ROLES.ADMIN]),

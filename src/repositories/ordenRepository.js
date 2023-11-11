@@ -1,6 +1,6 @@
 // src/repositories/ordenRepository.js
 const { Orden, Item, Mesa, ItemMenu, Grupo } = require('../models')
-const { Op, literal } = require('sequelize')
+const { Op, literal, fn, col } = require('sequelize')
 const db = require('../models')
 const { EXCLUDED_GROUPS } = require('../constants/grupos/grupos')
 const { ESTADOS } = require('../constants/estados/estados')
@@ -205,6 +205,120 @@ const ordenRepository = {
         })
 
         return totalConsumo
+    },
+
+    getTop5ClientesPorDia: async (dia) => {
+        //Debemos devolver los 5 clientes que más gastaron en el día
+        const top5Clientes = await Orden.findAll({
+            attributes: [
+                'clienteId', 
+                [literal('SUM(total)'), 'totalConsumo'],
+                [literal('COUNT(id)'), 'cantidadOrdenes'],
+            ],
+            where: {
+                fecha: dia,
+                paga: true,
+            },
+            group: ['clienteId'],
+            order: [[literal('SUM(total)'), 'DESC']],
+            limit: 5,
+        })
+
+        return top5Clientes
+    },
+
+    getTop5Clientes: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const top5Clientes = await Orden.findAll({
+            attributes: [
+                'clienteId',
+                [literal('SUM(total)'), 'totalConsumo'],
+                [literal('COUNT(id)'), 'cantidadOrdenes'],
+            ],
+            where: {
+                clienteId: { [Op.ne]: null },
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+            },
+            group: ['clienteId'],
+            order: [[literal('SUM(total)'), 'DESC']],
+            limit: 5,
+        })
+
+        return top5Clientes
+
+    },
+
+    getTop5ItemsMenuPorDia: async (dia) => {
+        const top5ItemsMenu = await Orden.findAll({
+            attributes: [
+                [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
+                [col('items.itemMenuId'), 'itemMenuId'],
+                [col('items->itemMenu.nombre'), 'nombre']
+            ],
+            include: [{
+                model: Item,
+                as: 'items',
+                attributes: [],
+                include: [{ // Incluir el modelo ItemMenu
+                    model: ItemMenu,
+                    as: 'itemMenu',
+                    attributes: ['nombre'] // Asegúrate de que 'nombre' es el nombre correcto de la columna
+                }]
+            }],
+            where: {
+                fecha: dia,
+                paga: true
+            },
+            group: ['items.itemMenuId', 'items->itemMenu.id'], // Asegúrate de que los paths sean correctos
+            order: [[fn('SUM', col('items.cantidad')), 'DESC']],
+            limit: 5,
+            subQuery: false
+        });
+    
+        return top5ItemsMenu;
+    },
+    
+    
+    
+
+    getTop5ItemsMenu: async (options) => {
+        const { fechaInicio, fechaFin } = options
+
+        const top5ItemsMenu = await Orden.findAll({
+            attributes: [
+                [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
+                [col('items.itemMenuId'), 'itemMenuId'],
+                [col('items->itemMenu.nombre'), 'nombre']
+            ],
+
+            include: [{
+                model: Item,
+                as: 'items',
+                attributes: [],
+                include: [{ // Incluir el modelo ItemMenu
+                    model: ItemMenu,
+                    as: 'itemMenu',
+                    attributes: ['nombre'] // Asegúrate de que 'nombre' es el nombre correcto de la columna
+                }]
+            }],
+            where: {
+                fecha: {
+                    [Op.between]: [fechaInicio, fechaFin],
+                },
+                paga: true,
+            },
+
+            group: ['items.itemMenuId', 'items->itemMenu.id'], // Asegúrate de que los paths sean correctos
+            order: [[fn('SUM', col('items.cantidad')), 'DESC']],
+            limit: 5,
+            subQuery: false
+        });
+
+        return top5ItemsMenu
     },
 
     getHorasPico: async (options) => {
