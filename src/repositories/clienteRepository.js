@@ -60,9 +60,9 @@ const clienteRepository = {
     aumentarCuentaPorCobrar: async (id, total, transaction) => {
         //Se debe aumentar la cuenta por cobrar del cliente, sumandole el total a lo que ya tiene
         const cliente = await Cliente.findByPk(id, { transaction })
-        const cuentaPorCobrar = cliente.cuentaPorCobrar + total
+        const cuentaPorCobrar = cliente.cuenta + total
         await Cliente.update(
-            { cuentaPorCobrar },
+            { cuenta: cuentaPorCobrar },
             { where: { id: id }, transaction }
         )
     },
@@ -71,15 +71,15 @@ const clienteRepository = {
         //Se debe aumentar la cuenta por cobrar del cliente, RESTANDO el total a lo que ya tiene
         const cliente = await Cliente.findByPk(id, { transaction })
         //No se puede restar un valor mayor al que ya tiene
-        if (total > cliente.cuentaPorCobrar) {
+        if (total > cliente.cuenta) {
             throw new HttpError(
                 HttpCode.BAD_REQUEST,
                 'El total del pago no puede ser mayor a la cuenta por cobrar del cliente'
             )
         }
-        const cuentaPorCobrar = cliente.cuentaPorCobrar - total
+        const cuentaPorCobrar = cliente.cuenta - total
         await Cliente.update(
-            { cuentaPorCobrar },
+            { cuenta: cuentaPorCobrar },
             { where: { id: id }, transaction }
         )
     },

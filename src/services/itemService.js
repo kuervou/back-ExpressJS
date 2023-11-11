@@ -36,8 +36,6 @@ const itemService = {
                         )
                     }
 
-                    // eslint-disable-next-line no-console
-                    console.log("estado orden: ", order.estado)
                     if(order.estado !== ESTADOS.POR_CONFIRMAR){
                         await itemInventarioRepository.descontarStock(
                             itemInventarios[0],

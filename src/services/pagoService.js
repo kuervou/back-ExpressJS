@@ -13,10 +13,12 @@ const sequelize = db.sequelize
 
 const pagoService = {
     crearPago: async (pagoData, transaction) => {
-        //Si envian una transaction la usamos, sino Iniciar transacción
-        if (!transaction) {
-            transaction = await sequelize.transaction()
-        }
+        let transactionOwner = false; // Esta bandera indica si la transacción fue creada dentro de esta función.
+
+    if (!transaction) {
+        transaction = await sequelize.transaction();
+        transactionOwner = true; // Marcamos que esta función inició la transacción.
+    }
 
         let ordenPagada = false
         //pasar el pagoData.total a number si es string
@@ -118,14 +120,17 @@ const pagoService = {
             // Crear el pago
             const nuevoPago = await pagoRepository.create(pagoData, transaction)
 
-            // Si todo está bien, confirmar la transacción
-            await transaction.commit()
-
-            return { nuevoPago, ordenPagada }
+            if (transactionOwner) {
+                await transaction.commit();
+            }
+    
+            return { nuevoPago, ordenPagada };
         } catch (error) {
-            // Si hay algún error, revertir la transacción
-            await transaction.rollback()
-            throw error
+             // Si hay algún error y esta función inició la transacción, la revertimos.
+        if (transactionOwner) {
+            await transaction.rollback();
+        }
+        throw error;
         }
     },
 

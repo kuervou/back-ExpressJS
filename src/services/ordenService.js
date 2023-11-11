@@ -150,16 +150,17 @@ const ordenService = {
                 //Agregamos el pago al array de pagos
                 pagos.push(nuevoPago)
             }
-
             //Si todo está bien, confirmar la transacción
             await transaction.commit()
 
             return pagos
         } catch (error) {
             // Si hay algún error, revertir la transacción
-            await transaction.rollback()
-            throw error
-        }
+            if (transaction.finished !== 'commit') {
+                await transaction.rollback();
+            }
+            throw error;
+            }
     },
 
     getOrdenes: async (options = {}) => {
@@ -607,8 +608,6 @@ const ordenService = {
             }
 
             //si la orden tiene items, no los eliminamos, pero si debemos manejar el stock si es necesario (Solo si es una orden que no está "Por confirmar")
-            // eslint-disable-next-line no-console
-            console.log("estado orden: ", orden.estado)
             if(orden.estado !== ESTADOS.POR_CONFIRMAR){
                 //crear un array con los ids de los items
                 const idsItems = []

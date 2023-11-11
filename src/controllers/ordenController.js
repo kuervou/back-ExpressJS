@@ -48,7 +48,7 @@ const ordenController = {
         })
     }),
 
-    pagarTodo: asyncHandler(async (req) => {
+    pagarTodo: asyncHandler(async (req, res) => {
         // Primero obtenemos el array de Ids de las ordenes a pagar del body
         const ordenes = req.body.ordenes
 
@@ -114,7 +114,6 @@ const ordenController = {
             fecha,
             hora,
             metodoPago,
-            ordenId: 0,
             cajaId,
             empleadoId,
             ordenesNoPagadas,
@@ -126,7 +125,10 @@ const ordenController = {
 
         io.emit('fetchOrdenes', { message: 'Pagos realizados' }) // Emitir evento para actualizar la lista de ordenes
 
-        return pagos
+        res.status(HttpCode.OK).json({
+            message: 'Pagos realizados',
+            pagos,
+        })
     }),
 
     getOrdenes: asyncHandler(async (req, res) => {
