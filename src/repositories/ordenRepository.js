@@ -235,6 +235,7 @@ const ordenRepository = {
                 'clienteId',
                 [literal('SUM(total)'), 'totalConsumo'],
                 [literal('COUNT(id)'), 'cantidadOrdenes'],
+                [literal('cliente.nombre'), 'nombreCliente'],
             ],
             where: {
                 clienteId: { [Op.ne]: null },
