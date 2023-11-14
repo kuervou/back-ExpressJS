@@ -398,7 +398,7 @@ const ordenService = {
         //Si envío el parametro día, debo devolver las estadisticas de ese día
         if (options.dia) {
             //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
-            return await ordenRepository.getTop5ItemsMenuPorDia(options.dia)
+            return await itemRepository.getTop5ItemsMenuPorDia(options.dia);
         } else if (options.mes) {   
             // Calculamos el rango del mes más reciente
             const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
@@ -406,7 +406,7 @@ const ordenService = {
             options.fechaInicio = primerDia
             options.fechaFin = ultimoDia
 
-            return await ordenRepository.getTop5ItemsMenu(options)
+            return await itemRepository.getTop5ItemsMenu(options.fechaInicio, options.fechaFin);
 
         } else if (options.anio) {
             //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
@@ -419,7 +419,7 @@ const ordenService = {
             options.fechaInicio = primerDiaDelAñoISO
             options.fechaFin = ultimoDiaDelAñoISO
 
-            return await ordenRepository.getTop5ItemsMenu(options)
+            return await itemRepository.getTop5ItemsMenuPorDia(options.dia);
 
         }
 
