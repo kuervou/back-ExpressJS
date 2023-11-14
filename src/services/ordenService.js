@@ -419,7 +419,7 @@ const ordenService = {
             options.fechaInicio = primerDiaDelAñoISO
             options.fechaFin = ultimoDiaDelAñoISO
 
-            return await itemRepository.getTop5ItemsMenuPorDia(options.dia);
+            return await itemRepository.getTop5ItemsMenu(options.fechaInicio, options.fechaFin);
 
         }
 
