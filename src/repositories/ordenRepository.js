@@ -1,5 +1,5 @@
 // src/repositories/ordenRepository.js
-const { Orden, Item, Mesa, ItemMenu, Grupo } = require('../models')
+const { Orden, Item, Mesa, ItemMenu, Grupo, Cliente } = require('../models')
 const { Op, literal, fn, col } = require('sequelize')
 const db = require('../models')
 const { EXCLUDED_GROUPS } = require('../constants/grupos/grupos')
@@ -208,35 +208,51 @@ const ordenRepository = {
     },
 
     getTop5ClientesPorDia: async (dia) => {
-        //Debemos devolver los 5 clientes que más gastaron en el día
         const top5Clientes = await Orden.findAll({
             attributes: [
-                'clienteId', 
-                [literal('SUM(total)'), 'totalConsumo'],
-                [literal('COUNT(id)'), 'cantidadOrdenes'],
+                'clienteId',
+                [literal('SUM(`Orden`.`total`)'), 'totalConsumo'],
+                [literal('COUNT(`Orden`.`id`)'), 'cantidadOrdenes'],
+                [literal('`cliente`.`nombre`'), 'nombreCliente'],
+                [literal('`cliente`.`apellido`'), 'apellidoCliente'],
             ],
+            include: [{
+                model: Cliente,
+                as: 'cliente',
+                attributes: []
+            }],
             where: {
                 fecha: dia,
                 paga: true,
             },
-            group: ['clienteId'],
-            order: [[literal('SUM(total)'), 'DESC']],
+            group: ['clienteId', 'cliente.id', 'cliente.nombre', 'cliente.apellido'],
+            order: [[fn('SUM', col('total')), 'DESC']],
             limit: 5,
-        })
-
-        return top5Clientes
+            subQuery: false
+        });
+    
+        return top5Clientes.map(result => {
+            const { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente } = result.get({ plain: true });
+            return { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente };
+        });
     },
-
+    
     getTop5Clientes: async (options) => {
-        const { fechaInicio, fechaFin } = options
-
+        const { fechaInicio, fechaFin } = options;
+    
         const top5Clientes = await Orden.findAll({
             attributes: [
                 'clienteId',
-                [literal('SUM(total)'), 'totalConsumo'],
-                [literal('COUNT(id)'), 'cantidadOrdenes'],
-                [literal('cliente.nombre'), 'nombreCliente'],
+                [literal('SUM(`Orden`.`total`)'), 'totalConsumo'],
+                [literal('COUNT(`Orden`.`id`)'), 'cantidadOrdenes'],
+                [literal('`cliente`.`nombre`'), 'nombreCliente'],
+                [literal('`cliente`.`apellido`'), 'apellidoCliente'],
             ],
+            include: [{
+                model: Cliente,
+                as: 'cliente',
+                attributes: []
+            }],
             where: {
                 clienteId: { [Op.ne]: null },
                 fecha: {
@@ -244,37 +260,40 @@ const ordenRepository = {
                 },
                 paga: true,
             },
-            group: ['clienteId'],
-            order: [[literal('SUM(total)'), 'DESC']],
+            group: ['clienteId', 'cliente.id', 'cliente.nombre', 'cliente.apellido'],
+            order: [[fn('SUM', col('total')), 'DESC']],
             limit: 5,
-        })
-
-        return top5Clientes
-
+            subQuery: false
+        });
+    
+        return top5Clientes.map(result => {
+            const { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente } = result.get({ plain: true });
+            return { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente };
+        });
     },
-
+    
     getTop5ItemsMenuPorDia: async (dia) => {
         const top5ItemsMenu = await Orden.findAll({
             attributes: [
                 [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
                 [col('items.itemMenuId'), 'itemMenuId'],
-                [col('items->itemMenu.nombre'), 'nombre']
+                [literal('`items->itemMenu`.`nombre`'), 'nombre'] // Uso de sequelize.literal
             ],
             include: [{
                 model: Item,
                 as: 'items',
                 attributes: [],
-                include: [{ // Incluir el modelo ItemMenu
+                include: [{
                     model: ItemMenu,
                     as: 'itemMenu',
-                    attributes: ['nombre'] // Asegúrate de que 'nombre' es el nombre correcto de la columna
+                    attributes: []
                 }]
             }],
             where: {
                 fecha: dia,
                 paga: true
             },
-            group: ['items.itemMenuId', 'items->itemMenu.id'], // Asegúrate de que los paths sean correctos
+            group: [literal('`items`.`itemMenuId`'), literal('`items->itemMenu`.`id`')], // Uso de sequelize.literal
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
@@ -282,6 +301,7 @@ const ordenRepository = {
     
         return top5ItemsMenu;
     },
+    
     
     
     
@@ -293,33 +313,31 @@ const ordenRepository = {
             attributes: [
                 [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
                 [col('items.itemMenuId'), 'itemMenuId'],
-                [col('items->itemMenu.nombre'), 'nombre']
+                [literal('`items->itemMenu`.`nombre`'), 'nombre'] // Uso de sequelize.literal
             ],
-
             include: [{
                 model: Item,
                 as: 'items',
                 attributes: [],
-                include: [{ // Incluir el modelo ItemMenu
+                include: [{
                     model: ItemMenu,
                     as: 'itemMenu',
-                    attributes: ['nombre'] // Asegúrate de que 'nombre' es el nombre correcto de la columna
+                    attributes: []
                 }]
             }],
             where: {
                 fecha: {
                     [Op.between]: [fechaInicio, fechaFin],
                 },
-                paga: true,
+                paga: true
             },
-
-            group: ['items.itemMenuId', 'items->itemMenu.id'], // Asegúrate de que los paths sean correctos
+            group: [literal('`items`.`itemMenuId`'), literal('`items->itemMenu`.`id`')], // Uso de sequelize.literal
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
         });
 
-        return top5ItemsMenu
+        return top5ItemsMenu;
     },
 
     getHorasPico: async (options) => {

@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
             // Relación uno a muchos con Orden
             Cliente.hasMany(models.Orden, {
                 foreignKey: 'clienteId',
-                as: 'cliente',
+                as: 'ordenes',
             })
         }
     }

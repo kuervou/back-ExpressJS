@@ -30,10 +30,6 @@ module.exports = {
         database: process.env.LOCAL_DB_NAME,
         host: process.env.LOCAL_DB_HOST,
         dialect: 'mysql',
-        dialectOptions: {
-            useUTC: true, // para MySQL
-        },
-        timezone: '+00:00', // Establece la zona horaria para la aplicación en UTC
         logging: console.log,
     },
 }
