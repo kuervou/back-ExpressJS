@@ -279,7 +279,7 @@ const ordenRepository = {
             attributes: [
                 [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
                 'items.itemMenuId',
-                [col('items.itemMenu.nombre'), 'nombre']
+                [literal('`itemMenu`.`nombre`'), 'nombre'] // Cambiado para usar literal
             ],
             include: [{
                 model: Item,
@@ -297,7 +297,7 @@ const ordenRepository = {
                 },
                 paga: true
             },
-            group: ['items.itemMenuId', 'items.itemMenu.id', 'items->itemMenu.nombre'], // Incluyendo todas las columnas seleccionadas
+            group: [literal('`items`.`itemMenuId`'), literal('`itemMenu`.`id`'), literal('`itemMenu`.`nombre`')], // Uso de literal para el GROUP BY
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
@@ -306,12 +306,14 @@ const ordenRepository = {
         return top5ItemsMenu;
     },
     
+    
     getTop5ItemsMenuPorDia: async (dia) => {
         const top5ItemsMenu = await Orden.findAll({
             attributes: [
                 [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
-                'items.itemMenuId',
-                [col('items.itemMenu.nombre'), 'nombre']
+                [col('items.itemMenuId'), 'itemMenuId'],
+                // Aquí se usa literal para obtener directamente el nombre del item del menú
+                [literal('`itemMenu`.`nombre`'), 'nombre'] 
             ],
             include: [{
                 model: Item,
@@ -327,14 +329,20 @@ const ordenRepository = {
                 fecha: dia,
                 paga: true
             },
-            group: ['items.itemMenuId', 'items.itemMenu.id', 'items->itemMenu.nombre'], // Incluyendo todas las columnas seleccionadas
+            // Utiliza literal para asegurarte de que el GROUP BY es aceptado por MySQL en modo estricto
+            group: [
+                literal('`items`.`itemMenuId`'),
+                literal('`itemMenu`.`id`'),
+                literal('`itemMenu`.`nombre`')
+            ],
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
         });
     
-        return top5ItemsMenu;
+        return top5ItemsMenu.map(item => item.get({ plain: true }));
     },
+    
     
 
     getHorasPico: async (options) => {
