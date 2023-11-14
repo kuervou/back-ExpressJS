@@ -272,48 +272,20 @@ const ordenRepository = {
         });
     },
     
-    getTop5ItemsMenuPorDia: async (dia) => {
-        const top5ItemsMenu = await Orden.findAll({
-            attributes: [
-                [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
-                [col('items.itemMenuId'), 'itemMenuId'],
-                [literal('`items->itemMenu`.`nombre`'), 'nombre'] // Uso de sequelize.literal
-            ],
-            include: [{
-                model: Item,
-                as: 'items',
-                attributes: [],
-                include: [{
-                    model: ItemMenu,
-                    as: 'itemMenu',
-                    attributes: []
-                }]
-            }],
-            where: {
-                fecha: dia,
-                paga: true
-            },
-            group: [literal('`items`.`itemMenuId`'), literal('`items->itemMenu`.`id`')], // Uso de sequelize.literal
-            order: [[fn('SUM', col('items.cantidad')), 'DESC']],
-            limit: 5,
-            subQuery: false
-        });
-    
-        return top5ItemsMenu;
-    },
+   
     
     
     
     
 
     getTop5ItemsMenu: async (options) => {
-        const { fechaInicio, fechaFin } = options
-
+        const { fechaInicio, fechaFin } = options;
+    
         const top5ItemsMenu = await Orden.findAll({
             attributes: [
                 [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
-                [col('items.itemMenuId'), 'itemMenuId'],
-                [literal('`items->itemMenu`.`nombre`'), 'nombre'] // Uso de sequelize.literal
+                'items.itemMenuId',
+                [col('items.itemMenu.nombre'), 'nombre']
             ],
             include: [{
                 model: Item,
@@ -322,7 +294,7 @@ const ordenRepository = {
                 include: [{
                     model: ItemMenu,
                     as: 'itemMenu',
-                    attributes: []
+                    attributes: ['nombre']
                 }]
             }],
             where: {
@@ -331,7 +303,37 @@ const ordenRepository = {
                 },
                 paga: true
             },
-            group: [literal('`items`.`itemMenuId`'), literal('`items->itemMenu`.`id`')], // Uso de sequelize.literal
+            group: ['items.itemMenuId', 'items.itemMenu.id'],
+            order: [[fn('SUM', col('items.cantidad')), 'DESC']],
+            limit: 5,
+            subQuery: false
+        });
+    
+        return top5ItemsMenu;
+    },
+    
+    getTop5ItemsMenuPorDia: async (dia) => {
+        const top5ItemsMenu = await Orden.findAll({
+            attributes: [
+                [fn('SUM', col('items.cantidad')), 'cantidadVendida'],
+                'items.itemMenuId',
+                [col('items.itemMenu.nombre'), 'nombre']
+            ],
+            include: [{
+                model: Item,
+                as: 'items',
+                attributes: [],
+                include: [{
+                    model: ItemMenu,
+                    as: 'itemMenu',
+                    attributes: ['nombre']
+                }]
+            }],
+            where: {
+                fecha: dia,
+                paga: true
+            },
+            group: ['items.itemMenuId', 'items.itemMenu.id'],
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
