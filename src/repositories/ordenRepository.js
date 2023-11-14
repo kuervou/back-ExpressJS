@@ -272,12 +272,6 @@ const ordenRepository = {
         });
     },
     
-   
-    
-    
-    
-    
-
     getTop5ItemsMenu: async (options) => {
         const { fechaInicio, fechaFin } = options;
     
@@ -294,7 +288,7 @@ const ordenRepository = {
                 include: [{
                     model: ItemMenu,
                     as: 'itemMenu',
-                    attributes: ['nombre']
+                    attributes: []
                 }]
             }],
             where: {
@@ -303,7 +297,7 @@ const ordenRepository = {
                 },
                 paga: true
             },
-            group: ['items.itemMenuId', 'items.itemMenu.id'],
+            group: ['items.itemMenuId', 'items.itemMenu.id', 'items->itemMenu.nombre'], // Incluyendo todas las columnas seleccionadas
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
@@ -326,21 +320,22 @@ const ordenRepository = {
                 include: [{
                     model: ItemMenu,
                     as: 'itemMenu',
-                    attributes: ['nombre']
+                    attributes: []
                 }]
             }],
             where: {
                 fecha: dia,
                 paga: true
             },
-            group: ['items.itemMenuId', 'items.itemMenu.id'],
+            group: ['items.itemMenuId', 'items.itemMenu.id', 'items->itemMenu.nombre'], // Incluyendo todas las columnas seleccionadas
             order: [[fn('SUM', col('items.cantidad')), 'DESC']],
             limit: 5,
             subQuery: false
         });
-
+    
         return top5ItemsMenu;
     },
+    
 
     getHorasPico: async (options) => {
         const { dia } = options
