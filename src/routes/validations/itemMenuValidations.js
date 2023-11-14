@@ -47,6 +47,8 @@ const updateItemsMenuInventarioSchema = Joi.object({
     porUnidad: Joi.boolean().optional().allow(null),
 })
 
+
+
 module.exports = {
     itemMenuSchema,
     updateItemMenuSchema,

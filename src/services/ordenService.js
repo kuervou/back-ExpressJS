@@ -12,6 +12,7 @@ const db = require('../models')
 const pagoRepository = require('../repositories/pagoRepository')
 const mesaRepository = require('../repositories/mesaRepository')
 const sequelize = db.sequelize
+const { Op } = require('sequelize')
 
 //funcion checkEmpleadoExists
 const checkEmpleadoExists = async (empleadoId) => {
@@ -130,12 +131,26 @@ const ordenService = {
 
             //Recorremos las ordenes no pagadas
             for (const orden of data.ordenesNoPagadas) {
+                //antes de crear el pago, debemos verificar que el total de los pagos no supere el total de la orden
+                const estadoPagos = await ordenService.getEstadoPagos(orden.id)
+
+                //Si el total de los pagos es igual al total de la orden, no se puede pagar
+                if (estadoPagos.totalPagado === estadoPagos.totalOrden) {
+                    throw new HttpError(
+                        HttpCode.BAD_REQUEST,
+                        'No se puede pagar una orden que ya está pagada'
+                    )
+                }
+
+                //Obtenemos el total a pagar
+                const totalAPagar = estadoPagos.totalOrden - estadoPagos.totalPagado
+
                 //Creamos un objeto pagoData con los datos necesarios para crear un pago
                 const pagoData = {
                     fecha: data.fecha,
                     hora: data.hora,
                     metodoPago: data.metodoPago,
-                    total: orden.total,
+                    total: totalAPagar,
                     empleadoId: data.empleadoId,
                     cajaId: data.cajaId,
                     ordenId: orden.id,
@@ -216,6 +231,50 @@ const ordenService = {
         return estadoPagos
     },
 
+    infoPagosOrdenes: async (ids) => {
+        // Obtiene todas las órdenes que coinciden con los IDs proporcionados
+        const ordenes = await ordenRepository.getOrdenesByIds(ids);
+       
+        
+        if (ordenes.length === 0) {
+            throw new HttpError(HttpCode.NOT_FOUND, 'Órdenes no encontradas');
+        }
+    
+        // Obtiene todos los pagos que coinciden con los IDs de las órdenes
+        const pagos = await pagoRepository.findAll({
+            ordenId: { [Op.in]: ids },
+        });
+    
+        // Prepara el objeto de respuesta con los totales inicializados en 0
+        const respuesta = {
+            ordenesIds: ids,
+            totalGeneralPagado: 0,
+            totalGeneralOrden: 0,
+            detalles: []
+        };
+    
+        // Calcula los totales y los detalles para cada orden
+        ordenes.forEach(orden => {
+            const pagosOrden = pagos.items.filter(p => p.ordenId === orden.id);
+            
+            let totalPagadoOrden = pagosOrden.reduce((total, pago) => total + pago.total, 0);
+    
+            // Agrega al total general
+            respuesta.totalGeneralPagado += totalPagadoOrden;
+            respuesta.totalGeneralOrden += orden.total;
+    
+            // Agrega los detalles por orden
+            respuesta.detalles.push({
+                ordenId: orden.id,
+                totalPagado: totalPagadoOrden,
+                totalOrden: orden.total,
+                paga: orden.paga
+            });
+        });
+    
+        return respuesta;
+    },
+    
     getEstadisticasVentas: async (options = {}) => {
         //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
 

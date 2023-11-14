@@ -13,6 +13,7 @@ const {
     porMesaSchema,
     removeItemsSchema,
     pagarTodoSchema,
+    ordenIdsSchema
 } = require('./validations/ordenValidations')
 const {
     statsSchema,
@@ -105,6 +106,13 @@ router.get(
     '/ordenes/:id/estadoPagos',
     auth([ROLES.ADMIN, ROLES.MOZO]),
     ordenController.getEstadoPagos
+)
+
+router.get(
+    '/ordenes/infoPagos/general',
+    auth([ROLES.ADMIN]),
+    validate(ordenIdsSchema, 'query'),
+    ordenController.infoPagosOrdenes
 )
 
 //Estadísticas de ventas

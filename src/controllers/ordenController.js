@@ -208,6 +208,24 @@ const ordenController = {
         res.status(HttpCode.OK).json(estadoPagos)
     }),
 
+    infoPagosOrdenes: asyncHandler(async (req, res) => {
+        let ids = req.query.Ids;
+
+        // Si es una cadena, divídela y convierte cada elemento en un número
+        if (typeof ids === 'string') {
+            ids = ids.split(',').map(id => {
+                const parsedId = parseInt(id, 10);
+                if (isNaN(parsedId)) {
+                    // Maneja el caso de que el ID no sea un número válido
+                    throw new HttpError(HttpCode.BAD_REQUEST, 'ID de orden no válido');
+                }
+                return parsedId;
+            });
+        } 
+        const estadosPagos = await ordenService.infoPagosOrdenes(ids);
+        res.status(HttpCode.OK).json(estadosPagos);
+    }),
+
     getEstadisticasVentas: asyncHandler(async (req, res) => {
         //obtener parametros de la query
         const { dia, mes, anio } = req.query

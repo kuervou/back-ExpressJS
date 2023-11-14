@@ -120,6 +120,15 @@ const pagarTodoSchema = Joi.object({
     empleadoId: Joi.number().required(),
 })
 
+const ordenIdsSchema = Joi.object({
+    Ids: [
+        Joi.number().integer().positive().optional(),
+        Joi.string()
+            .pattern(/^\d+(,\d+)*$/)
+            .optional(),
+    ],
+})
+
 module.exports = {
     ordenSchema,
     querySchema,
@@ -129,4 +138,6 @@ module.exports = {
     removeItemsSchema,
     porMesaSchema,
     pagarTodoSchema,
+    ordenIdsSchema,
+
 }
