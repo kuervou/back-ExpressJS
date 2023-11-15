@@ -1,130 +1,172 @@
-/* eslint-disable no-console */
-const request = require('supertest')
-const { app } = require('../../app')
-const clienteService = require('../../services/clienteService.js')
-const { generateTokenForTesting } = require('../utils')
+const request = require('supertest');
+const { app } = require('../../src/app');
+const clienteService = require('../../src/services/clienteService');
+jest.mock('../../src/services/clienteService');
+const { generateTokenForTesting } = require('../utils');
 
-// Mocks
-// eslint-disable-next-line no-undef
-const ClienteMock = {
-    nombre: 'John',
-    apellido: 'Doe',
-    telefono: '123456789',
-    cuenta: 100,
-    toJSON: function () {
-        return {
-            nombre: this.nombre,
-            apellido: this.apellido,
-            telefono: this.telefono,
-            cuenta: this.cuenta,
-        }
-    },
-}
+describe('clienteController', () => {
+    let authToken;
 
-clienteService.getClientes = jest.fn().mockResolvedValue([ClienteMock.toJSON()])
-clienteService.getClienteById = jest.fn((id) => {
-    if (id === '1') {
-        return Promise.resolve(ClienteMock.toJSON())
-    } else {
-        return Promise.resolve(null)
-    }
-})
-clienteService.crearCliente = jest.fn().mockResolvedValue(true)
-clienteService.updateCliente = jest.fn().mockResolvedValue([1]) // Suponemos que retorna el número de registros actualizados
-clienteService.deleteCliente = jest.fn().mockResolvedValue(1) // Suponemos que retorna el número de registros eliminados
-
-describe('clienteController Tests', () => {
-    let authToken
-
-    // Esto se ejecutará antes de cada prueba
     beforeEach(() => {
-        authToken = `Bearer ${generateTokenForTesting()}`
-    })
+        authToken = `Bearer ${generateTokenForTesting()}`;
+    });
 
-    // Test para getClientes
-    it('should return a list of clients', async () => {
-        const res = await request(app)
-            .get('/api/clientes')
-            .set('Authorization', authToken)
-        expect(res.statusCode).toEqual(200)
+    describe('POST /api/clientes', () => {
+        it('should create a new cliente', async () => {
+            const clienteData = { nombre: 'John', apellido: 'Doe', telefono: '123456789' };
+            clienteService.crearCliente.mockResolvedValue(clienteData);
 
-        expect(res.body).toEqual([ClienteMock.toJSON()])
-    })
+            const res = await request(app)
+                .post('/api/clientes')
+                .set('Authorization', authToken)
+                .send(clienteData);
 
-    // Test para getClienteById
-    it('should return a client by ID', async () => {
-        const res = await request(app)
-            .get('/api/clientes/1')
-            .set('Authorization', authToken)
-        expect(res.statusCode).toEqual(200)
+            expect(res.statusCode).toEqual(201);
+            expect(res.body).toHaveProperty('message', 'Cliente creado');
+            expect(clienteService.crearCliente).toHaveBeenCalledWith('john', 'doe', '123456789');
+        });
+    });
 
-        expect(res.body).toEqual(ClienteMock.toJSON())
-    })
+    describe('GET /api/clientes', () => {
+        it('should retrieve clientes', async () => {
+            const mockClientes = [
+                { id: 1, nombre: 'john', apellido: 'doe', telefono: '123456789' },
+                { id: 2, nombre: 'jane', apellido: 'doe', telefono: '098765432' },
+            ];
+            clienteService.getClientes.mockResolvedValue(mockClientes);
 
-    it('should return 404 if client is not found by ID', async () => {
-        const res = await request(app)
-            .get('/api/clientes/2')
-            .set('Authorization', authToken)
-        expect(res.statusCode).toEqual(404)
-    })
+            const res = await request(app)
+                .get('/api/clientes')
+                .set('Authorization', authToken)
+                .query({ page: 1, limit: 10 });
 
-    // Test para crearCliente
-    it('should create a client', async () => {
-        const res = await request(app)
-            .post('/api/clientes')
-            .set('Authorization', authToken)
-            .send({
-                nombre: 'John',
-                apellido: 'Does',
-                telefono: '123456789',
-            })
-        expect(res.statusCode).toEqual(201)
-        expect(res.body.message).toEqual('Cliente creado')
-    })
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual(mockClientes);
+        });
+    });
 
-    // Test para updateCliente
-    it('should update a client', async () => {
-        const res = await request(app)
-            .put('/api/clientes/1')
-            .set('Authorization', authToken)
-            .send({
-                nombre: 'John',
-                apellido: 'Doe Updated',
-                telefono: '123456789',
-                cuenta: 200,
-            })
-        expect(res.statusCode).toEqual(200)
-        expect(res.body.message).toEqual('Cliente actualizado')
-    })
+    //hacer un get sin  query
+    describe('GET /api/clientes without query', () => {
+        it('should retrieve clientes', async () => {
+            const mockClientes = [
+                { id: 1, nombre: 'john', apellido: 'doe', telefono: '123456789' },
+                { id: 2, nombre: 'jane', apellido: 'doe', telefono: '098765432' },
+            ];
+            clienteService.getClientes.mockResolvedValue(mockClientes);
+            
+            const res = await request(app)
+                .get('/api/clientes')
+                .set('Authorization', authToken);
 
-    it('should return 404 if client to update is not found', async () => {
-        clienteService.updateCliente.mockResolvedValue([0])
-        const res = await request(app)
-            .put('/api/clientes/2')
-            .set('Authorization', authToken)
-            .send({
-                nombre: 'John',
-                apellido: 'Doe Updated',
-                telefono: '123456789',
-                cuenta: 200,
-            })
-        expect(res.statusCode).toEqual(404)
-    })
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual(mockClientes);
+        });
+    });
+    
 
-    // Test para deleteCliente
-    it('should delete a client', async () => {
-        const res = await request(app)
-            .delete('/api/clientes/1')
-            .set('Authorization', authToken)
-        expect(res.statusCode).toEqual(200)
-        expect(res.body.message).toEqual('Cliente eliminado')
-    })
+    describe('GET /api/clientes/:id', () => {
+        it('should retrieve a cliente by id', async () => {
+            const cliente = { id: 1, nombre: 'john', apellido: 'doe', telefono: '123456789' };
+            clienteService.getClienteById.mockResolvedValue(cliente);
 
-    it('should return 404 if client to delete is not found', async () => {
-        clienteService.deleteCliente.mockResolvedValue(0)
-        const res = await request(app)
-            .delete('/api/clientes/2')
-            .set('Authorization', authToken)
-        expect(res.statusCode).toEqual(404)
-    })
-})
+            const res = await request(app)
+                .get(`/api/clientes/${cliente.id}`)
+                .set('Authorization', authToken);
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual(cliente);
+        });
+
+        it('should return 404 if cliente not found', async () => {
+            clienteService.getClienteById.mockResolvedValue(null);
+
+            const res = await request(app)
+                .get('/api/clientes/999')
+                .set('Authorization', authToken);
+
+            expect(res.statusCode).toEqual(404);
+        });
+    });
+
+    
+
+    describe('PUT /api/clientes/:id', () => {
+        it('should update the cliente', async () => {
+            const clienteData = { nombre: 'Jane', apellido: 'Doe', telefono: '123456789', cuenta: 200 };
+            clienteService.updateCliente.mockResolvedValue([1]);
+
+            const res = await request(app)
+                .put('/api/clientes/1')
+                .set('Authorization', authToken)
+                .send(clienteData);
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty('message', 'Cliente actualizado');
+        });
+
+        it('should return 404 if the cliente does not exist', async () => {
+            clienteService.updateCliente.mockResolvedValue([0]);
+
+            const res = await request(app)
+                .put('/api/clientes/999')
+                .set('Authorization', authToken)
+                .send({ nombre: 'Jane', apellido: 'Doe', telefono: '123456789', cuenta: 200 });
+
+            expect(res.statusCode).toEqual(404);
+        });
+    });
+
+    //Hacer un update sin pasar el nombre y apellido
+    describe('PUT /api/clientes/:id without nombre and apellido', () => {
+        it('should update the cliente', async () => {
+            const clienteData = { telefono: '123456789', cuenta: 200 };
+            clienteService.updateCliente.mockResolvedValue([1]);
+
+            const res = await request(app)
+                .put('/api/clientes/1')
+                .set('Authorization', authToken)
+                .send(clienteData);
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty('message', 'Cliente actualizado');
+        });
+
+        it('should return 404 if the cliente does not exist', async () => {
+            clienteService.updateCliente.mockResolvedValue([0]);
+
+            const res = await request(app)
+                .put('/api/clientes/999')
+                .set('Authorization', authToken)
+                .send({ telefono: '123456789', cuenta: 200 });
+
+            expect(res.statusCode).toEqual(404);
+        });
+    });
+
+    describe('DELETE /api/clientes/:id', () => {
+        it('should delete the cliente', async () => {
+            clienteService.deleteCliente.mockResolvedValue(1);
+
+            const res = await request(app)
+                .delete('/api/clientes/1')
+                .set('Authorization', authToken);
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty('message', 'Cliente eliminado');
+        });
+
+        it('should return 404 if the cliente does not exist', async () => {
+            clienteService.deleteCliente.mockResolvedValue(0);
+
+            const res = await request(app)
+                .delete('/api/clientes/999')
+                .set('Authorization', authToken);
+
+            expect(res.statusCode).toEqual(404);
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+});

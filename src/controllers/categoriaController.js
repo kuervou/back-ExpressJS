@@ -38,7 +38,7 @@ const categoriaController = {
     updateCategoria: asyncHandler(async (req, res) => {
         const id = req.params.id
         let { nombre } = req.body
-        nombre = nombre ? nombre.toLowerCase() : undefined //normalizamos el nombre
+        nombre =  nombre.toLowerCase()  //normalizamos el nombre
         const categoriaActualizada = await categoriaService.updateCategoria(
             id,
             nombre
