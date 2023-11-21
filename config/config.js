@@ -38,8 +38,15 @@ module.exports = {
         logging: console.log,
     },
     PRODUCTION: {
-        use_env_variable: 'JAWSDB_URL', // o 'CLEARDB_DATABASE_URL' dependiendo del add-on que hayas elegido
+        // Configuración específica para Google Cloud SQL en producción
+        username: process.env.PRODUCTION_DB_USER,
+        password: process.env.PRODUCTION_DB_PASS,
+        database: process.env.PRODUCTION_DB_NAME,
         dialect: 'mysql',
-        // Otras opciones como el logging pueden ser añadidas aquí
+        dialectOptions: {
+            socketPath: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`,
+        },
+        logging: false, // Puedes desactivar el logging en producción si lo prefieres
     },
+
 }

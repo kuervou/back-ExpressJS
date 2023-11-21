@@ -15,6 +15,7 @@ const { ROLES } = require('../constants/roles/roles')
 //agregarle el auth luego
 router.post(
     '/empleados',
+    auth([ROLES.ADMIN]),
     validate(empleadoSchema),
     empleadoController.crearEmpleado
 )

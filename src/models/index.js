@@ -9,20 +9,10 @@ const env = process.env.NODE_ENV || 'DEVELOPMENT'
 const config = require(__dirname + '/../../config/config.js')[env]
 const db = {}
 
-// Inicialización de Sequelize
-let sequelize
-if (config.use_env_variable) {
-    // Utiliza la URL completa de la base de datos si está definida
-    sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-    // Si no, utiliza las partes individuales
-    sequelize = new Sequelize(
-        config.database,
-        config.username,
-        config.password,
-        config
-    );
-}
+
+
+// Inicialización de Sequelize con la configuración para el entorno actual
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 // Leer todos los archivos de modelo en el directorio actual
 fs.readdirSync(__dirname)
