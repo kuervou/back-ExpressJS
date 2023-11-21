@@ -1,6 +1,6 @@
 const { exec } = require('child_process')
 const { http } = require('./app')
-const port = 3000 //process.env.PORT
+const port = process.env.PORT || 3000;
 
 // Ejecutar migraciones
 if (process.env.NODE_ENV !== 'TEST') {
