@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node src/index.js",
+        "start": "cross-env NODE_ENV=PRODUCTION node src/index.js",
         "local": "cross-env NODE_ENV=LOCAL node src/index.js",
         "migrate:local": "cross-env NODE_ENV=LOCAL npx sequelize-cli db:migrate",
         "seed:local": "cross-env NODE_ENV=LOCAL npx sequelize db:seed:all",
