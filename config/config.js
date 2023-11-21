@@ -32,4 +32,9 @@ module.exports = {
         dialect: 'mysql',
         logging: console.log,
     },
+    PRODUCTION: {
+        use_env_variable: 'JAWSDB_URL', // o 'CLEARDB_DATABASE_URL' dependiendo del add-on que hayas elegido
+        dialect: 'mysql',
+        // Otras opciones como el logging pueden ser añadidas aquí
+    },
 }
