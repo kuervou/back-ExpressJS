@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 require('dotenv').config()
 
-/*const env = process.env.NODE_ENV // Por ejemplo: 'development', 'production', 'test', etc.
+/* // Por ejemplo: 'development', 'production', 'test', etc.
 VERIFICANDO VARIABLES DE ENTORNO 
 console.log("hola");
 console.log(process.env.NODE_ENV);
@@ -10,7 +10,7 @@ console.log(`${env}_DB_HOST`);
 console.log(process.env[`${env}_DB_NAME`]);*/
 console.log("hola desde config");
 console.log(process.env.NODE_ENV);
-
+const env = process.env.NODE_ENV;
 console.log(`${env}_DB_HOST`);
 
 
