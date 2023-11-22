@@ -1,6 +1,6 @@
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const mesaRepository = require('../repositories/mesaRepository')
-const ordenesRepository = require('../repositories/ordenesRepository')
+const ordenesRepository = require('../repositories/ordenRepository')
 
 // Función auxiliar para chequear la unicidad del nroMesa
 const checkNroMesaUnique = async (nroMesa, excludeId = null) => {
