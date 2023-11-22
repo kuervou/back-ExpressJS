@@ -1,5 +1,6 @@
 const { HttpError, HttpCode } = require('../error-handling/http_error')
 const mesaRepository = require('../repositories/mesaRepository')
+const ordenesRepository = require('../repositories/ordenesRepository')
 
 // Función auxiliar para chequear la unicidad del nroMesa
 const checkNroMesaUnique = async (nroMesa, excludeId = null) => {
@@ -39,6 +40,20 @@ const mesaService = {
         if (nroMesa) {
             await checkNroMesaUnique(nroMesa, id)
         }
+        //Si se quiere actualizar el estado "libre" de la mesa, se debe validar que no haya un pedido asociado a la misma con estado "pendiente" o "en cocina"
+        if (libre === false) {
+           //usamos el ordenes repository y su funcion getCountOrdenesEnCocinayParaEntregarPorMesaId
+              const countOrdenes = await ordenesRepository.getCountOrdenesEnCocinayParaEntregarPorMesaId(id)
+                if (countOrdenes > 0) {
+                    throw new HttpError(
+                        HttpCode.CONFLICT,
+                        'No se puede cambiar el estado de la mesa porque tiene pedidos pendientes o en cocina'
+                    )
+                }
+           
+                
+        }
+
 
         return await mesaRepository.update(id, nroMesa, libre)
     },

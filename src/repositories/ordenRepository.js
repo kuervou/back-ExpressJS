@@ -344,6 +344,29 @@ const ordenRepository = {
         return ingresoEnAnio
     },
 
+    getCountOrdenesEnCocinayParaEntregarPorMesaId: async (mesaId) => {
+        //Debemos devolver la cantidad de ordenes cuyo estado sea EN_COCINA o PARA_ENTREGAR y que tengan asociada la mesaId pasada por parámetro
+        const cantOrdenes = await Orden.count({
+            where: {
+                estado: {
+                    [Op.in]: [ESTADOS.EN_COCINA, ESTADOS.PARA_ENTREGAR],
+                },
+            },
+            include: [
+                {
+                    model: Mesa,
+                    as: 'mesas',
+                    where: { id: mesaId },
+                    through: { attributes: [] },
+                },
+            ],
+        })
+
+        return cantOrdenes
+    },
+       
+
+
     findAll: async (options = {}) => {
         const {
             page = 1,
@@ -380,7 +403,7 @@ const ordenRepository = {
                             {
                                 model: Grupo,
                                 as: 'grupo',
-                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                attributes: ['nombre', 'esBebida'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
                             },
                         ],
                     },
@@ -463,7 +486,7 @@ const ordenRepository = {
                             {
                                 model: Grupo,
                                 as: 'grupo',
-                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                attributes: ['nombre', 'esBebida'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
                             },
                         ],
                     },
@@ -548,7 +571,7 @@ const ordenRepository = {
                             {
                                 model: Grupo,
                                 as: 'grupo',
-                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                attributes: ['nombre', 'esBebida'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
                             },
                         ],
                     },
@@ -634,7 +657,7 @@ const ordenRepository = {
                             {
                                 model: Grupo,
                                 as: 'grupo',
-                                attributes: ['nombre'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                attributes: ['nombre', 'esBebida'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
                             },
                         ],
                     },
