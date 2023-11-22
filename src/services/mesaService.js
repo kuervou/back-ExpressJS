@@ -41,7 +41,7 @@ const mesaService = {
             await checkNroMesaUnique(nroMesa, id)
         }
         //Si se quiere actualizar el estado "libre" de la mesa, se debe validar que no haya un pedido asociado a la misma con estado "pendiente" o "en cocina"
-        if (libre === false) {
+        if (libre === true) {
            //usamos el ordenes repository y su funcion getCountOrdenesEnCocinayParaEntregarPorMesaId
               const countOrdenes = await ordenesRepository.getCountOrdenesEnCocinayParaEntregarPorMesaId(id)
                 if (countOrdenes > 0) {
