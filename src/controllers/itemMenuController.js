@@ -152,25 +152,6 @@ const itemMenuController = {
             data.nombre = data.nombre.toLowerCase()
         }
 
-        if (data.itemsInventario) {
-            //validar que si data.itemsInventario existe sea un array que no contenga id repetidos
-            const ids = data.itemsInventario.map((item) => item.id)
-            const uniqueIds = [...new Set(ids)]
-            if (ids.length !== uniqueIds.length) {
-                throw new HttpError(
-                    HttpCode.BAD_REQUEST,
-                    'El array de itemsInventario contiene ids repetidos'
-                )
-            }
-
-            //si data.porUnidad no existe, solicitar que se envíe
-            if (data.porUnidad === undefined) {
-                throw new HttpError(
-                    HttpCode.BAD_REQUEST,
-                    'El campo porUnidad es requerido cuando se envía itemsInventario'
-                )
-            }
-        }
 
         if (data.imagen) {
             data.imagen = Buffer.from(data.imagen, 'base64')
