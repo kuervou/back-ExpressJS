@@ -39,7 +39,7 @@ const clienteService = {
         if (nombre && apellido) {
             await checkNombreApellidoUnique(nombre, apellido, id)
         }
-        
+
         return await clienteRepository.update(
             id,
             nombre,

@@ -143,7 +143,8 @@ const ordenService = {
                 }
 
                 //Obtenemos el total a pagar
-                const totalAPagar = estadoPagos.totalOrden - estadoPagos.totalPagado
+                const totalAPagar =
+                    estadoPagos.totalOrden - estadoPagos.totalPagado
 
                 //Creamos un objeto pagoData con los datos necesarios para crear un pago
                 const pagoData = {
@@ -172,10 +173,10 @@ const ordenService = {
         } catch (error) {
             // Si hay algún error, revertir la transacción
             if (transaction.finished !== 'commit') {
-                await transaction.rollback();
+                await transaction.rollback()
             }
-            throw error;
-            }
+            throw error
+        }
     },
 
     getOrdenes: async (options = {}) => {
@@ -233,48 +234,50 @@ const ordenService = {
 
     infoPagosOrdenes: async (ids) => {
         // Obtiene todas las órdenes que coinciden con los IDs proporcionados
-        const ordenes = await ordenRepository.getOrdenesByIds(ids);
-       
-        
+        const ordenes = await ordenRepository.getOrdenesByIds(ids)
+
         if (ordenes.length === 0) {
-            throw new HttpError(HttpCode.NOT_FOUND, 'Órdenes no encontradas');
+            throw new HttpError(HttpCode.NOT_FOUND, 'Órdenes no encontradas')
         }
-    
+
         // Obtiene todos los pagos que coinciden con los IDs de las órdenes
         const pagos = await pagoRepository.findAll({
             ordenId: { [Op.in]: ids },
-        });
-    
+        })
+
         // Prepara el objeto de respuesta con los totales inicializados en 0
         const respuesta = {
             ordenesIds: ids,
             totalGeneralPagado: 0,
             totalGeneralOrden: 0,
-            detalles: []
-        };
-    
+            detalles: [],
+        }
+
         // Calcula los totales y los detalles para cada orden
-        ordenes.forEach(orden => {
-            const pagosOrden = pagos.items.filter(p => p.ordenId === orden.id);
-            
-            let totalPagadoOrden = pagosOrden.reduce((total, pago) => total + pago.total, 0);
-    
+        ordenes.forEach((orden) => {
+            const pagosOrden = pagos.items.filter((p) => p.ordenId === orden.id)
+
+            let totalPagadoOrden = pagosOrden.reduce(
+                (total, pago) => total + pago.total,
+                0
+            )
+
             // Agrega al total general
-            respuesta.totalGeneralPagado += totalPagadoOrden;
-            respuesta.totalGeneralOrden += orden.total;
-    
+            respuesta.totalGeneralPagado += totalPagadoOrden
+            respuesta.totalGeneralOrden += orden.total
+
             // Agrega los detalles por orden
             respuesta.detalles.push({
                 ordenId: orden.id,
                 totalPagado: totalPagadoOrden,
                 totalOrden: orden.total,
-                paga: orden.paga
-            });
-        });
-    
-        return respuesta;
+                paga: orden.paga,
+            })
+        })
+
+        return respuesta
     },
-    
+
     getEstadisticasVentas: async (options = {}) => {
         //Vamos a manejar los filtros de fecha en el servicio, para no tener que hacerlo en el controller ni en el repository
 
@@ -433,7 +436,6 @@ const ordenService = {
             options.fechaFin = ultimoDia
 
             return await ordenRepository.getTop5Clientes(options)
-
         } else if (options.anio) {
             //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
             const primerDiaDelAño = new Date(options.anio, 0, 1)
@@ -446,9 +448,7 @@ const ordenService = {
             options.fechaFin = ultimoDiaDelAñoISO
 
             return await ordenRepository.getTop5Clientes(options)
-
         }
-
     },
 
     getTop5ItemsMenu: async (options = {}) => {
@@ -457,16 +457,18 @@ const ordenService = {
         //Si envío el parametro día, debo devolver las estadisticas de ese día
         if (options.dia) {
             //Estamos seguros que de dia esta en formato ISO 8601 por la Joi validation
-            return await itemRepository.getTop5ItemsMenuPorDia(options.dia);
-        } else if (options.mes) {   
+            return await itemRepository.getTop5ItemsMenuPorDia(options.dia)
+        } else if (options.mes) {
             // Calculamos el rango del mes más reciente
             const { primerDia, ultimoDia } = getRangoDelMes(options.mes)
 
             options.fechaInicio = primerDia
             options.fechaFin = ultimoDia
 
-            return await itemRepository.getTop5ItemsMenu(options.fechaInicio, options.fechaFin);
-
+            return await itemRepository.getTop5ItemsMenu(
+                options.fechaInicio,
+                options.fechaFin
+            )
         } else if (options.anio) {
             //Si envia el parametro año, caluclamos el primer dia del año y el ultimo dia del año
             const primerDiaDelAño = new Date(options.anio, 0, 1)
@@ -478,12 +480,12 @@ const ordenService = {
             options.fechaInicio = primerDiaDelAñoISO
             options.fechaFin = ultimoDiaDelAñoISO
 
-            return await itemRepository.getTop5ItemsMenu(options.fechaInicio, options.fechaFin);
-
+            return await itemRepository.getTop5ItemsMenu(
+                options.fechaInicio,
+                options.fechaFin
+            )
         }
-
     },
-    
 
     getHorasPico: async (options = {}) => {
         return await ordenRepository.getHorasPico(options)
@@ -547,7 +549,10 @@ const ordenService = {
                             idsItems.push(item.id)
                         })
 
-                        await itemService.manejarStockItemsOnConfirmar(idsItems, t)
+                        await itemService.manejarStockItemsOnConfirmar(
+                            idsItems,
+                            t
+                        )
                     }
                 }
             }
@@ -676,7 +681,7 @@ const ordenService = {
                 )
             }
             let result = 0
-            //Debemos verificar el estado de la orden y evaluar si debemos eliminar los items (itemRepository.deleteItems) o si eliminarlos y manejar el stock de los items (itemService.deleteItems) 
+            //Debemos verificar el estado de la orden y evaluar si debemos eliminar los items (itemRepository.deleteItems) o si eliminarlos y manejar el stock de los items (itemService.deleteItems)
             if (orden.estado == ESTADOS.POR_CONFIRMAR) {
                 result = await itemRepository.deleteItems(items, t)
             } else {
@@ -687,8 +692,6 @@ const ordenService = {
                 })
 
                 result = await itemService.deleteItems(items, t)
-
-                
             }
 
             await t.commit()
@@ -734,21 +737,17 @@ const ordenService = {
             }
 
             //si la orden tiene items, no los eliminamos, pero si debemos manejar el stock si es necesario (Solo si es una orden que no está "Por confirmar")
-            if(orden.estado !== ESTADOS.POR_CONFIRMAR){
+            if (orden.estado !== ESTADOS.POR_CONFIRMAR) {
                 //crear un array con los ids de los items
                 const idsItems = []
                 orden.items.forEach((item) => {
                     idsItems.push(item.id)
                 })
 
-
-
                 if (orden.items) {
                     await itemService.manejarStockItemsOnCancelar(idsItems, t)
                 }
-                
             }
-            
 
             const result = await ordenRepository.deleteOrden(id, t)
 

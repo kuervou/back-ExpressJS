@@ -84,7 +84,6 @@ const querySchema = Joi.object({
         .optional(),
     mesaId: Joi.number().optional(),
     fecha: Joi.date().iso().optional(),
-
 })
 
 const addOrRemoveMesaSchema = Joi.object({
@@ -139,5 +138,4 @@ module.exports = {
     porMesaSchema,
     pagarTodoSchema,
     ordenIdsSchema,
-
 }

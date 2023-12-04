@@ -216,30 +216,49 @@ const ordenRepository = {
                 [literal('`cliente`.`nombre`'), 'nombreCliente'],
                 [literal('`cliente`.`apellido`'), 'apellidoCliente'],
             ],
-            include: [{
-                model: Cliente,
-                as: 'cliente',
-                attributes: []
-            }],
+            include: [
+                {
+                    model: Cliente,
+                    as: 'cliente',
+                    attributes: [],
+                },
+            ],
             where: {
                 fecha: dia,
                 paga: true,
             },
-            group: ['clienteId', 'cliente.id', 'cliente.nombre', 'cliente.apellido'],
+            group: [
+                'clienteId',
+                'cliente.id',
+                'cliente.nombre',
+                'cliente.apellido',
+            ],
             order: [[fn('SUM', col('total')), 'DESC']],
             limit: 5,
-            subQuery: false
-        });
-    
-        return top5Clientes.map(result => {
-            const { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente } = result.get({ plain: true });
-            return { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente };
-        });
+            subQuery: false,
+        })
+
+        return top5Clientes.map((result) => {
+            const {
+                clienteId,
+                totalConsumo,
+                cantidadOrdenes,
+                nombreCliente,
+                apellidoCliente,
+            } = result.get({ plain: true })
+            return {
+                clienteId,
+                totalConsumo,
+                cantidadOrdenes,
+                nombreCliente,
+                apellidoCliente,
+            }
+        })
     },
-    
+
     getTop5Clientes: async (options) => {
-        const { fechaInicio, fechaFin } = options;
-    
+        const { fechaInicio, fechaFin } = options
+
         const top5Clientes = await Orden.findAll({
             attributes: [
                 'clienteId',
@@ -248,11 +267,13 @@ const ordenRepository = {
                 [literal('`cliente`.`nombre`'), 'nombreCliente'],
                 [literal('`cliente`.`apellido`'), 'apellidoCliente'],
             ],
-            include: [{
-                model: Cliente,
-                as: 'cliente',
-                attributes: []
-            }],
+            include: [
+                {
+                    model: Cliente,
+                    as: 'cliente',
+                    attributes: [],
+                },
+            ],
             where: {
                 clienteId: { [Op.ne]: null },
                 fecha: {
@@ -260,18 +281,34 @@ const ordenRepository = {
                 },
                 paga: true,
             },
-            group: ['clienteId', 'cliente.id', 'cliente.nombre', 'cliente.apellido'],
+            group: [
+                'clienteId',
+                'cliente.id',
+                'cliente.nombre',
+                'cliente.apellido',
+            ],
             order: [[fn('SUM', col('total')), 'DESC']],
             limit: 5,
-            subQuery: false
-        });
-    
-        return top5Clientes.map(result => {
-            const { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente } = result.get({ plain: true });
-            return { clienteId, totalConsumo, cantidadOrdenes, nombreCliente, apellidoCliente };
-        });
+            subQuery: false,
+        })
+
+        return top5Clientes.map((result) => {
+            const {
+                clienteId,
+                totalConsumo,
+                cantidadOrdenes,
+                nombreCliente,
+                apellidoCliente,
+            } = result.get({ plain: true })
+            return {
+                clienteId,
+                totalConsumo,
+                cantidadOrdenes,
+                nombreCliente,
+                apellidoCliente,
+            }
+        })
     },
-    
 
     getHorasPico: async (options) => {
         const { dia } = options

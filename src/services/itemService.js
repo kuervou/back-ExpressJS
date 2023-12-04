@@ -36,7 +36,7 @@ const itemService = {
                         )
                     }
 
-                    if(order.estado !== ESTADOS.POR_CONFIRMAR){
+                    if (order.estado !== ESTADOS.POR_CONFIRMAR) {
                         await itemInventarioRepository.descontarStock(
                             itemInventarios[0],
                             itemData.cantidad,
@@ -85,7 +85,6 @@ const itemService = {
             })
         )
     },
-
 
     // Funcion que dado un conjunto de items, ubicamos su itemMenu asociado y si el itemMenu tiene asociado un unico itemInventario, entonces debemos restar al stock la cantidad del item
     manejarStockItemsOnConfirmar: async (items, transaction) => {

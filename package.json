@@ -17,6 +17,11 @@
         "lint:fix": "eslint --fix .",
         "postinstall": "husky install"
     },
+    "husky": {
+        "hooks": {
+          "pre-commit": "npm run lint:check && npm run format:check && npm run test"
+        }
+      },
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -45,11 +50,6 @@
         "sequelize-mock": "^0.10.2",
         "sqlite3": "^5.1.6",
         "supertest": "^6.3.3"
-    },
-    "husky": {
-        "hooks": {
-          "pre-commit": "npm run lint:check && npm run format:check && npm run test"
-        }
-      }
+    }
       
 }

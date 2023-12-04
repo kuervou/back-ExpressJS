@@ -13,7 +13,7 @@ const {
     porMesaSchema,
     removeItemsSchema,
     pagarTodoSchema,
-    ordenIdsSchema
+    ordenIdsSchema,
 } = require('./validations/ordenValidations')
 const {
     statsSchema,
@@ -80,11 +80,7 @@ router.put(
     ordenController.updateOrden
 )
 
-router.delete(
-    '/ordenes/:id',
-    auth([ROLES.ADMIN]),
-    ordenController.deleteOrden
-)
+router.delete('/ordenes/:id', auth([ROLES.ADMIN]), ordenController.deleteOrden)
 
 //rutas para add y remove mesas
 router.post(

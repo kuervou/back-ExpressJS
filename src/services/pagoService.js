@@ -13,12 +13,12 @@ const sequelize = db.sequelize
 
 const pagoService = {
     crearPago: async (pagoData, transaction) => {
-        let transactionOwner = false; // Esta bandera indica si la transacción fue creada dentro de esta función.
+        let transactionOwner = false // Esta bandera indica si la transacción fue creada dentro de esta función.
 
-    if (!transaction) {
-        transaction = await sequelize.transaction();
-        transactionOwner = true; // Marcamos que esta función inició la transacción.
-    }
+        if (!transaction) {
+            transaction = await sequelize.transaction()
+            transactionOwner = true // Marcamos que esta función inició la transacción.
+        }
 
         let ordenPagada = false
         //pasar el pagoData.total a number si es string
@@ -107,8 +107,8 @@ const pagoService = {
                 ordenPagada = true
             }
 
-             // Si el método de pago es "Efectivo", se suma el total del pago al total de la caja
-             if (pagoData.metodoPago === METODOSPAGO.EFECTIVO) {
+            // Si el método de pago es "Efectivo", se suma el total del pago al total de la caja
+            if (pagoData.metodoPago === METODOSPAGO.EFECTIVO) {
                 let nuevoTotalCaja = caja.total + pagoData.total
                 await cajaRepository.updateTotal(
                     caja.id,
@@ -121,16 +121,16 @@ const pagoService = {
             const nuevoPago = await pagoRepository.create(pagoData, transaction)
 
             if (transactionOwner) {
-                await transaction.commit();
+                await transaction.commit()
             }
-    
-            return { nuevoPago, ordenPagada };
+
+            return { nuevoPago, ordenPagada }
         } catch (error) {
-             // Si hay algún error y esta función inició la transacción, la revertimos.
-        if (transactionOwner) {
-            await transaction.rollback();
-        }
-        throw error;
+            // Si hay algún error y esta función inició la transacción, la revertimos.
+            if (transactionOwner) {
+                await transaction.rollback()
+            }
+            throw error
         }
     },
 
@@ -199,12 +199,12 @@ const pagoService = {
             // Si el método de pago es "Credito", debemos comprobar que la orden tenga un cliente asociado
             if (pago.metodoPago === METODOSPAGO.CREDITO) {
                 if (orden.clienteId) {
-                // Si la orden tiene un cliente asociado, debemos disminuir la cuenta por cobrar del cliente
-                await clienteRepository.disminuirCuentaPorCobrar(
-                    orden.clienteId,
-                    pago.total,
-                    transaction
-                )
+                    // Si la orden tiene un cliente asociado, debemos disminuir la cuenta por cobrar del cliente
+                    await clienteRepository.disminuirCuentaPorCobrar(
+                        orden.clienteId,
+                        pago.total,
+                        transaction
+                    )
                 }
             }
             // Eliminar el pago

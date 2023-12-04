@@ -152,7 +152,6 @@ const itemMenuController = {
             data.nombre = data.nombre.toLowerCase()
         }
 
-
         if (data.imagen) {
             data.imagen = Buffer.from(data.imagen, 'base64')
         }
