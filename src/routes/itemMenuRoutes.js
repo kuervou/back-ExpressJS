@@ -38,10 +38,7 @@ router.get(
     itemMenuController.getItemsMenuActivosBasic
 )
 
-router.get(
-    '/itemsMenu/:id',
-    itemMenuController.getItemMenuById
-)
+router.get('/itemsMenu/:id', itemMenuController.getItemMenuById)
 
 router.get(
     '/itemsMenu/:id/itemsMenuInventario',

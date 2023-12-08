@@ -132,7 +132,8 @@ const ordenController = {
     }),
 
     getOrdenes: asyncHandler(async (req, res) => {
-        const { page, limit, empleadoId, clienteId, estado, mesaId, fecha } = req.query
+        const { page, limit, empleadoId, clienteId, estado, mesaId, fecha } =
+            req.query
 
         const options = {}
         if (page) options.page = +page
@@ -142,7 +143,6 @@ const ordenController = {
         if (estado) options.estado = estado
         if (mesaId) options.mesaId = +mesaId
         if (fecha) options.fecha = fecha
-
 
         const ordenes = await ordenService.getOrdenes(options)
 
@@ -209,21 +209,24 @@ const ordenController = {
     }),
 
     infoPagosOrdenes: asyncHandler(async (req, res) => {
-        let ids = req.query.Ids;
+        let ids = req.query.Ids
 
         // Si es una cadena, divídela y convierte cada elemento en un número
         if (typeof ids === 'string') {
-            ids = ids.split(',').map(id => {
-                const parsedId = parseInt(id, 10);
+            ids = ids.split(',').map((id) => {
+                const parsedId = parseInt(id, 10)
                 if (isNaN(parsedId)) {
                     // Maneja el caso de que el ID no sea un número válido
-                    throw new HttpError(HttpCode.BAD_REQUEST, 'ID de orden no válido');
+                    throw new HttpError(
+                        HttpCode.BAD_REQUEST,
+                        'ID de orden no válido'
+                    )
                 }
-                return parsedId;
-            });
-        } 
-        const estadosPagos = await ordenService.infoPagosOrdenes(ids);
-        res.status(HttpCode.OK).json(estadosPagos);
+                return parsedId
+            })
+        }
+        const estadosPagos = await ordenService.infoPagosOrdenes(ids)
+        res.status(HttpCode.OK).json(estadosPagos)
     }),
 
     getEstadisticasVentas: asyncHandler(async (req, res) => {
@@ -451,7 +454,6 @@ const ordenController = {
         if (mes) options.mes = mes
         if (anio) options.anio = anio
 
-
         //Validamos que haya enviado al menos un parametro
         if (!dia && !mes && !anio) {
             throw new HttpError(
@@ -546,7 +548,6 @@ const ordenController = {
         //obtener estadisticas
         const estadisticas = await ordenService.getTop5ItemsMenu(options)
         res.status(HttpCode.OK).json(estadisticas)
-
     }),
 
     getHorasPico: asyncHandler(async (req, res) => {

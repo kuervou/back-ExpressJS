@@ -10,9 +10,9 @@ const pagoController = {
         const pagoData = req.body
         const { nuevoPago } = await pagoService.crearPago(pagoData)
         const io = req.io
-        
+
         io.emit('fetchOrdenes', { message: 'Orden actualizada' })
-        
+
         io.emit('fetchTotalCaja', { message: 'Pago creada' })
         res.status(HttpCode.CREATED).json({
             message: 'Pago creado',
@@ -65,13 +65,11 @@ const pagoController = {
 
     deletePago: asyncHandler(async (req, res) => {
         const id = req.params.id
-        const { pagoEliminado } =
-            await pagoService.deletePago(id)
+        const { pagoEliminado } = await pagoService.deletePago(id)
         const io = req.io
 
-  
         io.emit('fetchOrdenes', { message: 'Orden actualizada' })
-        
+
         io.emit('fetchTotalCaja', { message: 'Pago eliminado' })
 
         res.status(HttpCode.OK).json({

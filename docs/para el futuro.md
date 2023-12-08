@@ -1,16 +1,19 @@
 
 # EN LO QUE QUEDÉ:
+Testing de controlladores:
+
+HECHOS:
+Caja
+Categoría
+Cliente
+Grupo
+Mesa
+Movimiento
+Pagos
 
 
-PROXIMO:
+EN PROCESO:
 
-OJO: los gurises tienen que migrar empleadoLog para el proximo pull del back
-
-debo ver el pagar todo VER DE HACER UN ENDPOINT NUEVO
-Lo del borrado logico de ordenes (Fijarme de reflejar todos los cambios que implica)
-debo ver las notas
-
-Aumentar el tamaño del blob en el contenedor
 
 
 HACERLE ACORDAR A GUZMAN DE CATEGORIAS PAGE -1
@@ -21,7 +24,9 @@ Verificar el estado en que esta una orden antes de agregarle o quitarle items.
 
 Cambiar el orden de las ordenes en home cocina
 
-
+PARA CUSNDO TODO ESTE TERMINADO :
+AL MOMENTO ARREGLAR RESPONSIVE, checkear tambien las actualizaciones en tiempo real,
+pueden haber cosas que agregaron los gurises que no se esten fetecheando con el ws. 
 
 ### LO QUE LE DIJE A GUZMAN:
 - errores manejo y servicio nuevo
@@ -35,6 +40,10 @@ Cambiar el orden de las ordenes en home cocina
  
 ## Pendientes
 
+- validar el actualizar cuenta de un cliente, que no permita una cuenta con valor negativo (Validar desde front)
+
+- Agregar al manual, el hecho de que si un cliente paga su deuda en efectivo hagan un movimiento de caja
+xxxxxxxxxxxxx
 - investigar el tema logs
 
 - Documentar con comentarios.

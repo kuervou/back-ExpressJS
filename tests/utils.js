@@ -6,12 +6,12 @@ function generateTokenForTesting() {
     // al generar tokens para usuarios reales.
     const testUserPayload = {
         id: 1,
-        rol: 'Admin', 
+        rol: 'Admin',
         nick: 'pipe',
         nombre: 'Felipe',
         apellido: 'Prince',
         telefono: '123456789',
-        activo: true
+        activo: true,
     }
 
     // Genera un token usando el payload y tu clave secreta.
