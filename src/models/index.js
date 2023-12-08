@@ -9,10 +9,13 @@ const env = process.env.NODE_ENV || 'DEVELOPMENT'
 const config = require(__dirname + '/../../config/config.js')[env]
 const db = {}
 
-
-
 // Inicialización de Sequelize con la configuración para el entorno actual
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+)
 
 // Leer todos los archivos de modelo en el directorio actual
 fs.readdirSync(__dirname)

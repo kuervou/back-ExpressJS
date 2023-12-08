@@ -107,6 +107,8 @@ const removeItemsSchema = Joi.object({
 })
 
 const porMesaSchema = Joi.object({
+    page: Joi.number().optional(),
+    limit: Joi.number().optional(),
     mesaId: Joi.number().optional(),
 })
 

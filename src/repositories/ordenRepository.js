@@ -2,7 +2,6 @@
 const { Orden, Item, Mesa, ItemMenu, Grupo, Cliente } = require('../models')
 const { Op, literal, fn, col } = require('sequelize')
 const db = require('../models')
-const { EXCLUDED_GROUPS } = require('../constants/grupos/grupos')
 const { ESTADOS } = require('../constants/estados/estados')
 
 const ordenRepository = {
@@ -401,8 +400,6 @@ const ordenRepository = {
 
         return cantOrdenes
     },
-       
-
 
     findAll: async (options = {}) => {
         const {
@@ -510,9 +507,9 @@ const ordenRepository = {
                 as: 'items',
                 order: [
                     literal(`CASE 
-                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
-                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
-                        ELSE 3 END ASC`),
+                        WHEN grupo.esBebida = true THEN 1
+                        ELSE 2
+                    END ASC`),
                 ],
                 include: [
                     {
@@ -659,7 +656,8 @@ const ordenRepository = {
     },
 
     findAllHistorial: async (options) => {
-        const { mesaId } = options
+        const { mesaId, page = 1, limit = 10 } = options
+        const offset = (page - 1) * limit
         const whereConditions = {}
 
         whereConditions[Op.or] = [
@@ -680,21 +678,22 @@ const ordenRepository = {
                 model: Item,
                 as: 'items',
                 order: [
+                    // Ordenar primero los ítems donde grupo.esBebida es true
                     literal(`CASE 
-                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.BEBIDAS}' THEN 1
-                        WHEN grupo.nombre = '${EXCLUDED_GROUPS.TRAGOS}' THEN 2
-                        ELSE 3 END ASC`),
+                        WHEN grupo.esBebida = true THEN 1
+                        ELSE 2
+                    END ASC`),
                 ],
                 include: [
                     {
                         model: ItemMenu,
                         as: 'itemMenu',
-                        attributes: ['nombre'], // Si sólo quieres el nombre y grupo, si quieres más campos, simplemente agrégales aquí.
+                        attributes: ['nombre'],
                         include: [
                             {
                                 model: Grupo,
                                 as: 'grupo',
-                                attributes: ['nombre', 'esBebida'], // Asumiendo que el campo se llama 'nombre' en el modelo Grupo.
+                                attributes: ['nombre', 'esBebida'],
                             },
                         ],
                     },
@@ -740,6 +739,8 @@ const ordenRepository = {
             ],
             distinct: true,
             include: include,
+            offset,
+            limit,
         })
 
         return {

@@ -174,9 +174,12 @@ const ordenController = {
     }),
 
     getOrdenesHistorial: asyncHandler(async (req, res) => {
-        const { mesaId } = req.query
+        const { mesaId, page, limit } = req.query
 
-        const options = {}
+        const options = {
+            page: page ? +page : 1,
+            limit: limit ? +limit : 10,
+        }
 
         if (mesaId) options.mesaId = +mesaId
 

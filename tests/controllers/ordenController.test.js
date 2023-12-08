@@ -358,6 +358,8 @@ describe('ordenController', () => {
             expect(res.body).toEqual(expectedOrders)
             expect(ordenService.getOrdenesHistorial).toHaveBeenCalledWith({
                 mesaId: mesaId,
+                page: 1,
+                limit: 10,
             })
         })
 
