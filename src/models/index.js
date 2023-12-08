@@ -4,21 +4,15 @@
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
-const process = require('process')
 const basename = path.basename(__filename)
 const env = process.env.NODE_ENV || 'DEVELOPMENT'
-//se req  uiere config.js y se accede a una propiedad específica del objeto exportado por ese archivo. Esta propiedad se determina por el valor de la variable env
 const config = require(__dirname + '/../../config/config.js')[env]
 const db = {}
 
-// Inicialización de Sequelize
-let sequelize
-sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-)
+
+
+// Inicialización de Sequelize con la configuración para el entorno actual
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 // Leer todos los archivos de modelo en el directorio actual
 fs.readdirSync(__dirname)

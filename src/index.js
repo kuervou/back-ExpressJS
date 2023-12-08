@@ -1,9 +1,15 @@
 const { exec } = require('child_process')
 const { http } = require('./app')
-const port = 3000 //process.env.PORT
+const port = process.env.PORT || 3000;
 
 // Ejecutar migraciones
 if (process.env.NODE_ENV !== 'TEST') {
+    //console logs para debug:
+    console.log("node env:");
+    console.log(process.env.NODE_ENV);
+
+
+
     exec('npx sequelize-cli db:migrate', (error, stdout) => {
         if (error) {
             // eslint-disable-next-line no-console
