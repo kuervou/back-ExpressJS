@@ -34,6 +34,7 @@ const querySchema = Joi.object({
             .pattern(/^\d+(,\d+)*$/)
             .optional(),
     ],
+    esBebida: Joi.boolean().optional(),
 })
 
 const updateItemsMenuInventarioSchema = Joi.object({

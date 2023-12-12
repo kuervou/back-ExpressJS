@@ -124,11 +124,11 @@ const itemMenuRepository = {
     },
     //findAllActivosBasic
     findAllActivosBasic: async (options = {}) => {
-        const { page = 1, limit = 10, nombre, grupoId } = options
+        const { page = 1, limit = 10, nombre, grupoId, esBebida } = options
         const offset = (page - 1) * limit
 
-        const whereConditions = {}
-        whereConditions.Activo = true
+        const whereConditions = { Activo: true }
+
         if (nombre) {
             whereConditions.Nombre = {
                 [Op.like]: `%${nombre}%`,
@@ -142,6 +142,21 @@ const itemMenuRepository = {
             } else {
                 whereConditions.GrupoId = grupoId
             }
+        }
+
+        const includeConditions = [
+            {
+                model: Grupo,
+                as: 'grupo',
+                attributes: ['nombre', 'esBebida'],
+            },
+            // ...otros includes...
+        ]
+
+        if (esBebida !== undefined) {
+            // Asegúrate de que esBebida es un booleano
+            const esBebidaBool = esBebida === 'true' || esBebida === true
+            includeConditions[0].where = { esBebida: esBebidaBool }
         }
 
         //si page o limit son -1, no se aplica paginación
@@ -165,7 +180,7 @@ const itemMenuRepository = {
             offset,
             limit,
             order: [['Nombre', 'ASC']],
-            include: ['grupo'], // incluyendo asociaciones
+            include: includeConditions,
             //exlcuir campos imagen, activo, grupoId
             attributes: { exclude: ['imagen', 'activo', 'grupoId'] },
         })

@@ -101,7 +101,7 @@ const itemMenuController = {
     //getItemsMenuActivosBasic es una función para obtener los itemsMenu activos con menos campos en la response (sirve para el menu de los mozos por ejemplo)
     getItemsMenuActivosBasic: asyncHandler(async (req, res) => {
         const { page, limit, nombre } = req.query
-        let { grupoId } = req.query
+        let { grupoId, esBebida } = req.query
         const options = {}
         if (page) options.page = +page
         if (limit) options.limit = +limit
@@ -114,6 +114,7 @@ const itemMenuController = {
             }
             options.grupoId = grupoId
         }
+        if (esBebida !== undefined) options.esBebida = esBebida === 'true'
 
         const itemMenus =
             await itemMenuService.getItemsMenuActivosBasic(options)
